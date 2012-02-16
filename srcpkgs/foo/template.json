@@ -1,0 +1,40 @@
+{
+	"name": "foo",
+	"version": "1.2.3",
+	"revision": 1,
+	"distfiles": [ "http://foo.com/foo.tar.xz" ],
+	"checksums": [ "f0e91e6333321ddb48fa12b5c66f56c3d5f05325748c66dd2e9016c278ff8e82" ],
+	"build_style": "gnu-configure",
+	"configure_args": "--with=something --whatever",
+	"short_desc": "The Foo program",
+	"maintainer": "davehome <davehome@redthumb.info.tm>",
+	"homepage": "http://foo.example.com/",
+	"license": "GPL-3",
+	"long_desc": [
+		" The Foo program is a bar thing that enables one",
+		" to foobar around and do other things and so on.",
+		" ",
+		" The Foo is blah woot weeee and stuff like that!"
+	],
+	"deps": {
+		"run": [ "ld-linux.so.2", "libc.so.6", "libasdf.so.0", "libfoo.so.1" ],
+		"build": [ "pkg-config", "intltool", "libffi-devel" ],
+		"full": [ "python" ]
+	},
+	"subpkgs": {
+		"libfoo": {
+			"revision": 2,
+			"short_desc": "Runtime Library",
+			"deps": {
+				"run": [ "ld-linux.so.2", "libc.so.6", "libasdf.so.0", "librofl.so.3" ]
+			}
+		},
+		"libfoo-devel": {
+			"revision": 5,
+			"short_desc": "Development Files",
+			"deps": {
+				"run": [ "libffi-devel", "libfoo" ]
+			}
+		}
+	}
+}
