@@ -1,5 +1,7 @@
--- Loads a template
-
+-- Loads a template using xsps.inc()
+-- Stores the template vars as 'pkg' and
+-- it's related functions into 'func' in a
+-- table and returns the table.
 function load_template(name)
 	local srcpkgs = xsps.getcfg("SRCPKGS")
 	local tmpl = {
