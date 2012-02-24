@@ -1,4 +1,6 @@
 -- Main code for processing a template.
+-- This code is under construction and
+-- may drastically change in the future.
 
 local process = function(tmpl, action)
 
@@ -18,7 +20,7 @@ local process = function(tmpl, action)
 
 	local pkg = xsps.load_template(tmpl)
 	if not xsps.process_queue[pkg] then
-		table.insert(xsps.process_queue, pkg)
+		table.insert(xsps.tasks, pkg)
 	end
 	
 
