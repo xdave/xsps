@@ -22,9 +22,8 @@ return {
 	},
 	build_options = {
 		build_style = "gnu_configure",
-		subpackages = { "libstuff", "libstuff-devel" },
-		gtk_iconcache_dirs = "$USR_SHARE/icons/hicolor",
-		configure_args = "--with-foo=blah"
+		configure_args = "--with-foo=blah",
+		gtk_iconcache_dirs = "$USR_SHARE/icons/hicolor"
 	}
 }
 
