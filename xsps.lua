@@ -2,6 +2,8 @@
 
 require "posix"
 
+local argv = arg
+
 xsps = {
 	format = {
 		env = function(str)
@@ -12,7 +14,8 @@ xsps = {
 		end
 	},
 	CONFIGDIR = function()
-		return xsps.format.env("$HOME/src/xsps/config")
+		local working = posix.dirname(arg[0])
+		return xsps.format.env(working.."/config")
 	end,
 	getcfg = function(opt)
 		local str = xsps.format.env(xsps.config[opt])
@@ -44,19 +47,19 @@ xsps.inc = function(file)
 	return func()
 end
 
+xsps.process_queue = {}
+
 xsps.config = xsps.inc(xsps.CONFIGDIR().."/xsps.lua")
 xsps.color = xsps.inc(xsps.getcfg("TOOLSDIR").."/misc/color.lua")
 xsps.log = xsps.inc(xsps.getcfg("TOOLSDIR").."/misc/log.lua")
 xsps.shell = xsps.inc(xsps.getcfg("TOOLSDIR").."/shell/shell.lua")
 xsps.vinstall = xsps.inc(xsps.getcfg("TOOLSDIR").."/shell/vinstall.lua")
 xsps.vmove = xsps.inc(xsps.getcfg("TOOLSDIR").."/shell/vmove.lua")
-xsps.tmpl_funcs = xsps.inc(xsps.getcfg("TOOLSDIR").."/tmpl/funcs.lua")
 xsps.load_template = xsps.inc(xsps.getcfg("TOOLSDIR").."/tmpl/load.lua")
+xsps.process = xsps.inc(xsps.getcfg("TOOLSDIR").."/tmpl/process.lua")
 
 xsps.ni = function(msg)
 	local err = "[%s] Not implemented yet!"
 	xsps.log.err(string.format(err, msg))
 end
-
-
 
