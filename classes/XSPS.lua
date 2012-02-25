@@ -1,8 +1,8 @@
 module(..., package.seeall)
 
 -- global
-XSPS = class(function(x)
-	x.actions = { install = "InstallAction" }
+XSPS = class(function(self)
+	self.actions = { install = "InstallAction" }
 end)
 
 function XSPS:action(action, template)
