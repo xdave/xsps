@@ -45,6 +45,11 @@ function class(base, init)
    return c
 end
 
+function get_class(className)
+	local c = require("classes/"..className)
+	return c[className]
+end
+
 function new(className, ...)
 	local c = require("classes/"..className)
 	return c[className](...)
