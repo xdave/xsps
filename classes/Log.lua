@@ -9,10 +9,10 @@ local formats = {
 }
 
 -- global
-Log = class(function(log)
-	log.me = log
-	log.color = new("Color")
-	log.mapping = formats 
+Log = class(function(self)
+	self.me = log
+	self.color = new("Color")
+	self.mapping = formats 
 end)
 
 function Log:all(kind, msg, context)
