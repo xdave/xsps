@@ -16,11 +16,12 @@ log:info(args.items.action.."ing `"..args.items.template.."'")
 --- weee
 log:err("i can't do anything yet! ohno!")
 
-local rpipe, wpipe = posix.pipe()
+--[[local rpipe, wpipe = posix.pipe()
 posix.write(wpipe, "test")
 local bytes, data = posix.read(rpipe, 4)
 assert(data == "test")
 posix.close(rpipe)
 posix.close(wpipe)
 
-print(data, bytes)
+print(data, bytes)]]
+

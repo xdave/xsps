@@ -1,7 +1,8 @@
+-- Configuration file for XSPS.
+
 return {
-	TOOLSDIR = "$HOME/src/xsps/tools",
-	SRCPKGS = "$HOME/src/xsps/srcpkgs",
 	SRCPKGS_URL = "git://github.com/davehome/xsps-packages.git",
+	SRCPKGS = "$HOME/src/xsps/srcpkgs",
 	MASTERDIR = "$HOME/src/xsps/chroot",
 	HOSTDIR = "$HOME/src/xsps/host",
 	CFLAGS = "-O2 -pipe -mtune=generic",
