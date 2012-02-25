@@ -5,7 +5,7 @@ return {
 	version = "0.0.1",
 	revision = 2,
 	homepage = "http://stellarbox.co.cc",
-	distfiles = { "$homepage/$name-$version.tar.xz" },
+	distfiles = { "${homepage}/${name}-${version}.tar.xz" },
 	patches = { "fix_stuff.patch" },
 	sums = { "d99089a63a6cfc1a6a4a026be9278028d47d224088d24b1853acb67e95683a15",
 		"89a63a6cfc1a6a4a026be9278028d47d2249278028d47d224088d24b1853acbe"
@@ -20,7 +20,11 @@ return {
 		build = { "sed", "coreutils", "libfoo-devel", "libbar-devel" },
 		run = { "libfoo.so.3", "libbar.so.1",
 			"ld-linux.so.2", "libc.so.6" },
-		full = { "hicolor-icon-theme", "desktop-file-utils" }
+		full = { "hicolor-icon-theme", "desktop-file-utils" },
+		run_subpkgs = {
+			["libstuff"] = { "some_program" },
+			["libstuff-devel"] = { "libfoo-devel", "libbar-devel" }
+		}
 	},
 	build_options = {
 		build_style = "gnu_configure",
