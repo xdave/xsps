@@ -2,9 +2,9 @@
 
 return {
 	SRCPKGS_URL = "git://github.com/davehome/xsps-packages.git",
-	SRCPKGS = "$HOME/src/xsps/srcpkgs",
-	MASTERDIR = "$HOME/src/xsps/chroot",
-	HOSTDIR = "$HOME/src/xsps/host",
+	SRCPKGS = "${HOME}/src/xsps/srcpkgs",
+	MASTERDIR = "${HOME}/src/xsps/chroot",
+	HOSTDIR = "${HOME}/src/xsps/host",
 	CFLAGS = "-O2 -pipe -mtune=generic",
 	CXXFLAGS = "$CFLAGS",
 	CCACHE = true,
