@@ -3,6 +3,6 @@
 
 namespace xsps {
 
-}; // namespace xsps
+} // namespace xsps
 
 #endif // COMMON_H

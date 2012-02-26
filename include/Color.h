@@ -18,7 +18,7 @@ namespace xsps {
 		WHITE = 37
 	};
 
-}; // namespace xsps
+} // namespace xsps
 
 
 #endif // XSPS_COLOR_H

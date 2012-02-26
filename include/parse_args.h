@@ -8,6 +8,6 @@ namespace xsps {
 	int print_usage(LogTypes, String);
 	int parse_args(LogTypes, int, char **);
 
-}; // namespace xsps
+} // namespace xsps
 
 #endif // XSPS_PARSE_ARGS_H

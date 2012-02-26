@@ -30,6 +30,6 @@ namespace xsps {
 		String context = "Default",
 		FILE *log_file = NULL);
 
-}; // namespace xsps
+} // namespace xsps
 
 #endif // XSPS_LOGGER_H
