@@ -2,11 +2,11 @@ TARGET := xsps
 SRC := $(shell find -type f -name '*.cxx')
 OBJ := $(patsubst %.cxx,%.o,$(SRC))
 
-OPTZ := -Os -pipe -mtune=generic
+OPTZ := -O2 -pipe -mtune=generic
 DEBUG := -DXSPS_DEBUG
 STATIC :=
 INCLUDE := -Isrc -Iinclude
-CFLAGS := -Wall $(STATIC) $(OPTZ) $(DEBUG) $(INCLUDE)
+CFLAGS := -Wall -Werror $(STATIC) $(OPTZ) $(DEBUG) $(INCLUDE)
 CXXFLAGS := -std=c++0x $(CFLAGS)
 LDFLAGS := $(STATIC) -Wl,--as-needed
 
