@@ -1,6 +1,6 @@
 TARGET := xsps
-SRC := $(shell find -type f -name '*.cxx')
-OBJ := $(patsubst %.cxx,%.o,$(SRC))
+SRC := $(shell find src -type f -name '*.cxx')
+OBJ := $(patsubst src/%.cxx,tmp/%.o,$(SRC))
 
 OPTZ := -O2 -pipe -mtune=generic
 DEBUG := -DXSPS_DEBUG
@@ -18,7 +18,8 @@ INSTALL_TARGET := $(INSTALL_DIR)/$(TARGET)
 all: $(TARGET)
 	@echo "[DONE]	Nothing more to be done for \`$^'."
 
-%.o: %.cxx
+tmp/%.o: src/%.cxx
+	@mkdir -p ${@D}
 	@echo "[CXX]	$@"
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -27,7 +28,7 @@ $(TARGET): $(OBJ)
 	@$(CXX) $(LDFLAGS) $^ -o $@
 
 clean:
-	@rm -rf $(OBJ) $(TARGET)
+	@rm -rf tmp $(TARGET)
 	@echo "[CLEAN]"
 
 install: $(INSTALL_TARGET)
