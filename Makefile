@@ -2,7 +2,7 @@ TARGET := xsps
 SRC := $(shell find -type f -name '*.cxx')
 OBJ := $(patsubst %.cxx,%.o,$(SRC))
 
-OPTZ := -Os -pipe -mtune=generic -march=i686
+OPTZ := -Os -pipe -mtune=generic
 DEBUG := -DXSPS_DEBUG
 STATIC :=
 INCLUDE := -Isrc -Iinclude
