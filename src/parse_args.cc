@@ -88,4 +88,4 @@ int parse_args(LogTypes LOG, int argc, char **argv) {
 
 } // parse_args()
 
-}; // namespace xsps
+} // namespace xsps
