@@ -6,7 +6,7 @@ OPTZ := -O2 -pipe -mtune=generic -march=i686
 STATIC :=
 INCLUDE := -Isrc/include
 CFLAGS := $(OPTZ) $(INCLUDE)
-CXXFLAGS := $(STATIC) -std=c++0x $(CFLAGS) 
+CXXFLAGS := $(STATIC) -std=c++0x $(CFLAGS)
 LDFLAGS := $(STATIC) -Wl,--as-needed
 
 PREFIX := /usr/local
@@ -14,7 +14,7 @@ DESTDIR :=
 INSTALL_DIR := $(DESTDIR)$(PREFIX)/bin
 INSTALL_TARGET := $(INSTALL_DIR)/$(TARGET)
 
-all: $(TARGET) 
+all: $(TARGET)
 	@echo "[DONE]	Nothing more to be done for \`$^'."
 
 %.o: %.cxx
@@ -36,7 +36,7 @@ $(INSTALL_TARGET): $(TARGET)
 	@mkdir -p $(INSTALL_DIR)
 	@install -m0755 $< $@
 
-uninstall: 
+uninstall:
 	@echo "[UNINSTALL]	$(INSTALL_TARGET)"
 	@rm -f $(INSTALL_TARGET)
 
