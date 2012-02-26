@@ -1,13 +1,22 @@
 TARGET := xsps
-SRC := $(shell find src -type f -name '*.cxx')
-OBJ := $(patsubst src/%.cxx,tmp/%.o,$(SRC))
+SRC := $(shell find src -type f -name '*.cc')
+OBJ := $(patsubst src/%.cc,tmp/%.o,$(SRC))
 
-OPTZ := -O2 -pipe -mtune=generic
+ifeq ("$(CXX)","clang++")
+	STD=c++11
+else
+	STD=c++0x
+endif
+
+WARN := -Wall -Werror -pedantic
+OPTZ := -O2 -pipe -mtune=generic\
+	-funroll-loops -fno-exceptions -fstack-protector-all\
+	-D_FORTIFY_SOURCE=2
 DEBUG := -DXSPS_DEBUG
 STATIC :=
 INCLUDE := -Isrc -Iinclude
-CFLAGS := -Wall -Werror $(STATIC) $(OPTZ) $(DEBUG) $(INCLUDE)
-CXXFLAGS := -std=c++0x $(CFLAGS)
+CFLAGS := $(WARN) $(STATIC) $(OPTZ) $(DEBUG)
+CXXFLAGS := -std=$(STD) $(CFLAGS) $(INCLUDE)
 LDFLAGS := $(STATIC) -Wl,--as-needed
 
 PREFIX := /usr/local
@@ -18,7 +27,7 @@ INSTALL_TARGET := $(INSTALL_DIR)/$(TARGET)
 all: $(TARGET)
 	@echo "[DONE]	Nothing more to be done for \`$^'."
 
-tmp/%.o: src/%.cxx
+tmp/%.o: src/%.cc
 	@mkdir -p ${@D}
 	@echo "[CXX]	$@"
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
