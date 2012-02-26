@@ -3,10 +3,11 @@ SRC := $(shell find -type f -name '*.cxx')
 OBJ := $(patsubst %.cxx,%.o,$(SRC))
 
 OPTZ := -O2 -pipe -mtune=generic -march=i686
+DEBUG := -DDEBUG
 STATIC :=
 INCLUDE := -Isrc/include
-CFLAGS := $(OPTZ) $(INCLUDE)
-CXXFLAGS := $(STATIC) -std=c++0x $(CFLAGS)
+CFLAGS := $(STATIC) $(OPTZ) $(DEBUG) $(INCLUDE)
+CXXFLAGS := -std=c++0x $(CFLAGS)
 LDFLAGS := $(STATIC) -Wl,--as-needed
 
 PREFIX := /usr/local

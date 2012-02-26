@@ -20,7 +20,7 @@ public:
 	Log();
 	~Log();
 
-	void print(LogType type, String msg, String context = "Main");
+	void print(LogType type, String msg, String context = "Default");
 
 }; // class Log
 
