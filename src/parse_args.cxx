@@ -7,23 +7,23 @@
 
 namespace xsps {
 
-int print_usage(LogTypes l, String progname) {
+int print_usage(LogTypes LOG, String progname) {
 	char buf[80];
 	sprintf(buf, "%s [OPTIONS...] [TEMPLATE]", progname);
-	Log(l.INFO, buf, "Usage");
-	Log(l.INFO, "Options:", "Usage");
-	Log(l.INFO, "  -c --config FILE\tUse config file FILE.", "Usage");
-	Log(l.INFO, "  -i --install\tPerform the install action.", "Usage");
-	Log(l.INFO, "  -h --help\t\tDisplay this help information.", "Usage");
-	Log(l.INFO, "Defaults:", "Usage");
-	Log(l.INFO, "  `-c' default: `./config/xsps.conf'.", "Usage");
-	Log(l.INFO, "  `-i' default: `bootstrap'.", "Usage");
+	Log(LOG.INFO, buf, "Usage");
+	Log(LOG.INFO, "Options:", "Usage");
+	Log(LOG.INFO, "  -c --config FILE\tUse config file FILE.", "Usage");
+	Log(LOG.INFO, "  -i --install\tPerform the install action.", "Usage");
+	Log(LOG.INFO, "  -h --help\t\tDisplay this help information.", "Usage");
+	Log(LOG.INFO, "Defaults:", "Usage");
+	Log(LOG.INFO, "  `-c' default: `./config/xsps.conf'.", "Usage");
+	Log(LOG.INFO, "  `-i' default: `bootstrap'.", "Usage");
 	return 1;
 }
 
-int parse_args(LogTypes l, int argc, char **argv) {
+int parse_args(LogTypes LOG, int argc, char **argv) {
 	if(argc < 2) {
-		return print_usage(l, argv[0]);
+		return print_usage(LOG, argv[0]);
 	}
 	int c = 0;
 
@@ -52,21 +52,21 @@ int parse_args(LogTypes l, int argc, char **argv) {
 			break;
 		case 'h':
 			sprintf(buf, "+option: -%c", c);
-			Log(l.DEBUG, buf, "parse_args");
-			return print_usage(l, argv[0]);
+			Log(LOG.DEBUG, buf, "parse_args");
+			return print_usage(LOG, argv[0]);
 			break;
 		case 'c':
 			sprintf(buf, "+option: -%c", c);
-			Log(l.DEBUG, buf, "parse_args");
+			Log(LOG.DEBUG, buf, "parse_args");
 			printf("TODO: Set config file\n");
 			break;
 		case 'i':
 			sprintf(buf, "+option: -%c", c);
-			Log(l.DEBUG, buf, "parse_args");
+			Log(LOG.DEBUG, buf, "parse_args");
 			printf("TODO: Perform install action.\n");
 			break;
 		case '?':
-			return print_usage(l, argv[0]);
+			return print_usage(LOG, argv[0]);
 			break;
 		default:
 			abort();
