@@ -1,5 +1,2 @@
-chroot
-host
-test_template
-*.o
 xsps
+tmp
