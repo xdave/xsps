@@ -3,21 +3,20 @@
 
 namespace xsps {
 
-	namespace Color {
-		static char ESC = 27;
-		static int OFF = 0;
-		static int BOLD = 1;
-		static int UNDERLINE = 4;
-		static int INVERSE = 7;
-		static int RED = 31;
-		static int GREEN = 32;
-		static int YELLOW = 33;
-		static int BLUE = 34;
-		static int MAGENTA = 35;
-		static int CYAN = 36;
-		static int WHITE = 37;
-
-	}; // namespace Color
+	enum Color {
+		OFF = 0,
+		BOLD = 1,
+		UNDERLINE = 4,
+		INVERSE = 7,
+		ESC = 27,
+		RED = 31,
+		GREEN = 32,
+		YELLOW = 33,
+		BLUE = 34,
+		MAGENTA = 35,
+		CYAN = 36,
+		WHITE = 37
+	};
 
 }; // namespace xsps
 
