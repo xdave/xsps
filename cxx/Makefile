@@ -6,7 +6,7 @@ OPTZ := -Os -pipe -mtune=generic -march=i686
 DEBUG := -DXSPS_DEBUG
 STATIC :=
 INCLUDE := -Isrc -Iinclude
-CFLAGS := -Werror $(STATIC) $(OPTZ) $(DEBUG) $(INCLUDE)
+CFLAGS := -Wall $(STATIC) $(OPTZ) $(DEBUG) $(INCLUDE)
 CXXFLAGS := -std=c++0x $(CFLAGS)
 LDFLAGS := $(STATIC) -Wl,--as-needed
 
