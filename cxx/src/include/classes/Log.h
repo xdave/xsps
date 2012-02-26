@@ -11,11 +11,12 @@ typedef struct LogType {
 	String name;
 	int color;
 	FILE *target;
+	FILE *logfile;
 } LogType;
 
 class Log {
 public:
-	static LogType Info, Warn, Debug, Err;
+	LogType Info, Warn, Debug, Err;
 
 	Log();
 	~Log();
