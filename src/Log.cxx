@@ -21,10 +21,10 @@ namespace xsps {
 		sprintf(result, "%s%s[%s] => [%s]: %s%s\n",
 			bold, color, type.name, context, msg, off);
 
-		fprintf(type.target, result);
+		fprintf(type.target, "%s", result);
 
 		if(log_file != NULL) {
-			fprintf(log_file, result);
+			fprintf(log_file, "%s", result);
 		}
 
 	}
