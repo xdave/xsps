@@ -1,24 +1,14 @@
-#include <String.h>
+#include <xsps_string.h>
 #include <Color.h>
-#include <classes/Log.h>
+#include <Log.h>
 #include <stdio.h>
 #include <string.h>
 
 namespace xsps {
 
-	Log::Log(){
-
-		Info  = { "INFO ", Color::WHITE,  stdout };
-		Warn  = { "WARN ", Color::YELLOW, stdout };
-		Debug = { "DEBUG", Color::CYAN,   stdout };
-		Err   = { "ERROR", Color::RED,    stderr };
-	}
-
-	Log::~Log(){}
-
-	void Log::print(LogType type, String msg, String context) {
+	void Log(LogType type, String msg, String context, FILE *log_file) {
 		if(strcmp(type.name, "DEBUG") == 0) {
-			#ifndef DEBUG
+			#ifndef XSPS_DEBUG
 			return;
 			#endif
 		}
@@ -33,8 +23,8 @@ namespace xsps {
 
 		fprintf(type.target, result);
 
-		if(type.logfile != NULL) {
-			fprintf(type.logfile, result);
+		if(log_file != NULL) {
+			fprintf(log_file, result);
 		}
 
 	}

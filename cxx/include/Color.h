@@ -1,5 +1,5 @@
 #ifndef XSPS_COLOR_H
-#define XSPS_COLOR_H
+#define XSPS_COLOR_H 1
 
 namespace xsps {
 

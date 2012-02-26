@@ -3,9 +3,9 @@ SRC := $(shell find -type f -name '*.cxx')
 OBJ := $(patsubst %.cxx,%.o,$(SRC))
 
 OPTZ := -Os -pipe -mtune=generic -march=i686
-DEBUG := -DDEBUG
+DEBUG := -DXSPS_DEBUG
 STATIC :=
-INCLUDE := -Isrc -Isrc/include
+INCLUDE := -Isrc -Iinclude
 CFLAGS := -Werror $(STATIC) $(OPTZ) $(DEBUG) $(INCLUDE)
 CXXFLAGS := -std=c++0x $(CFLAGS)
 LDFLAGS := $(STATIC) -Wl,--as-needed
