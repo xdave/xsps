@@ -9,7 +9,7 @@ namespace xsps {
 
 int print_usage(LogTypes LOG, String progname) {
 	char buf[80];
-	sprintf(buf, "%s [OPTIONS...] [TEMPLATE]", progname);
+	sprintf(buf, "%s [OPTIONS...] [[TEMPLATE] [TEMPLATE]...]", progname);
 	Log(LOG.INFO, buf, "Usage");
 	Log(LOG.INFO, "Options:", "Usage");
 	Log(LOG.INFO, "  -c --config FILE\tUse config file FILE.", "Usage");
@@ -18,6 +18,9 @@ int print_usage(LogTypes LOG, String progname) {
 	Log(LOG.INFO, "Defaults:", "Usage");
 	Log(LOG.INFO, "  `-c' default: `./config/xsps.conf'.", "Usage");
 	Log(LOG.INFO, "  `-i' default: `bootstrap'.", "Usage");
+	Log(LOG.INFO, "  TEMPLATE: the package(s) you would like to build.",
+		"Usage");
+	Log(LOG.INFO, "  They are built in the order given.", "Usage");
 	return 1;
 }
 
@@ -83,6 +86,6 @@ int parse_args(LogTypes LOG, int argc, char **argv) {
 	}
 	return 0;
 
-} // parse_args
+} // parse_args()
 
 }; // namespace xsps
