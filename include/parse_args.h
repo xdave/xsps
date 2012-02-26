@@ -1,11 +1,12 @@
 #include <xsps_string.h>
+#include <Log.h>
 #ifndef XSPS_PARSE_ARGS_H
 #define XSPS_PARSE_ARGS_H 1
 
 namespace xsps {
 
-	void print_usage(String progname);
-	void parse_args(int argc, char **argv);
+	int print_usage(LogTypes, String);
+	int parse_args(LogTypes, int, char **);
 
 }; // namespace xsps
 
