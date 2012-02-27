@@ -1,5 +1,6 @@
 #include <xsps_string.h>
-#include <vector>
+#include <Log.h>
+#include <map>
 #ifndef XSPS_ARGS_H
 #define XSPS_ARGS_H 1
 
@@ -7,10 +8,15 @@ namespace xsps {
 
 	class Args {
 	public:
-		std::vector<String> args;
+		static String HELP_TEXT;
+		String progname;
+		std::map<String, String> pairs;
 
-		Args(int&, char**&);
+		Args(int&, char**&, LogTypes&);
 		~Args();
+
+		void show_help();
+		void collect_pairs(LogTypes&, String, String, String);
 
 	}; // class Args
 
