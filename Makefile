@@ -1,5 +1,11 @@
 TARGET := xsps
+
+PREFIX := /usr/local
+DESTDIR :=
+INSTALL_DIR := $(DESTDIR)$(PREFIX)/bin
+INSTALL_TARGET := $(INSTALL_DIR)/$(TARGET)
 XSPS_CONFIG_DIR := ./config
+
 SRC := $(shell find src -type f -name '*.cc')
 OBJ := $(patsubst src/%.cc,tmp/%.o,$(SRC))
 
@@ -21,10 +27,6 @@ CFLAGS := $(WARN) $(STATIC) $(OPTZ) $(DEFINES) $(DEBUG)
 CXXFLAGS := -std=$(STD) $(CFLAGS) $(INCLUDE)
 LDFLAGS := $(STATIC) -Wl,--as-needed
 
-PREFIX := /usr/local
-DESTDIR :=
-INSTALL_DIR := $(DESTDIR)$(PREFIX)/bin
-INSTALL_TARGET := $(INSTALL_DIR)/$(TARGET)
 
 all: $(TARGET)
 	@echo "[DONE]	Nothing more to be done for \`$^'."
