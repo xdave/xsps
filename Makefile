@@ -1,4 +1,5 @@
 TARGET := xsps
+XSPS_CONFIG_DIR := ./config
 SRC := $(shell find src -type f -name '*.cc')
 OBJ := $(patsubst src/%.cc,tmp/%.o,$(SRC))
 
@@ -15,7 +16,8 @@ OPTZ := -O2 -pipe -mtune=generic\
 DEBUG := -DXSPS_DEBUG
 STATIC :=
 INCLUDE := -Isrc -Iinclude
-CFLAGS := $(WARN) $(STATIC) $(OPTZ) $(DEBUG)
+DEFINES := -DXSPS_CONFIG_DIR=\"$(XSPS_CONFIG_DIR)\"
+CFLAGS := $(WARN) $(STATIC) $(OPTZ) $(DEFINES) $(DEBUG)
 CXXFLAGS := -std=$(STD) $(CFLAGS) $(INCLUDE)
 LDFLAGS := $(STATIC) -Wl,--as-needed
 
