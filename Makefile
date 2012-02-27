@@ -12,15 +12,15 @@ OBJ := $(patsubst src/%.cc,tmp/%.o,$(SRC))
 STD := -std=c++0x
 
 ifeq ("$(CXX)","clang++")
-ifeq ("$(STD)", "-std=c++0x")
+ifneq ("$(STD)", "")
 	STD=-std=c++11
 endif
 endif
 
 WARN := -Wall -Werror -pedantic
 OPTZ := -ggdb -O2 -pipe -mtune=generic\
-	-funroll-loops -fno-exceptions -fstack-protector-all\
-	-D_FORTIFY_SOURCE=2
+	-funroll-loops -fno-exceptions\
+	-fstack-protector-all -D_FORTIFY_SOURCE=2
 DEBUG := -DXSPS_DEBUG
 STATIC :=
 INCLUDE := -Isrc -Iinclude
