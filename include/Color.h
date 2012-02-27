@@ -4,6 +4,7 @@
 namespace xsps {
 
 	namespace Color {
+		static const size_t SIZE = 8;
 
 		enum {
 			OFF = 0,

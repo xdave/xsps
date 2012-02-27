@@ -1,5 +1,5 @@
-#include <xsps_string.h>
-#include <Color.h>
+#include "xsps_string.h"
+#include "Color.h"
 #include <cstdio>
 
 #ifndef XSPS_LOGGER_H
@@ -8,6 +8,8 @@
 namespace xsps {
 
 	enum { LOG_INFO, LOG_WARN, LOG_DEBUG, LOG_ERROR };
+
+	static const size_t LOG_BUFFER_SIZE = 256;
 
 	typedef struct LogType {
 		String name;

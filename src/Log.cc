@@ -1,6 +1,7 @@
-#include <xsps_string.h>
-#include <Color.h>
-#include <Log.h>
+#include "common.h"
+#include "xsps_string.h"
+#include "Color.h"
+#include "Log.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -37,13 +38,15 @@ namespace xsps {
 	void Logger::print(int type, String msg, String context) {
 		LogType t = types[type];
 
-		if(strcmp(t.name, "DEBUG") == 0) {
+		if(type == LOG_DEBUG) {
 			#ifndef XSPS_DEBUG
 			return;
 			#endif
 		}
-		char bold[8], color[8], off[8];
-		char result[256];
+		char bold[Color::SIZE],
+		     color[Color::SIZE],
+		     off[Color::SIZE];
+		char result[LOG_BUFFER_SIZE];
 		sprintf(bold, "%c[%dm", Color::ESC, Color::BOLD);
 		sprintf(color, "%c[%dm", Color::ESC, t.color);
 		sprintf(off, "%c[%dm", Color::ESC, Color::OFF);

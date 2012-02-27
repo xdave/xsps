@@ -1,7 +1,7 @@
-#include <common.h>
-#include <xsps_string.h>
-#include <classes/Args.h>
-#include <Log.h>
+#include "common.h"
+#include "xsps_string.h"
+#include "classes/Args.h"
+#include "Log.h"
 #include <cstdlib>
 #include <cstring>
 
@@ -35,13 +35,13 @@ namespace xsps {
 					"Config FILE not specified!");
 				i++;
 			}
-			else if(streq(arg, "install")) {
+			else if(streq(arg, "-i") || streq(arg, "--install")) {
 				if(streq(next, "NONE")) next = "bootstrap";
 				collect_pairs(arg, next,
 					"No TEMPLATE specified!");
 				i++;
 			} else {
-				char buf[80];
+				char buf[LOG_BUFFER_SIZE];
 				sprintf(buf, "Unrecognized option: %s", arg);
 				Log->print(LOG_ERROR, buf, "Args");
 				return show_help();
@@ -73,10 +73,10 @@ Usage: %s [OPTIONS...] ACTION [TEMPLATE] [ACTION TEMPLATE...]\n\n\
   -c --config	FILE	 (optional) Select alternative configuration file.\n\
 				    [default: %s/xsps.conf]\n\
  Actions:\n\
-  install	TEMPLATE (optional) Install package from a TEMPLATE file from\n\
+  -i --install	TEMPLATE (optional) Install package from a TEMPLATE file from\n\
 				    the available package templates stored in\n\
 				    the `SRCPKGS' directory (see config).\n\
-				    [default: bootstrap]\n\
-  ... etc, etc..\n";
+				    [default: bootstrap]\n\n\
+ The default action is --install\n";
 
 } // namespace xsps
