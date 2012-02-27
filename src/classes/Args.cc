@@ -5,7 +5,6 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <cstdlib>
 #include <cerrno>
 
 namespace xsps {
