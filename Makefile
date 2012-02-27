@@ -9,14 +9,16 @@ XSPS_CONFIG_DIR := ./config
 SRC := $(shell find src -type f -name '*.cc')
 OBJ := $(patsubst src/%.cc,tmp/%.o,$(SRC))
 
+STD := -std=c++0x
+
 ifeq ("$(CXX)","clang++")
-	STD=c++11
-else
-	STD=c++0x
+ifeq ("$(STD)", "-std=c++0x")
+	STD=-std=c++11
+endif
 endif
 
 WARN := -Wall -Werror -pedantic
-OPTZ := -O2 -pipe -mtune=generic\
+OPTZ := -ggdb -O2 -pipe -mtune=generic\
 	-funroll-loops -fno-exceptions -fstack-protector-all\
 	-D_FORTIFY_SOURCE=2
 DEBUG := -DXSPS_DEBUG
@@ -24,8 +26,8 @@ STATIC :=
 INCLUDE := -Isrc -Iinclude
 DEFINES := -DXSPS_CONFIG_DIR=\"$(XSPS_CONFIG_DIR)\"
 CFLAGS := $(WARN) $(STATIC) $(OPTZ) $(DEFINES) $(DEBUG)
-CXXFLAGS := -std=$(STD) $(CFLAGS) $(INCLUDE)
-LDFLAGS := $(STATIC) -Wl,--as-needed
+CXXFLAGS := $(STD) $(CFLAGS) $(INCLUDE)
+LDFLAGS := $(STD) $(STATIC) -Wl,--as-needed
 
 
 all: $(TARGET)
