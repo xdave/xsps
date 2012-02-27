@@ -24,7 +24,7 @@ int print_usage(LogTypes LOG, String progname) {
 	return 1;
 }
 
-int parse_args(LogTypes LOG, int argc, char **argv) {
+int parse_args(LogTypes LOG, int argc, char** argv) {
 	if(argc < 2) {
 		return print_usage(LOG, argv[0]);
 	}
