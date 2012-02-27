@@ -1,3 +1,7 @@
+/* Copyright (c) 2012 davehome <davehome@redthumb.info.tm>.
+ * Distributed under a modified BSD-style license.
+ * See the COPYING file in the toplevel directory for license details. */
+
 #include "xsps_string.h"
 #include <map>
 #ifndef XSPS_ARGS_H

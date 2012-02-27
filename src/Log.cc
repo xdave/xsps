@@ -1,3 +1,7 @@
+/* Copyright (c) 2012 davehome <davehome@redthumb.info.tm>.
+ * Distributed under a modified BSD-style license.
+ * See the COPYING file in the toplevel directory for license details. */
+
 #include "common.h"
 #include "xsps_string.h"
 #include "Color.h"
