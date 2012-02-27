@@ -1,0 +1,45 @@
+BASIC:
+
+	To build and install/uninstall xsps, follow these steps:
+
+	$ make
+	$ sudo make install
+
+	To uninstall:
+
+	$ sudo make uninstall
+
+	(By default, everything is installed in /usr/local)
+
+	Done!
+
+ADVANCED:
+
+	You may change some options about the build and install.  Please see
+	the Makefile for available options; once you know what you want, use
+	them like so:
+
+	For example:
+
+	$ make CXX=clang++ STATIC=-static STD=-std=c++11
+	$ make DESTDIR=~/somewhere PREFIX=/usr install
+
+	The xsps executable is copied to the bin/ directory of the PREFIX under
+	the chosen DESTDIR.  The default DESTDIR is blank (defaults to /).
+
+	NOTE: The same command used to install xsps must be used to uninstall
+	it (while using the included Makefile); for example:
+
+	If you installed xsps with:
+
+	$ make DESTDIR=~/somewhere PREFIX=/usr install
+
+	You must uninstall it with:
+
+	$ make DESTDIR=~/somewhere PREFIX=/usr uninstall
+
+	Just change the word 'install' to 'uninstall'.
+
+
+Any questions?  Come to #xsps on irc.freenode.net and ask!
+
