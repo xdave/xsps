@@ -59,12 +59,12 @@ namespace xsps {
 	}
 
 	String Args::HELP_TEXT = "\
-Usage: %s [OPTIONS...] ACTION [TEMPLATE] [ACTION TEMPLATE...]\n\
-Options:\n\
-  -h --help		 (optional) Display this usage help message.\n\
+Usage: %s [OPTIONS...] ACTION [TEMPLATE] [ACTION TEMPLATE...]\n\n\
+ Options:\n\
+  -h --help			    Display this usage help message.\n\
   -c --config	FILE	 (optional) Select alternative configuration file.\n\
 				    [default: %s/xsps.conf]\n\
-Actions:\n\
+ Actions:\n\
   install	TEMPLATE (optional) Install package from a TEMPLATE file from\n\
 				    the available package templates stored in\n\
 				    the `SRCPKGS' directory (see config).\n\
