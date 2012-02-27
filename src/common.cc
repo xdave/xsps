@@ -1,3 +1,4 @@
+#include <cstring>
 #include "common.h"
 
 namespace xsps {

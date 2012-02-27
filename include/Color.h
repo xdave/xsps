@@ -1,9 +1,12 @@
+#include <cstddef>
+
 #ifndef XSPS_COLOR_H
 #define XSPS_COLOR_H 1
 
 namespace xsps {
 
 	namespace Color {
+
 		static const size_t SIZE = 8;
 
 		enum {
@@ -19,7 +22,7 @@ namespace xsps {
 			MAGENTA = 35,
 			CYAN = 36,
 			WHITE = 37
-		}; // enum Color
+		};
 
 	} // namespace Color
 

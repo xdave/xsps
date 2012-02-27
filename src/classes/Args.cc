@@ -2,8 +2,11 @@
 #include "xsps_string.h"
 #include "classes/Args.h"
 #include "Log.h"
+
 #include <cstdlib>
 #include <cstring>
+#include <cstdlib>
+#include <cerrno>
 
 namespace xsps {
 
@@ -47,12 +50,12 @@ namespace xsps {
 				return show_help();
 			}
 		}
-		return 0;
+		return EXIT_SUCCESS;
 	}
 
 	int Args::show_help() {
 		printf(HELP_TEXT, progname, XSPS_CONFIG_DIR);
-		return 1;
+		return EINVAL;
 	}
 
 	void Args::collect_pairs(String key, String value, String err_msg) {

@@ -1,5 +1,3 @@
-#include "common.h"
-#include "Log.h"
 #include "classes/Args.h"
 
 int main(int argc, char **argv) {

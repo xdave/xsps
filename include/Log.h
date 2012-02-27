@@ -1,5 +1,4 @@
 #include "xsps_string.h"
-#include "Color.h"
 #include <cstdio>
 
 #ifndef XSPS_LOGGER_H
