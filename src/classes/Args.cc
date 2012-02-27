@@ -52,6 +52,13 @@ namespace xsps {
 		return EXIT_SUCCESS;
 	}
 
+	int Args::validate() {
+		// STUB
+		Logger *Log = Logger::get_instance();
+		Log->print(LOG_DEBUG, "Not implemented!", "Args::validate()");
+		return EOPNOTSUPP;
+	}
+
 	int Args::show_help() {
 		fprintf(stderr, HELP_TEXT, progname, XSPS_CONFIG_DIR);
 		return EINVAL;
@@ -71,14 +78,14 @@ namespace xsps {
 	String Args::HELP_TEXT = "\
 Usage: %s [OPTIONS...] ACTION [TEMPLATE] [ACTION TEMPLATE...]\n\n\
  Options:\n\
-  -h --help			    Display this usage help message.\n\
-  -c --config	FILE	 (optional) Select alternative configuration file.\n\
-				    [default: %s/xsps.conf]\n\
+  -h --help			Display this usage help message.\n\
+  -c --config	FILE		Select alternative configuration file.\n\
+				[default: %s/xsps.conf]\n\
  Actions:\n\
-  -i --install	TEMPLATE (optional) Install package from a TEMPLATE file from\n\
-				    the available package templates stored in\n\
-				    the `SRCPKGS' directory (see config).\n\
-				    [default: bootstrap]\n\n\
- The default action is --install\n";
+  -i --install	TEMPLATE	Install package from a TEMPLATE file from the\n\
+				available package templates stored in the\n\
+				`SRCPKGS' directory (see config).\n\
+				[default: bootstrap]\n\n\
+ The default action is --install (err, not yet)\n";
 
 } // namespace xsps

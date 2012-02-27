@@ -17,6 +17,7 @@ namespace xsps {
 		~Args();
 
 		int parse();
+		int validate();
 		int show_help();
 		void collect_pairs(String, String, String);
 
