@@ -9,7 +9,7 @@ namespace xsps {
 
 	Args::Args(int& argc, char**& argv, LogTypes& LOG) {
 		progname = argv[0];
-		if(argc < 2) {
+		if(argc == 1) {
 			Log(LOG.ERROR, "No arguments given!", "Args");
 			show_help();
 		}
