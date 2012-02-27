@@ -53,7 +53,7 @@ namespace xsps {
 	}
 
 	int Args::show_help() {
-		printf(HELP_TEXT, progname, XSPS_CONFIG_DIR);
+		fprintf(stderr, HELP_TEXT, progname, XSPS_CONFIG_DIR);
 		return EINVAL;
 	}
 
