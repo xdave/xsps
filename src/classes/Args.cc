@@ -2,8 +2,8 @@
 #include <xsps_string.h>
 #include <classes/Args.h>
 #include <Log.h>
-#include <unistd.h>
 #include <cstdlib>
+#include <cstring>
 
 namespace xsps {
 
@@ -17,6 +17,7 @@ namespace xsps {
 		for (int i = 1; i < argc; i++) {
 			String arg = argv[i];
 			String next = argv[i+1];
+			if(next == NULL) next = "NONE";
 			if(streq(arg, "-h") || streq(arg, "--help")) {
 				Log(LOG.DEBUG, arg, "+OPTION");
 				show_help();
@@ -27,6 +28,7 @@ namespace xsps {
 				i++;
 			}
 			else if(streq(arg, "install")) {
+				if(streq(next, "NONE")) next = "bootstrap";
 				collect_pairs(LOG, arg, next,
 					"No TEMPLATE specified!");
 				i++;
@@ -47,7 +49,7 @@ namespace xsps {
 
 	void Args::collect_pairs(LogTypes& LOG, String key, String value,
 				String err_msg) {
-		if(value == NULL) {
+		if(streq(value, "NONE")) {
 			Log(LOG.ERROR, err_msg, "Args");
 			show_help();
 		}
@@ -57,13 +59,16 @@ namespace xsps {
 	}
 
 	String Args::HELP_TEXT = "\
-Usage: %s [OPTIONS...] ACTION TEMPLATE [ACTION TEMPLATE...]\n\
+Usage: %s [OPTIONS...] ACTION [TEMPLATE] [ACTION TEMPLATE...]\n\
 Options:\n\
-  -h --help		 (optional) Display this usage help message\n\
-  -c --config	FILE	 (optional) Select an alternative configuration file\n\
-				[default: %s/xsps.conf]\n\
+  -h --help		 (optional) Display this usage help message.\n\
+  -c --config	FILE	 (optional) Select alternative configuration file.\n\
+				    [default: %s/xsps.conf]\n\
 Actions:\n\
-  install	TEMPLATE (required) Install something...\n\
+  install	TEMPLATE (optional) Install package from a TEMPLATE file from\n\
+				    the available package templates stored in\n\
+				    the `SRCPKGS' directory (see config).\n\
+				    [default: bootstrap]\n\
   ... etc, etc..\n";
 
 	Args::~Args() {}
