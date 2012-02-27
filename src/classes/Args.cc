@@ -7,11 +7,19 @@
 
 namespace xsps {
 
-	Args::Args(int& argc, char**& argv, LogTypes& LOG) {
+	Args::Args(int& count, char**& vector) {
+		argc = count;
+		argv = vector;
 		progname = argv[0];
+	}
+
+	Args::~Args() {}
+
+	int Args::parse() {
+		Logger* Log = Logger::get_instance();
 		if(argc == 1) {
-			Log(LOG.ERROR, "No arguments given!", "Args");
-			show_help();
+			Log->print(LOG_ERROR, "No arguments given!", "Args");
+			return show_help();
 		}
 
 		for (int i = 1; i < argc; i++) {
@@ -19,43 +27,43 @@ namespace xsps {
 			String next = argv[i+1];
 			if(next == NULL) next = "NONE";
 			if(streq(arg, "-h") || streq(arg, "--help")) {
-				Log(LOG.DEBUG, arg, "+OPTION");
-				show_help();
+				Log->print(LOG_DEBUG, arg, "+OPTION");
+				return show_help();
 			}
 			else if(streq(arg, "-c") || streq(arg, "--config")) {
-				collect_pairs(LOG, arg, next,
+				collect_pairs(arg, next,
 					"Config FILE not specified!");
 				i++;
 			}
 			else if(streq(arg, "install")) {
 				if(streq(next, "NONE")) next = "bootstrap";
-				collect_pairs(LOG, arg, next,
+				collect_pairs(arg, next,
 					"No TEMPLATE specified!");
 				i++;
 			} else {
 				char buf[80];
 				sprintf(buf, "Unrecognized option: %s", arg);
-				Log(LOG.ERROR, buf, "Args");
-				show_help();
+				Log->print(LOG_ERROR, buf, "Args");
+				return show_help();
 			}
 		}
-
+		return 0;
 	}
 
-	void Args::show_help() {
+	int Args::show_help() {
 		printf(HELP_TEXT, progname, XSPS_CONFIG_DIR);
-		exit(1);
+		return 1;
 	}
 
-	void Args::collect_pairs(LogTypes& LOG, String key, String value,
-				String err_msg) {
+	void Args::collect_pairs(String key, String value, String err_msg) {
+		Logger* Log = Logger::get_instance();
 		if(streq(value, "NONE")) {
-			Log(LOG.ERROR, err_msg, "Args");
+			Log->print(LOG_ERROR, err_msg, "Args");
 			show_help();
 		}
 		pairs.insert(std::pair<String,String>(key, value));
-		Log(LOG.DEBUG, key, "+OPTION");
-		Log(LOG.DEBUG, value, "+VALUE");
+		Log->print(LOG_DEBUG, key, "+OPTION");
+		Log->print(LOG_DEBUG, value, "+VALUE");
 	}
 
 	String Args::HELP_TEXT = "\
@@ -70,8 +78,5 @@ Usage: %s [OPTIONS...] ACTION [TEMPLATE] [ACTION TEMPLATE...]\n\n\
 				    the `SRCPKGS' directory (see config).\n\
 				    [default: bootstrap]\n\
   ... etc, etc..\n";
-
-	Args::~Args() {}
-
 
 } // namespace xsps

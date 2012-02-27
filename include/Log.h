@@ -7,28 +7,26 @@
 
 namespace xsps {
 
+	enum { LOG_INFO, LOG_WARN, LOG_DEBUG, LOG_ERROR };
+
 	typedef struct LogType {
 		String name;
 		int color;
 		FILE *target;
 	} LogType;
 
-	typedef struct LogTypes {
-		LogTypes() :
-			INFO ({ "INFO ", Color::WHITE,  stdout }),
-			WARN ({ "WARN ", Color::YELLOW, stdout }),
-			DEBUG({ "DEBUG", Color::CYAN,   stderr }),
-			ERROR({ "ERROR", Color::RED,    stderr }) {}
-		LogType INFO;
-		LogType WARN;
-		LogType DEBUG;
-		LogType ERROR;
-	} LogTypes;
-
-	void Log(LogType type,
-		String msg,
-		String context = "Default",
-		FILE *log_file = NULL);
+	class Logger {
+	public:
+		static Logger* get_instance();
+		void print(int, String, String context = "Default");
+		~Logger();
+	protected:
+		Logger();
+	private:
+		static Logger* instance;
+		LogType types[4];
+		FILE* log_file;
+	};
 
 } // namespace xsps
 

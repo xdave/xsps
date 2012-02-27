@@ -4,10 +4,40 @@
 #include <stdio.h>
 #include <string.h>
 
-namespace xsps {
 
-	void Log(LogType type, String msg, String context, FILE *log_file) {
-		if(strcmp(type.name, "DEBUG") == 0) {
+namespace xsps {
+	Logger* Logger::instance = NULL;
+
+	Logger::Logger() {
+		types[LOG_INFO].name    = "INFO ";
+		types[LOG_INFO].color   = Color::WHITE;
+		types[LOG_INFO].target  = stdout;
+		types[LOG_WARN].name    = "WARN ";
+		types[LOG_WARN].color   = Color::YELLOW;
+		types[LOG_WARN].target  = stdout;
+		types[LOG_DEBUG].name   = "DEBUG";
+		types[LOG_DEBUG].color   = Color::CYAN;
+		types[LOG_DEBUG].target  = stderr;
+		types[LOG_ERROR].name    = "ERROR";
+		types[LOG_ERROR].color   = Color::RED;
+		types[LOG_ERROR].target  = stderr;
+	}
+
+	Logger* Logger::get_instance() {
+		if(instance == NULL) {
+			instance = new Logger();
+		}
+		return instance;
+	}
+
+	Logger::~Logger() {
+		delete instance;
+	}
+
+	void Logger::print(int type, String msg, String context) {
+		LogType t = types[type];
+
+		if(strcmp(t.name, "DEBUG") == 0) {
 			#ifndef XSPS_DEBUG
 			return;
 			#endif
@@ -15,13 +45,13 @@ namespace xsps {
 		char bold[8], color[8], off[8];
 		char result[256];
 		sprintf(bold, "%c[%dm", Color::ESC, Color::BOLD);
-		sprintf(color, "%c[%dm", Color::ESC, type.color);
+		sprintf(color, "%c[%dm", Color::ESC, t.color);
 		sprintf(off, "%c[%dm", Color::ESC, Color::OFF);
 
 		sprintf(result, "%s%s[%s] => [%s]: %s%s\n",
-			bold, color, type.name, context, msg, off);
+			bold, color, t.name, context, msg, off);
 
-		fprintf(type.target, "%s", result);
+		fprintf(t.target, "%s", result);
 
 		if(log_file != NULL) {
 			fprintf(log_file, "%s", result);
