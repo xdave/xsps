@@ -5,7 +5,7 @@
 #include "common.h"
 #include "xsps_string.h"
 #include "classes/Args.h"
-#include "Log.h"
+#include "classes/Logger.h"
 
 #include <cstdlib>
 #include <cstring>
