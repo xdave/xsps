@@ -5,7 +5,7 @@
 #include "common.h"
 #include "xsps_string.h"
 #include "Color.h"
-#include "Log.h"
+#include "classes/Logger.h"
 
 #include <cstdio>
 
