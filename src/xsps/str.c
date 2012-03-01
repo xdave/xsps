@@ -2,13 +2,10 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
-#ifndef COMMON_H
-#define COMMON_H 1
+#include "str.h"
 
-namespace xsps {
+#include <string.h>
 
-	bool streq(const char*, const char*);
-
-} // namespace xsps
-
-#endif // COMMON_H
+bool streq(const char* s1, const char* s2) {
+	return ((strcmp(s1, s2)) == 0);
+}

@@ -2,14 +2,10 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
-#include <cstring>
-#include "common.h"
+#ifndef XSPS_ARGS_H
+#define XSPS_ARGS_H 1
 
-namespace xsps {
+int xsps_args_print_usage(const char*);
+int xsps_args_parse(int, char**, int*, char**, char**);
 
-	bool streq(const char* s1, const char* s2) {
-		if(strcmp(s1, s2) == 0) return true;
-		else return false;
-	}
-
-}
+#endif /* XSPS_ARGS_H */

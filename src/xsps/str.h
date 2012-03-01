@@ -2,9 +2,11 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
-#ifndef XSPS_STRING_H
-#define XSPS_STRING_H 1
+#include <stdbool.h>
 
-typedef const char* String;
+#ifndef XSPS_STR_H
+#define XSPS_STR_H 1
 
-#endif // XSPS_STRING_H
+bool streq(const char*, const char*);
+
+#endif /* XSPS_STR_H */

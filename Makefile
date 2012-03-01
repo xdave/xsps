@@ -6,41 +6,33 @@ INSTALL_DIR := $(DESTDIR)$(PREFIX)/bin
 INSTALL_TARGET := $(INSTALL_DIR)/$(TARGET)
 XSPS_CONFIG_DIR := ./config
 
-SRC := $(shell find src -type f -name '*.cc')
-OBJ := $(patsubst src/%.cc,tmp/%.o,$(SRC))
+SRC := $(shell find src -type f -name '*.c')
+OBJ := $(patsubst src/%.c,tmp/%.o,$(SRC))
 
-STD := -std=c++0x
-
-ifeq ("$(CXX)","clang++")
-ifneq ("$(STD)", "")
-	STD=-std=c++11
-endif
-endif
-
+STD := -std=c99
 WARN := -Wall -Werror -pedantic
-OPTZ := -ggdb -O2 -pipe -mtune=generic\
+OPTZ := -O2 -pipe -mtune=generic\
 	-funroll-loops -fno-exceptions\
 	-fstack-protector-all -D_FORTIFY_SOURCE=2
-DEBUG := -DXSPS_DEBUG
+DEBUG := -ggdb -DXSPS_DEBUG
 STATIC :=
-INCLUDE := -Isrc -Iinclude
-DEFINES := -DXSPS_CONFIG_DIR=\"$(XSPS_CONFIG_DIR)\"
-CFLAGS := $(WARN) $(STATIC) $(OPTZ) $(DEFINES) $(DEBUG)
-CXXFLAGS := $(STD) $(CFLAGS) $(INCLUDE)
+INCLUDE := -Isrc/xsps
+DEFINES := -DXSPS_CONFIG_DIR=\"$(XSPS_CONFIG_DIR)\" -D_REENTRANT\
+	   -D_POSIX_C_SOURCE=200112L
+CFLAGS := $(STD) $(WARN) $(STATIC) $(OPTZ) $(DEFINES) $(DEBUG) $(INCLUDE)
 LDFLAGS := $(STD) $(STATIC) -Wl,--as-needed
-
 
 all: $(TARGET)
 	@echo "[DONE]	Nothing more to be done for \`$^'."
 
-tmp/%.o: src/%.cc
+tmp/%.o: src/%.c
 	@mkdir -p ${@D}
-	@echo "[CXX]	$@"
-	@$(CXX) $(CXXFLAGS) -c $< -o $@
+	@echo "[CC]	$@"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(TARGET): $(OBJ)
 	@echo "[LD]	$@"
-	@$(CXX) $(LDFLAGS) $^ -o $@
+	@$(CC) $(LDFLAGS) $^ -o $@
 
 clean:
 	@rm -rf tmp $(TARGET)
