@@ -21,7 +21,7 @@ ADVANCED:
 
 	For example:
 
-	$ make CXX=clang++ STATIC=-static STD=-std=c++11
+	$ make CXX=clang STATIC=-static STD=-std=c89
 	$ make DESTDIR=~/somewhere PREFIX=/usr install
 
 	The xsps executable is copied to the bin/ directory of the PREFIX under
