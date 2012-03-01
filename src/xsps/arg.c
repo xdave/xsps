@@ -5,18 +5,18 @@
 #include "log.h"
 #include "arg.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 int xsps_args_print_usage(const char* progname) {
 	char buffer[XSPS_LOG_SIZE];
-	sprintf( buffer, "Usage: %s [-h] [-d] [-c FILE]\n"
+	sprintf( buffer, "Usage: %s [-h] [-d] [-c FILE] -b PACKAGE\n"
 		"Options:\n"
 		" -h .......... display this message\n"
 		" -d .......... display extra debugging messages\n"
 		" -c FILE ..... specifiy alternate config FILE\n"
+		"Actions:\n"
 		" -b PACKAGE .. build a PACKAGE",
 	progname);
 	xsps_log.info(buffer);

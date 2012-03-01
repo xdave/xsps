@@ -2,6 +2,7 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
+#include "color.h"
 #include "log.h"
 
 #include <stdio.h>
@@ -25,7 +26,7 @@ void xsps_log_error(const char *msg) {
 	xsps_log_all(COLOR_RED, stderr, "ERROR", msg);
 }
 
-void xsps_log_all(xsps_color c, FILE* target,
+void xsps_log_all(int c, FILE* target,
 		  const char *name, const char *msg) {
 	int	error;
 	char	color[COLOR_SIZE],

@@ -2,8 +2,6 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
-#include "color.h"
-
 #include <stdio.h>
 
 #ifndef XSPS_LOG_H
@@ -29,6 +27,6 @@ void xsps_log_debug(const char*);
 void xsps_log_error(const char*);
 
 void xsps_log_init();
-void xsps_log_all(xsps_color, FILE*, const char*, const char*);
+void xsps_log_all(int, FILE*, const char*, const char*);
 
 #endif /* XSPS_LOG_H */
