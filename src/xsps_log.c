@@ -2,12 +2,12 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
-#include "color.h"
-#include "log.h"
-
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+
+#include "type/xsps_color.h"
+#include "xsps_log.h"
 
 void xsps_log_info(const char *msg) {
 	xsps_log_all(COLOR_WHITE, stdout, "INFO ", msg);

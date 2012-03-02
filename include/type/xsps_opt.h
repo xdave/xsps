@@ -2,11 +2,12 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
-#include <stdbool.h>
+#ifndef XSPS_OPT_H
+#define XSPS_OPT_H 1
 
-#ifndef XSPS_STR_H
-#define XSPS_STR_H 1
+typedef struct xsps_opt {
+	char config[80];
+	char build[80];
+} xsps_opt;
 
-bool streq(const char*, const char*);
-
-#endif /* XSPS_STR_H */
+#endif /* XSPS_OPT_H */

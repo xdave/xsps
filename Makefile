@@ -1,29 +1,29 @@
 TARGET := xsps
+XSPS_CONFIG_DIR := config
 
 PREFIX := /usr/local
 DESTDIR :=
 INSTALL_DIR := $(DESTDIR)$(PREFIX)/bin
 INSTALL_TARGET := $(INSTALL_DIR)/$(TARGET)
-XSPS_CONFIG_DIR := ./config
 
 SRC := $(shell find src -type f -name '*.c')
 OBJ := $(patsubst src/%.c,tmp/%.o,$(SRC))
 
-STD := -std=c99
+LIBS := -lconfuse
+
 WARN := -Wall -Werror -pedantic
 OPTZ := -O2 -pipe -mtune=generic\
-	-funroll-loops -fno-exceptions\
+	-fPIC -funroll-loops -fno-exceptions\
 	-fstack-protector-all -D_FORTIFY_SOURCE=2
 DEBUG := -ggdb -DXSPS_DEBUG
 STATIC :=
-INCLUDE := -Isrc/xsps
+INCLUDE := -Iinclude
 DEFINES := -DXSPS_CONFIG_DIR=\"$(XSPS_CONFIG_DIR)\" -D_REENTRANT\
 	   -D_POSIX_C_SOURCE=200112L
-CFLAGS := $(STD) $(WARN) $(STATIC) $(OPTZ) $(DEFINES) $(DEBUG) $(INCLUDE)
-LDFLAGS := $(STD) $(STATIC) -Wl,--as-needed
+CFLAGS := $(WARN) $(STATIC) $(OPTZ) $(DEFINES) $(DEBUG) $(INCLUDE) $(LIBS)
+LDFLAGS := $(STATIC) -Wl,--as-needed $(LIBS)
 
 all: $(TARGET)
-	@echo "[DONE]	Nothing more to be done for \`$^'."
 
 tmp/%.o: src/%.c
 	@mkdir -p ${@D}

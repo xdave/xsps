@@ -2,10 +2,10 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
-#include "str.h"
-
 #include <string.h>
 
-bool streq(const char* s1, const char* s2) {
+#include "xsps_streq.h"
+
+bool xsps_streq(const char* s1, const char* s2) {
 	return ((strcmp(s1, s2)) == 0);
 }

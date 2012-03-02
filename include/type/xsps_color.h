@@ -2,8 +2,8 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
-#ifndef COLOR_H
-#define COLOR_H 1
+#ifndef XSPS_COLOR_H
+#define XSPS_COLOR_H 1
 
 typedef enum {
 	COLOR_SIZE = 8,
@@ -21,4 +21,4 @@ typedef enum {
 	COLOR_WHITE = 37
 } xsps_color;
 
-#endif /* COLOR_H */
+#endif /* XSPS_COLOR_H */

@@ -2,10 +2,13 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
-#ifndef XSPS_ARGS_H
-#define XSPS_ARGS_H 1
+#include "xsps_arg.h"
+#include "xsps_init.h"
 
-int xsps_args_print_usage(const char*);
-int xsps_args_parse(int, char**, int*, char**, char**);
+#include <string.h>
+#include <stdio.h>
 
-#endif /* XSPS_ARGS_H */
+int main(int argc, char** argv) {
+	xsps_init();
+	return xsps_arg_parse(argc, argv);
+}
