@@ -7,7 +7,7 @@
 #include <confuse.h>
 
 #ifndef XSPS_H
-#define XSPS_H
+#define XSPS_H 1
 
 #define XSPS_LOG_SIZE 2048
 #define XSPS_CONFIG XSPS_CONFIG_DIR "/xsps.conf"
