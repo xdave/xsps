@@ -2,12 +2,11 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
-#ifndef XSPS_OPT_H
-#define XSPS_OPT_H 1
+#include "type/xsps_handle_t.h"
 
-typedef struct xsps_opt {
-	char config[80];
-	char build[80];
-} xsps_opt;
+#ifndef XSPS_CONFIG_H
+#define XSPS_CONFIG_H 1
 
-#endif /* XSPS_OPT_H */
+void xsps_config_init(xsps_handle_t*);
+
+#endif /* XSPS_CONFIG_H */

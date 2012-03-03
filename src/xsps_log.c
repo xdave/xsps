@@ -3,30 +3,32 @@
  * See the COPYING file in the toplevel directory for license details. */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 
-#include "type/xsps_color.h"
+#include "type/xsps_color_t.h"
 #include "xsps_log.h"
 
-void xsps_log_info(const char *msg) {
-	xsps_log_all(COLOR_WHITE, stdout, "INFO ", msg);
+void xsps_log_info(void* xhp, const char *msg) {
+	xsps_log_all((xsps_handle_t*)xhp, COLOR_WHITE, stdout, "INFO ", msg);
 }
 
-void xsps_log_warn(const char *msg) {
-	xsps_log_all(COLOR_YELLOW, stdout, "WARN ", msg);
+void xsps_log_warn(void* xhp, const char *msg) {
+	xsps_log_all((xsps_handle_t*)xhp, COLOR_YELLOW, stdout, "WARN ", msg);
 }
 
-void xsps_log_debug(const char *msg) {
-	if(xsps_enable_debug_log == 1)
-		xsps_log_all(COLOR_CYAN, stderr, "DEBUG", msg);
+void xsps_log_debug(void* x, const char *msg) {
+	xsps_handle_t* xhp = (xsps_handle_t*)x;
+	if(xhp->log->enable_debug == 1)
+		xsps_log_all(xhp, COLOR_CYAN, stderr, "DEBUG", msg);
 }
 
-void xsps_log_error(const char *msg) {
-	xsps_log_all(COLOR_RED, stderr, "ERROR", msg);
+void xsps_log_error(void* xhp, const char *msg) {
+	xsps_log_all((xsps_handle_t*)xhp, COLOR_RED, stderr, "ERROR", msg);
 }
 
-void xsps_log_all(int c, FILE* target,
+void xsps_log_all(xsps_handle_t* xhp, int c, FILE* target,
 		  const char *name, const char *msg) {
 	int	error;
 	char	color[COLOR_SIZE],
@@ -45,14 +47,15 @@ void xsps_log_all(int c, FILE* target,
 
 	if (error > 0) {
 		strerror_r(error, buf, XSPS_LOG_SIZE);
-		xsps_log_error(buf);
+		xsps_log_error(xhp, buf);
 	}
 }
 
-void xsps_log_init() {
-	xsps_enable_debug_log = 0;
-	xsps_log.info  = xsps_log_info;
-	xsps_log.warn  = xsps_log_warn;
-	xsps_log.debug = xsps_log_debug;
-	xsps_log.error = xsps_log_error;
+void xsps_log_init(xsps_handle_t* xhp) {
+	xhp->log = malloc(sizeof(xsps_log_t));
+	xhp->log->enable_debug = 0;
+	xhp->log->info  = xsps_log_info;
+	xhp->log->warn  = xsps_log_warn;
+	xhp->log->debug = xsps_log_debug;
+	xhp->log->error = xsps_log_error;
 }

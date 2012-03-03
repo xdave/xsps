@@ -9,54 +9,61 @@
 #include "xsps_log.h"
 #include "xsps_arg.h"
 
-void xsps_arg_init() {
-	sprintf(xsps_options.config, "%s/xsps.conf", XSPS_CONFIG_DIR);
-	sprintf(xsps_options.build,  "%s", "base-chroot");
+void xsps_arg_init(xsps_handle_t* xhp) {
+	xhp->arg = malloc(sizeof(xsps_arg_t));
+	strcpy(xhp->arg->config, XSPS_CONFIG);
+	strcpy(xhp->arg->build, "base-chroot");
 }
 
-int xsps_arg_parse(int argc, char** argv) {
+int xsps_arg_parse(xsps_handle_t* xhp, int argc, char** argv) {
 	int c;
-	extern char* optarg;
+	/*extern char* optarg;*/
 	char buffer[XSPS_LOG_SIZE];
 
-	if (argc == 1) { return xsps_arg_print_usage(argv[0]); }
+	if (argc == 1) { return xsps_arg_print_usage(xhp, argv[0]); }
 
-	while ((c = getopt(argc, argv, "hdc:b:")) != EOF) {
+	while ((c = getopt(argc, argv, "hdc:m:b:")) != EOF) {
 		switch (c) {
 			case 'd':
-				xsps_enable_debug_log = 1;
-				xsps_log.debug("+FLAG -d");
+				xhp->log->enable_debug = 1;
+				xhp->log->debug(xhp, "+FLAG -d");
 				break;
 			case 'c':
-				sprintf(xsps_options.config, "%s", optarg);
+				strcpy(xhp->arg->config, optarg);
 				sprintf(buffer, "+OPTION -c: '%s'", optarg);
-				xsps_log.debug(buffer);
+				xhp->log->debug(xhp, buffer);
+				break;
+			case 'm':
+				strcpy(xhp->config->masterdir, optarg);
+				sprintf(buffer, "+OPTION -m: '%s'", optarg);
+				xhp->log->debug(xhp, buffer);
 				break;
 			case 'b':
-				sprintf(xsps_options.build, "%s", optarg);
+				strcpy(xhp->arg->build, optarg);
 				sprintf(buffer, "+OPTION -b: '%s'", optarg);
-				xsps_log.debug(buffer);
+				xhp->log->debug(xhp, buffer);
 				break;
 			case 'h':
 			default:
-				return xsps_arg_print_usage(argv[0]);
+				return xsps_arg_print_usage(xhp, argv[0]);
 				break;
 		}
 	}
 	return 0;
 }
 
-int xsps_arg_print_usage(const char* progname) {
+int xsps_arg_print_usage(xsps_handle_t* xhp, const char* progname) {
 	char buffer[XSPS_LOG_SIZE/2];
 	sprintf(buffer,
-"Usage: %s [-h] [-d] [-c FILE] -b PACKAGE\n\n"
+"Usage: %s [-h] [-d] [-c FILE] [-m DIR] -b PACKAGE\n\n"
 "	Options:\n"
 "	  -h .............. display this message\n"
 "	  -d .............. display extra debugging messages\n"
-"	  -c FILE ......... specifiy alternate config FILE\n\n"
+"	  -c FILE ......... specifiy alternate config FILE\n"
+"	  -m DIR .......... override MASTERDIR config setting\n\n"
 "	Actions:\n"
 "	  -b PACKAGE ...... build a PACKAGE\n",
 		progname);
-	xsps_log.info(buffer);
+	xhp->log->info(xhp, buffer);
 	return 0;
 }

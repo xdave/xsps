@@ -4,20 +4,17 @@
 
 #include <stdio.h>
 
-#include "type/xsps_log_obj.h"
+#include "type/xsps_handle_t.h"
 
 #ifndef XSPS_LOG_H
 #define XSPS_LOG_H 1
 
-xsps_log_obj xsps_log;
-int xsps_enable_debug_log;
+void xsps_log_info (void*, const char*);
+void xsps_log_warn (void*, const char*);
+void xsps_log_debug(void*, const char*);
+void xsps_log_error(void*, const char*);
 
-void xsps_log_info (const char*);
-void xsps_log_warn (const char*);
-void xsps_log_debug(const char*);
-void xsps_log_error(const char*);
-
-void xsps_log_all(int, FILE*, const char*, const char*);
-void xsps_log_init();
+void xsps_log_all(xsps_handle_t*, int, FILE*, const char*, const char*);
+void xsps_log_init(xsps_handle_t*);
 
 #endif /* XSPS_LOG_H */

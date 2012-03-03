@@ -2,9 +2,13 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
-#ifndef XSPS_INIT_H
-#define XSPS_INIT_H 1
+#ifndef XSPS_ARG_T_H
+#define XSPS_ARG_T_H 1
 
-void xsps_init();
+typedef struct xsps_arg_t {
+	char config[80];
+	char masterdir[80];
+	char build[80];
+} xsps_arg_t;
 
-#endif /* XSPS_INIT_H */
+#endif /* XSPS_ARG_T_H */

@@ -11,17 +11,20 @@ OBJ := $(patsubst src/%.c,tmp/%.o,$(SRC))
 
 LIBS := -lconfuse
 
-WARN := -Wall -Werror -pedantic
-OPTZ := -O2 -pipe -mtune=generic\
-	-fPIC -funroll-loops -fno-exceptions\
+STD := -ansi
+WARN := -Wall -Wextra -Werror -Wshadow -Wformat=2 -Wconversion\
+	-Wformat-security -pedantic -Wnested-externs -Wvla\
+	-Wno-overlength-strings -Wmissing-declarations -Wdisabled-optimization\
+	--param ssp-buffer-size=1
+OPTZ := -O2 -pipe -mtune=generic -fPIC -funroll-loops -fno-exceptions\
 	-fstack-protector-all -D_FORTIFY_SOURCE=2
 DEBUG := -ggdb -DXSPS_DEBUG
 STATIC :=
 INCLUDE := -Iinclude
 DEFINES := -DXSPS_CONFIG_DIR=\"$(XSPS_CONFIG_DIR)\" -D_REENTRANT\
 	   -D_POSIX_C_SOURCE=200112L
-CFLAGS := $(WARN) $(STATIC) $(OPTZ) $(DEFINES) $(DEBUG) $(INCLUDE) $(LIBS)
-LDFLAGS := $(STATIC) -Wl,--as-needed $(LIBS)
+CFLAGS := $(STD) $(WARN) $(STATIC) $(OPTZ) $(DEFINES) $(DEBUG) $(INCLUDE)
+LDFLAGS := $(STD) $(STATIC) $(LIBS) -Wl,--as-needed
 
 all: $(TARGET)
 
