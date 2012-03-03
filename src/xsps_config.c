@@ -2,18 +2,13 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 
-#include <confuse.h>
-
-#include "xsps_config.h"
-#include "xsps_arg.h"
-#include "xsps_log.h"
+#include "xsps.h"
 
 void xsps_config_init(xsps_handle_t* xhp) {
+	cfg_t* cfg;
 	cfg_opt_t opts[] = {
 		CFG_STR("XSPS_DISTDIR", "$HOME/src/xsps", CFGF_NONE),
 		CFG_STR("XSPS_REPOURL", "git://github.com/davehome/xsps.git",
@@ -32,6 +27,7 @@ void xsps_config_init(xsps_handle_t* xhp) {
 
 	xhp->config = malloc(sizeof(xsps_config_t));
 	xhp->config->cfg = cfg_init(opts, CFGF_NONE);
+	cfg = xhp->config->cfg;
 
 	if(cfg_parse(xhp->config->cfg, xhp->arg->config) == CFG_PARSE_ERROR) {
 		xhp->log->error(xhp, "[config] parse error");
@@ -39,21 +35,21 @@ void xsps_config_init(xsps_handle_t* xhp) {
 		return;
 	}
 
-	strcpy(xhp->config->distdir,
-		cfg_getstr(xhp->config->cfg, "XSPS_DISTDIR"));
-	strcpy(xhp->config->repourl,
+	xstrcpy(&xhp->config->distdir,
+		cfg_getstr(cfg, "XSPS_DISTDIR"));
+	xstrcpy(&xhp->config->repourl,
 		cfg_getstr(xhp->config->cfg, "XSPS_REPOURL"));
-	strcpy(xhp->config->masterdir,
+	xstrcpy(&xhp->config->masterdir,
 		cfg_getstr(xhp->config->cfg, "XSPS_MASTERDIR"));
-	strcpy(xhp->config->hostdir,
+	xstrcpy(&xhp->config->hostdir,
 		cfg_getstr(xhp->config->cfg, "XSPS_HOSTDIR"));
-	strcpy(xhp->config->cflags,
+	xstrcpy(&xhp->config->cflags,
 		cfg_getstr(xhp->config->cfg, "XSPS_CFLAGS"));
-	strcpy(xhp->config->cxxflags,
+	xstrcpy(&xhp->config->cxxflags,
 		cfg_getstr(xhp->config->cfg, "XSPS_CXXFLAGS"));
-	strcpy(xhp->config->ldflags,
+	xstrcpy(&xhp->config->ldflags,
 		cfg_getstr(xhp->config->cfg, "XSPS_LDFLAGS"));
-	strcpy(xhp->config->compress_cmd,
+	xstrcpy(&xhp->config->compress_cmd,
 		cfg_getstr(xhp->config->cfg, "XSPS_COMPRESS_CMD"));
 
 	xhp->config->ccache = cfg_getbool(xhp->config->cfg, "XSPS_CCACHE");

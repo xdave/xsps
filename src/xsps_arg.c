@@ -6,13 +6,12 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "xsps_log.h"
-#include "xsps_arg.h"
+#include "xsps.h"
 
 void xsps_arg_init(xsps_handle_t* xhp) {
 	xhp->arg = malloc(sizeof(xsps_arg_t));
-	strcpy(xhp->arg->config, XSPS_CONFIG);
-	strcpy(xhp->arg->build, "base-chroot");
+	xstrcpy(&xhp->arg->config, XSPS_CONFIG);
+	xstrcpy(&xhp->arg->build, "base-chroot");
 }
 
 int xsps_arg_parse(xsps_handle_t* xhp, int argc, char** argv) {
@@ -29,17 +28,17 @@ int xsps_arg_parse(xsps_handle_t* xhp, int argc, char** argv) {
 				xhp->log->debug(xhp, "+FLAG -d");
 				break;
 			case 'c':
-				strcpy(xhp->arg->config, optarg);
+				xstrcpy(&xhp->arg->config, optarg);
 				sprintf(buffer, "+OPTION -c: '%s'", optarg);
 				xhp->log->debug(xhp, buffer);
 				break;
 			case 'm':
-				strcpy(xhp->config->masterdir, optarg);
+				xstrcpy(&xhp->config->masterdir, optarg);
 				sprintf(buffer, "+OPTION -m: '%s'", optarg);
 				xhp->log->debug(xhp, buffer);
 				break;
 			case 'b':
-				strcpy(xhp->arg->build, optarg);
+				xstrcpy(&xhp->arg->build, optarg);
 				sprintf(buffer, "+OPTION -b: '%s'", optarg);
 				xhp->log->debug(xhp, buffer);
 				break;

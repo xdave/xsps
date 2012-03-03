@@ -4,10 +4,7 @@
 
 #include <stdlib.h>
 
-#include "xsps_handle.h"
-#include "xsps_log.h"
-#include "xsps_arg.h"
-#include "xsps_config.h"
+#include "xsps.h"
 
 xsps_handle_t* xsps_handle_new() {
 	xsps_handle_t* xhp;
