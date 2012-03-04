@@ -95,8 +95,8 @@ void xsps_log_all(xsps_handle_t*,int,FILE*,const char*,const char*, ...);
 
 /* command line arguments */
 void xsps_arg_init(xsps_handle_t*, int, char**);
-int xsps_arg_parse(xsps_handle_t*);
-int xsps_arg_print_usage(xsps_handle_t*);
+int  xsps_arg_parse(xsps_handle_t*);
+void xsps_arg_print_usage(xsps_handle_t*);
 
 /* configuration*/
 void xsps_config_init(xsps_handle_t*);

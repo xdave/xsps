@@ -21,8 +21,12 @@ xsps_handle_t* xsps_handle_new(int argc, char** argv) {
 
 void xsps_handle_free(xsps_handle_t* xhp) {
 	xsps_strmgr_free(xhp);
-	cfg_free(xhp->config->cfg);
-	free(xhp->config);
-	free(xhp->arg);
+
+	if (xhp->config != NULL && xhp->config->cfg != NULL)
+		cfg_free(xhp->config->cfg);
+
+	if (xhp->config != NULL) free(xhp->config);
+	if (xhp->arg != NULL) free(xhp->arg);
+
 	free(xhp);
 }

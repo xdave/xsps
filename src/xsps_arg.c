@@ -22,7 +22,7 @@ int xsps_arg_parse(xsps_handle_t* xhp) {
 	int c;
 
 	if (xhp->arg->argc == 1)
-		return xsps_arg_print_usage(xhp);
+		xsps_arg_print_usage(xhp);
 
 	while ((c = getopt(xhp->arg->argc,xhp->arg->argv,"hdc:m:b:")) != EOF) {
 		switch (c) {
@@ -47,14 +47,16 @@ int xsps_arg_parse(xsps_handle_t* xhp) {
 				break;
 			case 'h':
 			default:
-				return xsps_arg_print_usage(xhp);
+				xsps_arg_print_usage(xhp);
 				break;
 		}
 	}
 	return 0;
 }
 
-int xsps_arg_print_usage(xsps_handle_t* xhp) {
+void
+xsps_arg_print_usage(xsps_handle_t* xhp)
+{
 	xsps_log_info(xhp,
 "Usage: %s [-h] [-d] [-c FILE] [-m DIR] -b PACKAGE\n\n"
 "	Options:\n"
@@ -65,5 +67,6 @@ int xsps_arg_print_usage(xsps_handle_t* xhp) {
 "	Actions:\n"
 "	  -b PACKAGE ...... build a PACKAGE\n",
 		xhp->arg->argv[0]);
-	return 0;
+	xsps_handle_free(xhp);
+	exit(1);
 }
