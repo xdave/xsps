@@ -2,7 +2,6 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
-#include <stdlib.h>
 #include <string.h>
 
 #include "xsps.h"
