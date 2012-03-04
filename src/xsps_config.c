@@ -4,11 +4,11 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 #include "xsps.h"
 
 void xsps_config_init(xsps_handle_t* xhp) {
-	cfg_t* cfg;
 	cfg_opt_t opts[] = {
 		CFG_STR("XSPS_DISTDIR", "$HOME/src/xsps", CFGF_NONE),
 		CFG_STR("XSPS_REPOURL", "git://github.com/davehome/xsps.git",
@@ -27,36 +27,42 @@ void xsps_config_init(xsps_handle_t* xhp) {
 
 	xhp->config = malloc(sizeof(xsps_config_t));
 	xhp->config->cfg = cfg_init(opts, CFGF_NONE);
-	cfg = xhp->config->cfg;
 
-	if(cfg_parse(xhp->config->cfg, xhp->arg->config) == CFG_PARSE_ERROR) {
-		xhp->log->error(xhp, "[config] parse error");
-		cfg_free(xhp->config->cfg);
-		return;
+	switch(cfg_parse(xhp->config->cfg, xhp->arg->config)) {
+		case CFG_FILE_ERROR:
+			fprintf(stderr, "[confuse] Warning: configuration "
+				"file '%s' could not be read: %s\n",
+				xhp->arg->config, strerror(errno));
+				fprintf(stderr, "[confuse] using defaults...\n");
+			break;
+		case CFG_PARSE_ERROR:
+			xsps_handle_free(xhp);
+			abort();
+			break;
+		case CFG_SUCCESS:
+		default:
+			break;
 	}
 
-	xstrcpy(&xhp->config->distdir,
-		cfg_getstr(cfg, "XSPS_DISTDIR"));
-	xstrcpy(&xhp->config->repourl,
+	xhp->config->distdir = xstrcpy(xhp,
+		cfg_getstr(xhp->config->cfg, "XSPS_DISTDIR"));
+	xhp->config->repourl = xstrcpy(xhp,
 		cfg_getstr(xhp->config->cfg, "XSPS_REPOURL"));
-	xstrcpy(&xhp->config->masterdir,
+	xhp->config->masterdir = xstrcpy(xhp,
 		cfg_getstr(xhp->config->cfg, "XSPS_MASTERDIR"));
-	xstrcpy(&xhp->config->hostdir,
+	xhp->config->hostdir = xstrcpy(xhp,
 		cfg_getstr(xhp->config->cfg, "XSPS_HOSTDIR"));
-	xstrcpy(&xhp->config->cflags,
+	xhp->config->cflags = xstrcpy(xhp,
 		cfg_getstr(xhp->config->cfg, "XSPS_CFLAGS"));
-	xstrcpy(&xhp->config->cxxflags,
+	xhp->config->cxxflags = xstrcpy(xhp,
 		cfg_getstr(xhp->config->cfg, "XSPS_CXXFLAGS"));
-	xstrcpy(&xhp->config->ldflags,
+	xhp->config->ldflags = xstrcpy(xhp,
 		cfg_getstr(xhp->config->cfg, "XSPS_LDFLAGS"));
-	xstrcpy(&xhp->config->compress_cmd,
+	xhp->config->compress_cmd = xstrcpy(xhp,
 		cfg_getstr(xhp->config->cfg, "XSPS_COMPRESS_CMD"));
 
 	xhp->config->ccache = cfg_getbool(xhp->config->cfg, "XSPS_CCACHE");
 	xhp->config->makejobs = cfg_getint(xhp->config->cfg, "XSPS_MAKEJOBS");
 	xhp->config->compress_level = cfg_getint(xhp->config->cfg,
 							"XSPS_COMPRESS_LEVEL");
-	
-	cfg_free(xhp->config->cfg);
 }
-
