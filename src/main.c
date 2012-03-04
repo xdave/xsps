@@ -18,7 +18,7 @@ main(int argc, char** argv)
 	/*
 	 * Test!
 	 */
-	blah(argc, argv);
+	process_template(argc, argv);
 
 	xhp_free(xhp);
 	return (EXIT_SUCCESS);
