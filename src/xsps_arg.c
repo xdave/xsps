@@ -10,8 +10,8 @@
 
 void xsps_arg_init(xsps_handle_t* xhp) {
 	xhp->arg = malloc(sizeof(xsps_arg_t));
-	xstrcpy(&xhp->arg->config, XSPS_CONFIG);
-	xstrcpy(&xhp->arg->build, "base-chroot");
+	xhp->arg->config = xstrcpy(xhp, XSPS_CONFIG);
+	xhp->arg->build = xstrcpy(xhp, "base-chroot");
 }
 
 int xsps_arg_parse(xsps_handle_t* xhp, int argc, char** argv) {
@@ -28,17 +28,17 @@ int xsps_arg_parse(xsps_handle_t* xhp, int argc, char** argv) {
 				xhp->log->debug(xhp, "+FLAG -d");
 				break;
 			case 'c':
-				xstrcpy(&xhp->arg->config, optarg);
+				xhp->arg->config = xstrcpy(xhp, optarg);
 				sprintf(buffer, "+OPTION -c: '%s'", optarg);
 				xhp->log->debug(xhp, buffer);
 				break;
 			case 'm':
-				xstrcpy(&xhp->config->masterdir, optarg);
+				xhp->config->masterdir = xstrcpy(xhp, optarg);
 				sprintf(buffer, "+OPTION -m: '%s'", optarg);
 				xhp->log->debug(xhp, buffer);
 				break;
 			case 'b':
-				xstrcpy(&xhp->arg->build, optarg);
+				xhp->arg->build = xstrcpy(xhp, optarg);
 				sprintf(buffer, "+OPTION -b: '%s'", optarg);
 				xhp->log->debug(xhp, buffer);
 				break;
