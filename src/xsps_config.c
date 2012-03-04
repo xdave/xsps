@@ -54,7 +54,7 @@ void xsps_config_init(xsps_handle_t* xhp) {
 		cfg_getstr(xhp->config->cfg, "XSPS_DISTDIR"));
 	xhp->config->repourl = xstrcpy(xhp,
 		cfg_getstr(xhp->config->cfg, "XSPS_REPOURL"));
-	xhp->config->masterdir = xstrcpy(xhp,
+	xhp->arg->masterdir = xstrcpy(xhp,
 		cfg_getstr(xhp->config->cfg, "XSPS_MASTERDIR"));
 	xhp->config->hostdir = xstrcpy(xhp,
 		cfg_getstr(xhp->config->cfg, "XSPS_HOSTDIR"));
