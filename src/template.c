@@ -416,11 +416,13 @@ process_template(xhp_t *xhp)
 	if (rv == CFG_FILE_ERROR) {
 		log_error(xhp, "%s: cannot read %s (%s)", xhp->arg->argv[0],
 		    template, strerror(errno));
+		cfg_free(cfg);
 		xhp_free(xhp);
 		exit(EXIT_FAILURE);
 	} else if (rv == CFG_PARSE_ERROR) {
 		log_error(xhp, "%s: failed to parse %s", xhp->arg->argv[0],
 		    template);
+		cfg_free(cfg);
 		xhp_free(xhp);
 		exit(EXIT_FAILURE);
 	}
@@ -428,6 +430,8 @@ process_template(xhp_t *xhp)
 	 * Validate the "package" section, we need at least one.
 	 */
 	if (validate_pkg_section(cfg) == -1)
+		cfg_free(cfg);
+		xhp_free(xhp);
 		exit(EXIT_FAILURE);
 
 	if (pkgname) {
@@ -435,6 +439,7 @@ process_template(xhp_t *xhp)
 		if (cfgsec == NULL) {
 			log_error(xhp, "%s: no such package `%s' in %s.",
 			    xhp->arg->argv[0], pkgname, template);
+			cfg_free(cfg);
 			xhp_free(xhp);
 			exit(EXIT_FAILURE);
 		}
