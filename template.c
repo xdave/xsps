@@ -96,6 +96,8 @@ validate_mkdeps_section(cfg_t *cfg, cfg_opt_t *opt)
 	unsigned int i;
 	bool found = false;
 
+	(void)opt;
+
 	for (i = 0; i < cfg_size(cfg, "make-depends"); i++) {
 		cfgsec = cfg_getnsec(cfg, "make-depends", i);
 		if (cfg_size(cfgsec, "all")) {
@@ -118,6 +120,8 @@ validate_distfiles_section(cfg_t *cfg, cfg_opt_t *opt)
 	cfg_t *cfgsec;
 	unsigned int i;
 	bool found_src = false, found_hash = false;
+
+	(void)opt;
 
 	for (i = 0; i < cfg_size(cfg, "distfiles"); i++) {
 		cfgsec = cfg_getnsec(cfg, "distfiles", i);
