@@ -12,7 +12,7 @@
 #define XSPS_H 1
 
 #define XENOMEM(xhp)							\
-	fprintf(stderr, "%s:%d: Out of memory!", __FILE__, __LINE__);	\
+	fprintf(stderr, "%s:%d: Out of memory!\n", __FILE__, __LINE__);	\
 	xhp_free(xhp);							\
 	exit(EXIT_FAILURE)
 
