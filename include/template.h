@@ -1,3 +1,9 @@
+/* Copyright (c) 2012 davehome <davehome@redthumb.info.tm>.
+ * Copyright (c) 2012 Juan Romero Pardines.
+ * All rights reserved.
+ * Distributed under a modified BSD-style license.
+ * See the COPYING file in the toplevel directory for license details. */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
