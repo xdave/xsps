@@ -58,6 +58,7 @@ arg_parse(xhp_t *xhp)
 			log_debug(xhp, "+OPTION -%c: '%s'", c, optarg);
 			break;
 		case 'b':
+			/* TODO: build action not implemented */
 			xhp->arg->build = xstrcpy(xhp, optarg);
 			log_debug(xhp, "+OPTION -%c: '%s'", c, optarg);
 			break;

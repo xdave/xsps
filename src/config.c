@@ -28,7 +28,7 @@ config_init(xhp_t *xhp)
 		CFG_END()
 	};
 
-	int error;
+	int  error;
 	char error_buffer[256];
 
 	xhp->config = xmalloc(xhp, sizeof(config_t));
