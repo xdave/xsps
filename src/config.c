@@ -14,8 +14,8 @@ config_init(xhp_t *xhp)
 {
 	cfg_opt_t opts[] = {
 		CFG_STR("XSPS_DISTDIR", "$HOME/src/xsps", CFGF_NONE),
-		CFG_STR("XSPS_REPOURL", "git://github.com/davehome/xsps.git",
-			CFGF_NONE),
+		CFG_STR("XSPS_SRCPKGS_REPOURL",
+		    "git://github.com/davehome/xsps.git", CFGF_NONE),
 		CFG_STR("XSPS_MASTERDIR", "$XSPS_DISTDIR/chroot", CFGF_NONE),
 		CFG_STR("XSPS_HOSTDIR", "$XSPS_DISTDIR/host", CFGF_NONE),
 		CFG_STR("XSPS_CFLAGS", "-O2 -pipe -mtune=generic", CFGF_NONE),
@@ -51,10 +51,14 @@ config_init(xhp_t *xhp)
 		break;
 	}
 
+	/* TODO: parse environment variables in strings and
+	 * contextual vars within config
+	 * */
+
 	xhp->config->distdir = xstrcpy(xhp,
-		cfg_getstr(xhp->config->cfg, "XSPS_DISTDIR"));
+	    cfg_getstr(xhp->config->cfg, "XSPS_DISTDIR"));
 	xhp->config->repourl = xstrcpy(xhp,
-		cfg_getstr(xhp->config->cfg, "XSPS_REPOURL"));
+	    cfg_getstr(xhp->config->cfg, "XSPS_SRCPKGS_REPOURL"));
 	if(xhp->arg->masterdir == NULL) {
 		xhp->config->masterdir = xstrcpy(xhp,
 		    cfg_getstr(xhp->config->cfg, "XSPS_MASTERDIR"));
@@ -62,15 +66,15 @@ config_init(xhp_t *xhp)
 		xhp->config->masterdir = xhp->arg->masterdir;
 	}
 	xhp->config->hostdir = xstrcpy(xhp,
-		cfg_getstr(xhp->config->cfg, "XSPS_HOSTDIR"));
+	    cfg_getstr(xhp->config->cfg, "XSPS_HOSTDIR"));
 	xhp->config->cflags = xstrcpy(xhp,
-		cfg_getstr(xhp->config->cfg, "XSPS_CFLAGS"));
+	    cfg_getstr(xhp->config->cfg, "XSPS_CFLAGS"));
 	xhp->config->cxxflags = xstrcpy(xhp,
-		cfg_getstr(xhp->config->cfg, "XSPS_CXXFLAGS"));
+	    cfg_getstr(xhp->config->cfg, "XSPS_CXXFLAGS"));
 	xhp->config->ldflags = xstrcpy(xhp,
-		cfg_getstr(xhp->config->cfg, "XSPS_LDFLAGS"));
+	    cfg_getstr(xhp->config->cfg, "XSPS_LDFLAGS"));
 	xhp->config->compress_cmd = xstrcpy(xhp,
-		cfg_getstr(xhp->config->cfg, "XSPS_COMPRESS_CMD"));
+	    cfg_getstr(xhp->config->cfg, "XSPS_COMPRESS_CMD"));
 
 	xhp->config->ccache = cfg_getbool(xhp->config->cfg, "XSPS_CCACHE");
 	xhp->config->makejobs =

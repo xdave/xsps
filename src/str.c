@@ -69,3 +69,29 @@ xstrcpy(xhp_t *xhp, const char *src)
 {
 	return str_add(xhp, src);
 }
+
+/* format version of xstrcpy() */
+char *
+xstrf(xhp_t *xhp, const char *fmt, ...)
+{
+	int	n;
+	size_t	size = 100;
+	char	*p, *np, *result;
+	va_list ap;
+
+	p = xmalloc(xhp, size);
+
+	while(1) {
+		va_start(ap, fmt);
+		n = vsnprintf(p, size, fmt, ap);
+		va_end(ap);
+		if(n > -1 && (size_t)n < size) break;
+		if(n > -1) size = (size_t)n+1;
+		np = xrealloc(xhp, p, size);
+		p = np;
+	}
+
+	result = str_add(xhp, p);
+	free(p);
+	return result;
+}
