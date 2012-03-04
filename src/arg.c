@@ -20,6 +20,7 @@ arg_init(xhp_t *xhp, int argc, char **argv)
 	xhp->arg->masterdir = NULL;
 	xhp->arg->option = NULL;
 	xhp->arg->pkgname = NULL;
+	xhp->arg->template_name = NULL;
 	xhp->arg->template = NULL;
 	xhp->arg->build = xstrcpy(xhp, "base-chroot");
 	arg_parse(xhp);
@@ -74,7 +75,7 @@ arg_parse(xhp_t *xhp)
 		arg_print_usage(xhp);
 	}
 
-	xhp->arg->template = argv[0];
+	xhp->arg->template_name = argv[0];
 }
 
 void
