@@ -9,6 +9,7 @@
 xsps_handle_t* xsps_handle_new() {
 	xsps_handle_t* xhp;
 	xhp = malloc(sizeof(xsps_handle_t));
+	xhp->strmgr = xsps_strmgr_new();
 	xsps_log_init(xhp);
 	xsps_arg_init(xhp);
 	xsps_config_init(xhp);
@@ -16,8 +17,10 @@ xsps_handle_t* xsps_handle_new() {
 }
 
 void xsps_handle_free(xsps_handle_t* xhp) {
-	if (xhp->config != NULL) free(xhp->config);
-	if (xhp->arg != NULL) free(xhp->arg);
-	if (xhp->log != NULL) free(xhp->log);
-	if (xhp != NULL) free(xhp);
+	xsps_strmgr_free(xhp->strmgr);
+	cfg_free(xhp->config->cfg);
+	free(xhp->config);
+	free(xhp->arg);
+	free(xhp->log);
+	free(xhp);
 }
