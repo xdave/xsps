@@ -4,12 +4,22 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #include <confuse.h>
 
 #ifndef XSPS_H
 #define XSPS_H 1
 
 #define XSPS_LOG_SIZE 2048
+#define xsps_log_info(xhp, fmt, ...) \
+	xsps_log_all(xhp, COLOR_WHITE, stdout, "INFO ", fmt, ##__VA_ARGS__)
+#define xsps_log_warn(xhp, fmt, ...) \
+	xsps_log_all(xhp, COLOR_YELLOW, stdout, "WARN ", fmt, ##__VA_ARGS__)
+#define xsps_log_debug(xhp, fmt, ...) \
+	xsps_log_all(xhp, COLOR_CYAN, stderr, "DEBUG", fmt, ##__VA_ARGS__)
+#define xsps_log_error(xhp, fmt, ...) \
+	xsps_log_all(xhp, COLOR_RED, stderr, "ERROR", fmt, ##__VA_ARGS__)
+
 #define XSPS_CONFIG XSPS_CONFIG_DIR "/xsps.conf"
 
 /* color */
@@ -28,15 +38,6 @@ typedef enum {
 	COLOR_CYAN = 36,
 	COLOR_WHITE = 37
 } xsps_color_t;
-
-/* logging */
-typedef struct xsps_log_t {
-	int enable_debug;
-	void (*info) (void*, const char*);
-	void (*warn) (void*, const char*);
-	void (*debug)(void*, const char*);
-	void (*error)(void*, const char*);
-} xsps_log_t;
 
 /* command line arguments */
 typedef struct xsps_arg_t {
@@ -69,7 +70,6 @@ typedef struct xsps_strmgr_t {
 /* main xsps handle */
 typedef struct xsps_handle_t {
 	xsps_strmgr_t* strmgr;
-	xsps_log_t* log;
 	xsps_arg_t* arg;
 	xsps_config_t* config;
 } xsps_handle_t;
@@ -78,12 +78,11 @@ xsps_handle_t* xsps_handle_new();
 void xsps_handle_free(xsps_handle_t*);
 
 /* logging */
-void xsps_log_info (void*, const char*);
-void xsps_log_warn (void*, const char*);
-void xsps_log_debug(void*, const char*);
-void xsps_log_error(void*, const char*);
-void xsps_log_all(xsps_handle_t*, int, FILE*, const char*, const char*);
-void xsps_log_init(xsps_handle_t*);
+/*void xsps_log_info (void*, const char*, ...);
+void xsps_log_warn (void*, const char*, ...);
+void xsps_log_debug(void*, const char*, ...);
+void xsps_log_error(void*, const char*, ...);*/
+void xsps_log_all(xsps_handle_t*,int,FILE*,const char*,const char*, ...);
 
 /* command line arguments */
 void xsps_arg_init(xsps_handle_t*);

@@ -11,7 +11,7 @@ OBJ := $(patsubst src/%.c,tmp/%.o,$(SRC))
 
 LIBS := -lconfuse
 
-STD := -ansi
+STD := -std=c99
 WARN := -Wall -Wextra -Werror -Wshadow -Wformat=2 -Wconversion\
 	-Wformat-security -pedantic -Wnested-externs -Wvla\
 	-Wno-overlength-strings -Wmissing-declarations -Wdisabled-optimization\

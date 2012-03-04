@@ -16,31 +16,29 @@ void xsps_arg_init(xsps_handle_t* xhp) {
 
 int xsps_arg_parse(xsps_handle_t* xhp, int argc, char** argv) {
 	int c;
-	/*extern char* optarg;*/
-	char buffer[XSPS_LOG_SIZE];
 
 	if (argc == 1) { return xsps_arg_print_usage(xhp, argv[0]); }
 
 	while ((c = getopt(argc, argv, "hdc:m:b:")) != EOF) {
 		switch (c) {
 			case 'd':
-				xhp->log->enable_debug = 1;
-				xhp->log->debug(xhp, "+FLAG -d");
+				/* TODO: ENABLE DEBUG LOGGING HERE */
+				xsps_log_debug(xhp, "+FLAG -%c", c);
 				break;
 			case 'c':
 				xhp->arg->config = xstrcpy(xhp, optarg);
-				sprintf(buffer, "+OPTION -c: '%s'", optarg);
-				xhp->log->debug(xhp, buffer);
+				xsps_log_debug(xhp, "+OPTION -%c: '%s'",
+						c, optarg);
 				break;
 			case 'm':
 				xhp->arg->masterdir = xstrcpy(xhp, optarg);
-				sprintf(buffer, "+OPTION -m: '%s'", optarg);
-				xhp->log->debug(xhp, buffer);
+				xsps_log_debug(xhp, "+OPTION -%c: '%s'",
+						c, optarg);
 				break;
 			case 'b':
 				xhp->arg->build = xstrcpy(xhp, optarg);
-				sprintf(buffer, "+OPTION -b: '%s'", optarg);
-				xhp->log->debug(xhp, buffer);
+				xsps_log_debug(xhp, "+OPTION -%c: '%s'",
+						c, optarg);
 				break;
 			case 'h':
 			default:
@@ -52,8 +50,7 @@ int xsps_arg_parse(xsps_handle_t* xhp, int argc, char** argv) {
 }
 
 int xsps_arg_print_usage(xsps_handle_t* xhp, const char* progname) {
-	char buffer[XSPS_LOG_SIZE/2];
-	sprintf(buffer,
+	xsps_log_info(xhp,
 "Usage: %s [-h] [-d] [-c FILE] [-m DIR] -b PACKAGE\n\n"
 "	Options:\n"
 "	  -h .............. display this message\n"
@@ -63,6 +60,5 @@ int xsps_arg_print_usage(xsps_handle_t* xhp, const char* progname) {
 "	Actions:\n"
 "	  -b PACKAGE ...... build a PACKAGE\n",
 		progname);
-	xhp->log->info(xhp, buffer);
 	return 0;
 }
