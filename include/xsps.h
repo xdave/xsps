@@ -55,7 +55,8 @@ typedef struct arg_t {
 	char*  masterdir;	/* optional */
 	char*  option;		/* optional */
 	char*  pkgname;		/* optional */
-	char*  template;
+	char*  template_name;	/* optional */
+	char*  template;	/* internal */
 	char*  build;		/* TODO: not implemented */
 } arg_t;
 
@@ -113,6 +114,7 @@ void	str_free(xhp_t *);
 char	*str_add(xhp_t *, const char *);
 bool	xstreq(const char *, const char *);
 char	*xstrcpy(xhp_t *, const char *);
+char	*xstrf(xhp_t *, const char *, ...);
 
 /* template processing */
 int process_template(xhp_t *);
