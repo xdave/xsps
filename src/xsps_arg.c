@@ -33,7 +33,7 @@ int xsps_arg_parse(xsps_handle_t* xhp, int argc, char** argv) {
 				xhp->log->debug(xhp, buffer);
 				break;
 			case 'm':
-				xhp->config->masterdir = xstrcpy(xhp, optarg);
+				xhp->arg->masterdir = xstrcpy(xhp, optarg);
 				sprintf(buffer, "+OPTION -m: '%s'", optarg);
 				xhp->log->debug(xhp, buffer);
 				break;
