@@ -19,13 +19,13 @@
 	exit(EXIT_FAILURE)
 
 #define log_info(xhp, fmt, ...) \
-	log_all(xhp, COLOR_WHITE, stdout, "INFO ", fmt, ##__VA_ARGS__)
+	log_all(xhp, COLOR_WHITE, stdout, "INFO ", fmt, __VA_ARGS__)
 #define log_warn(xhp, fmt, ...) \
-	log_all(xhp, COLOR_YELLOW, stdout, "WARN ", fmt, ##__VA_ARGS__)
+	log_all(xhp, COLOR_YELLOW, stdout, "WARN ", fmt, __VA_ARGS__)
 #define log_debug(xhp, fmt, ...) \
-	log_all(xhp, COLOR_CYAN, stderr, "DEBUG", fmt, ##__VA_ARGS__)
+	log_all(xhp, COLOR_CYAN, stderr, "DEBUG", fmt, __VA_ARGS__)
 #define log_error(xhp, fmt, ...) \
-	log_all(xhp, COLOR_RED, stderr, "ERROR", fmt, ##__VA_ARGS__)
+	log_all(xhp, COLOR_RED, stderr, "ERROR", fmt, __VA_ARGS__)
 
 #define XSPS_CONFIG XSPS_CONFIG_DIR "/xsps.conf"
 
