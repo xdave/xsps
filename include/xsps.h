@@ -45,7 +45,7 @@ typedef struct xsps_arg_t {
 	char* build;
 } xsps_arg_t;
 
-
+/* configuration */
 typedef struct xsps_config_t {
 	char* distdir;
 	char* repourl;
@@ -62,8 +62,15 @@ typedef struct xsps_config_t {
 	cfg_opt_t* opts;
 } xsps_config_t;
 
+/* string manager */
+typedef struct xsps_strmgr_t {
+	size_t size;
+	char** items;
+} xsps_strmgr_t;
+
 /* main xsps handle */
 typedef struct xsps_handle_t {
+	xsps_strmgr_t* strmgr;
 	xsps_log_t* log;
 	xsps_arg_t* arg;
 	xsps_config_t* config;
@@ -88,8 +95,14 @@ int xsps_arg_print_usage(xsps_handle_t*, const char*);
 /* configuration*/
 void xsps_config_init(xsps_handle_t*);
 
-/* String-related */
+/* string manager*/
+xsps_strmgr_t*	 xsps_strmgr_new();
+void		 xsps_strmgr_free(xsps_strmgr_t*);
+char*		 xsps_strmgr_add(xsps_strmgr_t*, const char*);
+void		 xsps_strmgr_del(xsps_strmgr_t*);
+
+/* misc string-related */
 bool xsps_streq(const char*, const char*);
-char** xstrcpy(char**,char*);
+char* xstrcpy(xsps_handle_t*, const char*);
 
 #endif /* XSPS_H */
