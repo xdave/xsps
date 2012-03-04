@@ -110,4 +110,7 @@ char*	str_add(xhp_t*, const char*);
 bool	xstreq(const char*, const char*);
 char*	xstrcpy(xhp_t*, const char*);
 
+/* template processing */
+int process_template(int, char**);
+
 #endif /* XSPS_H */

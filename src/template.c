@@ -13,7 +13,7 @@
 #include <confuse.h>
 #include <sys/utsname.h>
 
-#include "template.h"
+#include "xsps.h"
 
 typedef enum confopt {
 	OPT_INT = 1,
