@@ -59,7 +59,6 @@ typedef struct xsps_config_t {
 	int compress_level;
 	int makejobs;
 	cfg_t* cfg;
-	cfg_opt_t* opts;
 } xsps_config_t;
 
 /* string manager */
