@@ -4,13 +4,10 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <stdbool.h>
 #include <unistd.h>
-#include <confuse.h>
 #include <sys/utsname.h>
 
 #include "xsps.h"
