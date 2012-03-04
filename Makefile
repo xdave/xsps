@@ -24,7 +24,7 @@ INCLUDE := -Iinclude
 DEFINES := -DXSPS_CONFIG_DIR=\"$(XSPS_CONFIG_DIR)\" -D_REENTRANT\
 	   -D_POSIX_C_SOURCE=200112L
 CFLAGS := $(STD) $(WARN) $(STATIC) $(OPTZ) $(DEFINES) $(DEBUG) $(INCLUDE)
-LDFLAGS := $(STD) $(STATIC) $(LIBS) -Wl,--as-needed
+LDFLAGS := $(STD) $(STATIC) $(LIBS) -Wl,--as-needed -z muldefs
 
 all: $(TARGET)
 
