@@ -11,6 +11,10 @@
 #ifndef XSPS_H
 #define XSPS_H 1
 
+#define XENOMEM fprintf(stderr, "%s:%d: Out of memory!", __FILE__, __LINE__); \
+	xsps_handle_free(xhp);						      \
+	exit(1)
+
 #define XSPS_LOG_SIZE 2048
 #define xsps_log_info(xhp, fmt, ...) \
 	xsps_log_all(xhp, COLOR_WHITE, stdout, "INFO ", fmt, ##__VA_ARGS__)
@@ -78,11 +82,12 @@ typedef struct xsps_handle_t {
 xsps_handle_t* xsps_handle_new(void);
 void xsps_handle_free(xsps_handle_t*);
 
+/* safe memory allocation */
+void *xmalloc(xsps_handle_t*, size_t size);
+void *xcalloc(xsps_handle_t*, size_t nmemb, size_t size);
+void *xrealloc(xsps_handle_t*, void *ptr, size_t size);
+
 /* logging */
-/*void xsps_log_info (void*, const char*, ...);
-void xsps_log_warn (void*, const char*, ...);
-void xsps_log_debug(void*, const char*, ...);
-void xsps_log_error(void*, const char*, ...);*/
 void xsps_log_all(xsps_handle_t*,int,FILE*,const char*,const char*, ...);
 
 /* command line arguments */
@@ -93,14 +98,11 @@ int xsps_arg_print_usage(xsps_handle_t*, const char*);
 /* configuration*/
 void xsps_config_init(xsps_handle_t*);
 
-/* string manager*/
+/* string managment*/
 void	xsps_strmgr_init(xsps_handle_t *);
-void	xsps_strmgr_free(xsps_strmgr_t*);
-char*	xsps_strmgr_add(xsps_strmgr_t*, const char*);
-void	xsps_strmgr_del(xsps_strmgr_t*);
-
-/* misc string-related */
-bool xsps_streq(const char*, const char*);
-char* xstrcpy(xsps_handle_t*, const char*);
+void	xsps_strmgr_free(xsps_handle_t*);
+char*	xsps_strmgr_add(xsps_handle_t*, const char*);
+bool	xsps_streq(const char*, const char*);
+char*	xstrcpy(xsps_handle_t*, const char*);
 
 #endif /* XSPS_H */

@@ -28,7 +28,7 @@ void xsps_config_init(xsps_handle_t* xhp) {
 	int error;
 	char error_buffer[256];
 
-	xhp->config = malloc(sizeof(xsps_config_t));
+	xhp->config = xmalloc(xhp, sizeof(xsps_config_t));
 	xhp->config->cfg = cfg_init(opts, CFGF_NONE);
 
 	switch(cfg_parse(xhp->config->cfg, xhp->arg->config)) {

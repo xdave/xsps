@@ -9,7 +9,7 @@
 #include "xsps.h"
 
 void xsps_arg_init(xsps_handle_t* xhp) {
-	xhp->arg = malloc(sizeof(xsps_arg_t));
+	xhp->arg = xmalloc(xhp, sizeof(xsps_arg_t));
 	xhp->arg->config = xstrcpy(xhp, XSPS_CONFIG);
 	xhp->arg->build = xstrcpy(xhp, "base-chroot");
 }
