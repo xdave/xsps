@@ -9,8 +9,7 @@
 #include "xsps.h"
 
 void
-xsps_log_all(xsps_handle_t* xhp, int c, FILE* target,
-		const char *name, const char *fmt, ...)
+log_all(xhp_t* xhp, int c, FILE* tgt, const char *name, const char *fmt, ...)
 {
 	int	n;
 	size_t	size = 100;
@@ -32,7 +31,7 @@ xsps_log_all(xsps_handle_t* xhp, int c, FILE* target,
 		p = np;
 	}
 
-	fprintf(target, "%c[%dm%c[%dm[%s] => %s%c[%dm\n",
+	fprintf(tgt, "%c[%dm%c[%dm[%s] => %s%c[%dm\n",
 		COLOR_ESC, COLOR_BOLD, COLOR_ESC, c,
 		name, p, COLOR_ESC, COLOR_OFF);
 

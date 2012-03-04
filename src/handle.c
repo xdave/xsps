@@ -6,21 +6,21 @@
 
 #include "xsps.h"
 
-xsps_handle_t* xsps_handle_new(int argc, char** argv) {
-	xsps_handle_t* xhp;
-	xhp = malloc(sizeof(xsps_handle_t));
+xhp_t* xhp_new(int argc, char** argv) {
+	xhp_t* xhp;
+	xhp = malloc(sizeof(xhp_t));
 	if (xhp == NULL) {
 		fprintf(stderr, "%s:%d: Out of memory!", __FILE__, __LINE__);
 		exit(1);
 	}
-	xsps_strmgr_init(xhp);
-	xsps_arg_init(xhp, argc, argv);
-	xsps_config_init(xhp);
+	str_init(xhp);
+	arg_init(xhp, argc, argv);
+	config_init(xhp);
 	return xhp;
 }
 
-void xsps_handle_free(xsps_handle_t* xhp) {
-	xsps_strmgr_free(xhp);
+void xhp_free(xhp_t* xhp) {
+	str_free(xhp);
 
 	if (xhp->config != NULL && xhp->config->cfg != NULL)
 		cfg_free(xhp->config->cfg);

@@ -9,39 +9,39 @@
 #include "xsps.h"
 
 void*
-xmalloc(xsps_handle_t* xhp, size_t size)
+xmalloc(xhp_t* xhp, size_t size)
 {
 	void* ptr;
 
 	ptr = malloc(size);
 	if (ptr == NULL && size != 0) {
-		XENOMEM;
+		XENOMEM(xhp);
 	}
 
 	return ptr;
 }
 
 void*
-xcalloc(xsps_handle_t* xhp, size_t nmemb, size_t size) 
+xcalloc(xhp_t* xhp, size_t nmemb, size_t size) 
 {
 	void* ptr;
 
 	ptr = calloc(nmemb, size);
 	if (ptr == NULL && size != 0) {
-		XENOMEM;
+		XENOMEM(xhp);
 	}
 
 	return ptr;
 }
 
 void*
-xrealloc(xsps_handle_t* xhp, void *old_ptr, size_t size)
+xrealloc(xhp_t* xhp, void *old_ptr, size_t size)
 {
 	void* ptr;
 
 	ptr = realloc(old_ptr, size);
 	if (ptr == NULL && size != 0) {
-		XENOMEM;
+		XENOMEM(xhp);
 	}
 
 	return ptr;

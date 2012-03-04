@@ -11,19 +11,20 @@
 #ifndef XSPS_H
 #define XSPS_H 1
 
-#define XENOMEM fprintf(stderr, "%s:%d: Out of memory!", __FILE__, __LINE__); \
-	xsps_handle_free(xhp);						      \
+#define XENOMEM(xhp)							\
+	fprintf(stderr, "%s:%d: Out of memory!", __FILE__, __LINE__);	\
+	xhp_free(xhp);							\
 	exit(1)
 
-#define XSPS_LOG_SIZE 2048
-#define xsps_log_info(xhp, fmt, ...) \
-	xsps_log_all(xhp, COLOR_WHITE, stdout, "INFO ", fmt, ##__VA_ARGS__)
-#define xsps_log_warn(xhp, fmt, ...) \
-	xsps_log_all(xhp, COLOR_YELLOW, stdout, "WARN ", fmt, ##__VA_ARGS__)
-#define xsps_log_debug(xhp, fmt, ...) \
-	xsps_log_all(xhp, COLOR_CYAN, stderr, "DEBUG", fmt, ##__VA_ARGS__)
-#define xsps_log_error(xhp, fmt, ...) \
-	xsps_log_all(xhp, COLOR_RED, stderr, "ERROR", fmt, ##__VA_ARGS__)
+#define LOG_SIZE 2048
+#define log_info(xhp, fmt, ...) \
+	log_all(xhp, COLOR_WHITE, stdout, "INFO ", fmt, ##__VA_ARGS__)
+#define log_warn(xhp, fmt, ...) \
+	log_all(xhp, COLOR_YELLOW, stdout, "WARN ", fmt, ##__VA_ARGS__)
+#define log_debug(xhp, fmt, ...) \
+	log_all(xhp, COLOR_CYAN, stderr, "DEBUG", fmt, ##__VA_ARGS__)
+#define log_error(xhp, fmt, ...) \
+	log_all(xhp, COLOR_RED, stderr, "ERROR", fmt, ##__VA_ARGS__)
 
 #define XSPS_CONFIG XSPS_CONFIG_DIR "/xsps.conf"
 
@@ -42,20 +43,20 @@ typedef enum {
 	COLOR_MAGENTA = 35,
 	COLOR_CYAN = 36,
 	COLOR_WHITE = 37
-} xsps_color_t;
+} color_t;
 
 /* command line arguments */
-typedef struct xsps_arg_t {
+typedef struct arg_t {
 	int    argc;
 	char** argv;
 	bool   debug;
 	char*  config;
 	char*  masterdir;
 	char*  build;
-} xsps_arg_t;
+} arg_t;
 
 /* configuration */
-typedef struct xsps_config_t {
+typedef struct config_t {
 	char* distdir;
 	char* repourl;
 	char* hostdir;
@@ -67,45 +68,45 @@ typedef struct xsps_config_t {
 	uint16_t compress_level;
 	uint16_t makejobs;
 	cfg_t* cfg;
-} xsps_config_t;
+} config_t;
 
 /* string manager */
-typedef struct xsps_strmgr_t {
+typedef struct str_t {
 	size_t size;
 	char** items;
-} xsps_strmgr_t;
+} str_t;
 
 /* main xsps handle */
-typedef struct xsps_handle_t {
-	xsps_strmgr_t* strmgr;
-	xsps_arg_t* arg;
-	xsps_config_t* config;
-} xsps_handle_t;
+typedef struct xhp_t {
+	str_t* str;
+	arg_t* arg;
+	config_t* config;
+} xhp_t;
 
-xsps_handle_t* xsps_handle_new(int, char**);
-void xsps_handle_free(xsps_handle_t*);
+xhp_t* xhp_new(int, char**);
+void xhp_free(xhp_t*);
 
 /* safe memory allocation */
-void *xmalloc(xsps_handle_t*, size_t size);
-void *xcalloc(xsps_handle_t*, size_t nmemb, size_t size);
-void *xrealloc(xsps_handle_t*, void *ptr, size_t size);
+void *xmalloc(xhp_t*, size_t size);
+void *xcalloc(xhp_t*, size_t nmemb, size_t size);
+void *xrealloc(xhp_t*, void *ptr, size_t size);
 
 /* logging */
-void xsps_log_all(xsps_handle_t*,int,FILE*,const char*,const char*, ...);
+void log_all(xhp_t*, int, FILE*, const char*, const char*, ...);
 
 /* command line arguments */
-void xsps_arg_init(xsps_handle_t*, int, char**);
-int  xsps_arg_parse(xsps_handle_t*);
-void xsps_arg_print_usage(xsps_handle_t*);
+void arg_init(xhp_t*, int, char**);
+int  arg_parse(xhp_t*);
+void arg_print_usage(xhp_t*);
 
 /* configuration*/
-void xsps_config_init(xsps_handle_t*);
+void config_init(xhp_t*);
 
 /* string managment*/
-void	xsps_strmgr_init(xsps_handle_t *);
-void	xsps_strmgr_free(xsps_handle_t*);
-char*	xsps_strmgr_add(xsps_handle_t*, const char*);
+void	str_init(xhp_t*);
+void	str_free(xhp_t*);
+char*	str_add(xhp_t*, const char*);
 bool	xstreq(const char*, const char*);
-char*	xstrcpy(xsps_handle_t*, const char*);
+char*	xstrcpy(xhp_t*, const char*);
 
 #endif /* XSPS_H */

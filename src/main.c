@@ -8,11 +8,11 @@
 #include "xsps.h"
 
 int main(int argc, char** argv) {
-	xsps_handle_t* xhp = xsps_handle_new(argc, argv);
+	xhp_t* xhp = xhp_new(argc, argv);
 
-	xsps_log_info(xhp, "%s -- %s!!!", "test", "hello");
-	xsps_log_warn(xhp, "%c %s %x %d", '!', "hi", (size_t)&main, 50);
+	log_info(xhp, "%s -- %s!!!", "test", "hello");
+	log_warn(xhp, "%c %s %x %d", '!', "hi", (size_t)&main, 50);
 
-	xsps_handle_free(xhp);
+	xhp_free(xhp);
 	return 0;
 }

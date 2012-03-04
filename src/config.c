@@ -8,7 +8,7 @@
 
 #include "xsps.h"
 
-void xsps_config_init(xsps_handle_t* xhp) {
+void config_init(xhp_t* xhp) {
 	cfg_opt_t opts[] = {
 		CFG_STR("XSPS_DISTDIR", "$HOME/src/xsps", CFGF_NONE),
 		CFG_STR("XSPS_REPOURL", "git://github.com/davehome/xsps.git",
@@ -28,19 +28,19 @@ void xsps_config_init(xsps_handle_t* xhp) {
 	int error;
 	char error_buffer[256];
 
-	xhp->config = xmalloc(xhp, sizeof(xsps_config_t));
+	xhp->config = xmalloc(xhp, sizeof(config_t));
 	xhp->config->cfg = cfg_init(opts, CFGF_NONE);
 
 	switch(cfg_parse(xhp->config->cfg, xhp->arg->config)) {
 		case CFG_FILE_ERROR:
 			error = errno;
 			strerror_r(error, error_buffer, 256);
-			xsps_log_warn(xhp, "Can't read config file '%s': %s.",
+			log_warn(xhp, "Can't read config file '%s': %s.",
 					xhp->arg->config, error_buffer);
-			xsps_log_warn(xhp, "%s", "Using defaults.");
+			log_warn(xhp, "%s", "Using defaults.");
 			break;
 		case CFG_PARSE_ERROR:
-			xsps_handle_free(xhp);
+			xhp_free(xhp);
 			exit(1);
 			break;
 		case CFG_SUCCESS:

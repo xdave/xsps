@@ -8,46 +8,43 @@
 
 #include "xsps.h"
 
-void xsps_arg_init(xsps_handle_t* xhp, int argc, char** argv) {
-	xhp->arg = xmalloc(xhp, sizeof(xsps_arg_t));
+void arg_init(xhp_t* xhp, int argc, char** argv) {
+	xhp->arg = xmalloc(xhp, sizeof(arg_t));
 	xhp->arg->argc = argc;
 	xhp->arg->argv = argv;
 	xhp->arg->debug = false;
 	xhp->arg->config = xstrcpy(xhp, XSPS_CONFIG);
 	xhp->arg->build = xstrcpy(xhp, "base-chroot");
-	xsps_arg_parse(xhp);
+	arg_parse(xhp);
 }
 
-int xsps_arg_parse(xsps_handle_t* xhp) {
+int arg_parse(xhp_t* xhp) {
 	int c;
 
 	if (xhp->arg->argc == 1)
-		xsps_arg_print_usage(xhp);
+		arg_print_usage(xhp);
 
 	while ((c = getopt(xhp->arg->argc,xhp->arg->argv,"hdc:m:b:")) != EOF) {
 		switch (c) {
 			case 'd':
 				xhp->arg->debug = true;
-				xsps_log_debug(xhp, "+FLAG -%c", c);
+				log_debug(xhp, "+FLAG -%c", c);
 				break;
 			case 'c':
 				xhp->arg->config = xstrcpy(xhp, optarg);
-				xsps_log_debug(xhp, "+OPTION -%c: '%s'",
-						c, optarg);
+				log_debug(xhp, "+OPTION -%c: '%s'", c, optarg);
 				break;
 			case 'm':
 				xhp->arg->masterdir = xstrcpy(xhp, optarg);
-				xsps_log_debug(xhp, "+OPTION -%c: '%s'",
-						c, optarg);
+				log_debug(xhp, "+OPTION -%c: '%s'", c, optarg);
 				break;
 			case 'b':
 				xhp->arg->build = xstrcpy(xhp, optarg);
-				xsps_log_debug(xhp, "+OPTION -%c: '%s'",
-						c, optarg);
+				log_debug(xhp, "+OPTION -%c: '%s'", c, optarg);
 				break;
 			case 'h':
 			default:
-				xsps_arg_print_usage(xhp);
+				arg_print_usage(xhp);
 				break;
 		}
 	}
@@ -55,9 +52,9 @@ int xsps_arg_parse(xsps_handle_t* xhp) {
 }
 
 void
-xsps_arg_print_usage(xsps_handle_t* xhp)
+arg_print_usage(xhp_t* xhp)
 {
-	xsps_log_info(xhp,
+	log_info(xhp,
 "Usage: %s [-h] [-d] [-c FILE] [-m DIR] -b PACKAGE\n\n"
 "	Options:\n"
 "	  -h .............. display this message\n"
@@ -67,6 +64,6 @@ xsps_arg_print_usage(xsps_handle_t* xhp)
 "	Actions:\n"
 "	  -b PACKAGE ...... build a PACKAGE\n",
 		xhp->arg->argv[0]);
-	xsps_handle_free(xhp);
+	xhp_free(xhp);
 	exit(1);
 }
