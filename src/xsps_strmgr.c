@@ -57,7 +57,7 @@ xsps_strmgr_free(xsps_handle_t* xhp)
 
 /* easier to check */
 bool
-xsps_streq(const char* s1, const char* s2)
+xstreq(const char* s1, const char* s2)
 {
 	return ((strcmp(s1, s2)) == 0);
 }

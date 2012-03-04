@@ -34,12 +34,10 @@ void xsps_config_init(xsps_handle_t* xhp) {
 	switch(cfg_parse(xhp->config->cfg, xhp->arg->config)) {
 		case CFG_FILE_ERROR:
 			error = errno;
-			fprintf(stderr, "WARNING: configuration "
-				"file '%s' could not be read: ",
-				xhp->arg->config);
-				strerror_r(error, error_buffer, 256);
-				fprintf(stderr, "%s\nUsing defaults.\n",
-					error_buffer);
+			strerror_r(error, error_buffer, 256);
+			xsps_log_warn(xhp, "Can't read config file '%s': %s.",
+					xhp->arg->config, error_buffer);
+			xsps_log_warn(xhp, "%s", "Using defaults.");
 			break;
 		case CFG_PARSE_ERROR:
 			xsps_handle_free(xhp);

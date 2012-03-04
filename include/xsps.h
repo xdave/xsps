@@ -46,9 +46,12 @@ typedef enum {
 
 /* command line arguments */
 typedef struct xsps_arg_t {
-	char* config;
-	char* masterdir;
-	char* build;
+	int    argc;
+	char** argv;
+	bool   debug;
+	char*  config;
+	char*  masterdir;
+	char*  build;
 } xsps_arg_t;
 
 /* configuration */
@@ -79,7 +82,7 @@ typedef struct xsps_handle_t {
 	xsps_config_t* config;
 } xsps_handle_t;
 
-xsps_handle_t* xsps_handle_new(void);
+xsps_handle_t* xsps_handle_new(int, char**);
 void xsps_handle_free(xsps_handle_t*);
 
 /* safe memory allocation */
@@ -91,9 +94,9 @@ void *xrealloc(xsps_handle_t*, void *ptr, size_t size);
 void xsps_log_all(xsps_handle_t*,int,FILE*,const char*,const char*, ...);
 
 /* command line arguments */
-void xsps_arg_init(xsps_handle_t*);
-int xsps_arg_parse(xsps_handle_t*, int, char**);
-int xsps_arg_print_usage(xsps_handle_t*, const char*);
+void xsps_arg_init(xsps_handle_t*, int, char**);
+int xsps_arg_parse(xsps_handle_t*);
+int xsps_arg_print_usage(xsps_handle_t*);
 
 /* configuration*/
 void xsps_config_init(xsps_handle_t*);
@@ -102,7 +105,7 @@ void xsps_config_init(xsps_handle_t*);
 void	xsps_strmgr_init(xsps_handle_t *);
 void	xsps_strmgr_free(xsps_handle_t*);
 char*	xsps_strmgr_add(xsps_handle_t*, const char*);
-bool	xsps_streq(const char*, const char*);
+bool	xstreq(const char*, const char*);
 char*	xstrcpy(xsps_handle_t*, const char*);
 
 #endif /* XSPS_H */

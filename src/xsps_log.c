@@ -17,6 +17,9 @@ xsps_log_all(xsps_handle_t* xhp, int c, FILE* target,
 	char	*p, *np;
 	va_list ap;
 
+	if (xstreq(name, "DEBUG") && xhp->arg->debug == false)
+		return;
+
 	p = xmalloc(xhp, size);
 
 	while(1) {

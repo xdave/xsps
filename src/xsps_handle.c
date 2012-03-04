@@ -6,7 +6,7 @@
 
 #include "xsps.h"
 
-xsps_handle_t* xsps_handle_new() {
+xsps_handle_t* xsps_handle_new(int argc, char** argv) {
 	xsps_handle_t* xhp;
 	xhp = malloc(sizeof(xsps_handle_t));
 	if (xhp == NULL) {
@@ -14,7 +14,7 @@ xsps_handle_t* xsps_handle_new() {
 		exit(1);
 	}
 	xsps_strmgr_init(xhp);
-	xsps_arg_init(xhp);
+	xsps_arg_init(xhp, argc, argv);
 	xsps_config_init(xhp);
 	return xhp;
 }
