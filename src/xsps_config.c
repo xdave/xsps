@@ -68,7 +68,8 @@ void xsps_config_init(xsps_handle_t* xhp) {
 		cfg_getstr(xhp->config->cfg, "XSPS_COMPRESS_CMD"));
 
 	xhp->config->ccache = cfg_getbool(xhp->config->cfg, "XSPS_CCACHE");
-	xhp->config->makejobs = cfg_getint(xhp->config->cfg, "XSPS_MAKEJOBS");
-	xhp->config->compress_level = cfg_getint(xhp->config->cfg,
-		"XSPS_COMPRESS_LEVEL");
+	xhp->config->makejobs =
+	    (uint16_t)cfg_getint(xhp->config->cfg, "XSPS_MAKEJOBS");
+	xhp->config->compress_level =
+	    (uint16_t)cfg_getint(xhp->config->cfg, "XSPS_COMPRESS_LEVEL");
 }

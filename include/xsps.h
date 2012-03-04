@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include <confuse.h>
+#include <inttypes.h>
 
 #ifndef XSPS_H
 #define XSPS_H 1
@@ -56,8 +57,8 @@ typedef struct xsps_config_t {
 	char* ldflags;
 	char* compress_cmd;
 	bool ccache;
-	int compress_level;
-	int makejobs;
+	uint16_t compress_level;
+	uint16_t makejobs;
 	cfg_t* cfg;
 } xsps_config_t;
 
