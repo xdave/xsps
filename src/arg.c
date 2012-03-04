@@ -83,15 +83,15 @@ arg_print_usage(xhp_t *xhp)
 	log_info(xhp,
 "Usage: %s [-dh] [-c file] [-m dir] [-o prop] [-p pkgname] template\n\n"
 "	Flags:\n"
-"	  -h .............. display this message\n"
-"	  -d .............. display extra debugging messages\n\n"
+"	  -h ............ display this message\n"
+"	  -d ............ display extra debugging messages\n\n"
 "	Config:\n"
-"	  -c file ......... specifiy alternate config file\n"
-"	  -m dir .......... override master dir config setting\n\n"
+"	  -c file ....... specifiy alternate config file\n"
+"	  -m dir ........ override master dir config setting\n\n"
 "	Options:\n"
-"	  -p pkgname ...... specify package name\n"
-"	  -o prop ......... show a property from a package template\n\n"
-"	template .......... the source package template to use\n",
+"	  -p pkgname .... specify package name within a template\n"
+"	  -o prop ....... show property from package for selected template\n\n"
+"	template ........ the source package template to use\n",
 	    xhp->arg->argv[0]);
 	xhp_free(xhp);
 	exit(EXIT_FAILURE);
