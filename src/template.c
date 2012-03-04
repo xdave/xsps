@@ -430,8 +430,6 @@ process_template(xhp_t *xhp)
 	 * Validate the "package" section, we need at least one.
 	 */
 	if (validate_pkg_section(cfg) == -1)
-		cfg_free(cfg);
-		xhp_free(xhp);
 		exit(EXIT_FAILURE);
 
 	if (pkgname) {
