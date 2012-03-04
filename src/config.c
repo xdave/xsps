@@ -35,28 +35,32 @@ config_init(xhp_t *xhp)
 	xhp->config->cfg = cfg_init(opts, CFGF_NONE);
 
 	switch(cfg_parse(xhp->config->cfg, xhp->arg->config)) {
-		case CFG_FILE_ERROR:
-			error = errno;
-			strerror_r(error, error_buffer, 256);
-			log_warn(xhp, "Can't read config file '%s': %s.",
-					xhp->arg->config, error_buffer);
-			log_warn(xhp, "%s", "Using defaults.");
-			break;
-		case CFG_PARSE_ERROR:
-			xhp_free(xhp);
-			exit(EXIT_FAILURE);
-			break;
-		case CFG_SUCCESS:
-		default:
-			break;
+	case CFG_FILE_ERROR:
+		error = errno;
+		strerror_r(error, error_buffer, 256);
+		log_warn(xhp, "Can't read config file '%s': %s.",
+		    xhp->arg->config, error_buffer);
+		log_warn(xhp, "%s", "Using defaults.");
+		break;
+	case CFG_PARSE_ERROR:
+		xhp_free(xhp);
+		exit(EXIT_FAILURE);
+		break;
+	case CFG_SUCCESS:
+	default:
+		break;
 	}
 
 	xhp->config->distdir = xstrcpy(xhp,
 		cfg_getstr(xhp->config->cfg, "XSPS_DISTDIR"));
 	xhp->config->repourl = xstrcpy(xhp,
 		cfg_getstr(xhp->config->cfg, "XSPS_REPOURL"));
-	xhp->arg->masterdir = xstrcpy(xhp,
-		cfg_getstr(xhp->config->cfg, "XSPS_MASTERDIR"));
+	if(xhp->arg->masterdir == NULL) {
+		xhp->config->masterdir = xstrcpy(xhp,
+		    cfg_getstr(xhp->config->cfg, "XSPS_MASTERDIR"));
+	} else {
+		xhp->config->masterdir = xhp->arg->masterdir;
+	}
 	xhp->config->hostdir = xstrcpy(xhp,
 		cfg_getstr(xhp->config->cfg, "XSPS_HOSTDIR"));
 	xhp->config->cflags = xstrcpy(xhp,

@@ -50,19 +50,20 @@ typedef enum {
 typedef struct arg_t {
 	int    argc;
 	char** argv;
-	bool   debug;
-	char*  config;
-	char*  masterdir;
-	char*  option;
-	char*  pkgname;
+	bool   debug;		/* optional */
+	char*  config;		/* optional */
+	char*  masterdir;	/* optional */
+	char*  option;		/* optional */
+	char*  pkgname;		/* optional */
 	char*  template;
-	char*  build;
+	char*  build;		/* TODO: not implemented */
 } arg_t;
 
 /* configuration */
 typedef struct config_t {
 	char* distdir;
 	char* repourl;
+	char* masterdir;
 	char* hostdir;
 	char* cflags;
 	char* cxxflags;

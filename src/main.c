@@ -13,9 +13,10 @@ main(int argc, char **argv)
 {
 	xhp_t *xhp = xhp_new(argc, argv);
 
-	/*
-	 * Test!
-	 */
+	/* testing config args */
+	log_debug(xhp, "%s", "Configuration:");
+	log_debug(xhp, "masterdir = '%s'", xhp->config->masterdir);
+
 	process_template(xhp);
 
 	xhp_free(xhp);

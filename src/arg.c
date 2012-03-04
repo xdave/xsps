@@ -17,6 +17,7 @@ arg_init(xhp_t *xhp, int argc, char **argv)
 	xhp->arg->argv = argv;
 	xhp->arg->debug = false;
 	xhp->arg->config = xstrcpy(xhp, XSPS_CONFIG);
+	xhp->arg->masterdir = NULL;
 	xhp->arg->option = NULL;
 	xhp->arg->pkgname = NULL;
 	xhp->arg->template = NULL;
