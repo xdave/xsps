@@ -8,7 +8,9 @@
 
 #include "xsps.h"
 
-void arg_init(xhp_t* xhp, int argc, char** argv) {
+void
+arg_init(xhp_t* xhp, int argc, char** argv)
+{
 	xhp->arg = xmalloc(xhp, sizeof(arg_t));
 	xhp->arg->argc = argc;
 	xhp->arg->argv = argv;
@@ -18,7 +20,9 @@ void arg_init(xhp_t* xhp, int argc, char** argv) {
 	arg_parse(xhp);
 }
 
-int arg_parse(xhp_t* xhp) {
+int
+arg_parse(xhp_t* xhp)
+{
 	int c;
 
 	if (xhp->arg->argc == 1)

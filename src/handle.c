@@ -6,7 +6,9 @@
 
 #include "xsps.h"
 
-xhp_t* xhp_new(int argc, char** argv) {
+xhp_t*
+xhp_new(int argc, char** argv)
+{
 	xhp_t* xhp;
 	xhp = malloc(sizeof(xhp_t));
 	if (xhp == NULL) {
@@ -19,7 +21,9 @@ xhp_t* xhp_new(int argc, char** argv) {
 	return xhp;
 }
 
-void xhp_free(xhp_t* xhp) {
+void
+xhp_free(xhp_t* xhp)
+{
 	str_free(xhp);
 
 	if (xhp->config != NULL && xhp->config->cfg != NULL)

@@ -7,7 +7,9 @@
 
 #include "xsps.h"
 
-int main(int argc, char** argv) {
+int
+main(int argc, char** argv)
+{
 	xhp_t* xhp = xhp_new(argc, argv);
 
 	log_info(xhp, "%s -- %s!!!", "test", "hello");
