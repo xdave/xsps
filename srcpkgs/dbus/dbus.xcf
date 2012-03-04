@@ -1,0 +1,74 @@
+# build template for dbus 
+#
+source = "dbus"
+version = "1.4.16"
+revision = "1"
+homepage = "http://dbus.freedesktop.org"
+maintainer = "Juan RP <xtraeme@gmail.com>"
+license = "GPL-2"
+description = "
+ D-BUS is a message bus, used for sending messages between applications.
+ Conceptually, it fits somewhere in between raw sockets and CORBA in terms
+ of complexity.
+
+ D-BUS supports broadcast messages, asynchronous messages (thus decreasing
+ latency), authentication, and more.  It is designed to be low-overhead;
+ messages are sent using a binary protocol, not using XML.  D-BUS also
+ supports a method call mapping for its messages, but it is not required;
+ this makes using the system quite simple."
+
+distfiles { 
+	source = { "http://dbus.freedesktop.org/dbus/dbus-${version}.tar.gz" }
+	sha256 = { "1d8ee6262f8cc2148f06578eee522c755ba0896206b3464ca9bdc84f411b29c6" }
+}
+required-abi = "1.2.10"
+make-depends { 
+	all = { "pkg-config", "expat-devel", "libX11-devel" }
+}
+
+build-style = "gnu-configure"
+configure-args = {
+	"--disable-selinux", "--enable-userdb=cache", "--with-xml=expat",
+	"--disable-dnotify", "--enable-inotify", "--with-dbus-user=dbus",
+	"--disable-doxygen-docs", "--disable-xml-docs", "--disable-tests",
+	"--with-systemdsystemunitdir=/lib/systemd/system"
+}
+
+package {
+	pkgname = "dbus"
+	desc = "Message bus system"
+	conf-files = {
+		"/etc/dbus-1/session.conf",
+		"/etc/dbus-1/system.conf"
+	}
+	systemd-services = { "dbus.service false" }
+	system-accounts = { "dbus" }
+	files = {
+		"/etc", "/lib/systemd", "/usr/libexec",
+		"/usr/bin/dbus-cleanup-sockets",
+		"/usr/share/man/man1/dbus-cleanup-sockets.1",
+		"/usr/bin/dbus-monitor", "/usr/share/man/man1/dbus-monitor.1",
+		"/usr/bin/dbus-send", "/usr/share/man/man1/dbus-send.1",
+		"/usr/bin/dbus-uuidgen", "/usr/share/man/man1/dbus-uuidgen.1",
+		"/usr/bin/dbus-daemon", "/usr/share/man/man1/dbus-daemon.1"
+	}
+}
+package {
+	pkgname = "dbus-devel"
+	desc = "Message bus system -- development files"
+	depends = { "pkg-config", "expat-devel", "libX11-devel", "dbus-libs" }
+	files = {
+		"/usr/include", "/usr/lib/dbus-*", "/usr/lib/pkgconfig",
+		"/usr/lib/*.a", "/usr/share/doc"
+	}
+}
+package {
+	pkgname = "dbus-libs"
+	desc = "Message bus system -- runtime libraries"
+	files = { "usr/lib/*.so*" }
+}
+package {
+	pkgname = "dbus-x11"
+	desc = "Message bus system -- X11 support"
+	files = { "usr/bin/dbus-launch", "usr/share/man/man1/dbus-launch.1" }
+}
