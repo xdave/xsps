@@ -16,7 +16,6 @@
 	xhp_free(xhp);							\
 	exit(1)
 
-#define LOG_SIZE 2048
 #define log_info(xhp, fmt, ...) \
 	log_all(xhp, COLOR_WHITE, stdout, "INFO ", fmt, ##__VA_ARGS__)
 #define log_warn(xhp, fmt, ...) \
