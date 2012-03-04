@@ -14,7 +14,7 @@
 #define XENOMEM(xhp)							\
 	fprintf(stderr, "%s:%d: Out of memory!", __FILE__, __LINE__);	\
 	xhp_free(xhp);							\
-	exit(1)
+	exit(EXIT_FAILURE)
 
 #define log_info(xhp, fmt, ...) \
 	log_all(xhp, COLOR_WHITE, stdout, "INFO ", fmt, ##__VA_ARGS__)
@@ -95,7 +95,7 @@ void log_all(xhp_t*, int, FILE*, const char*, const char*, ...);
 
 /* command line arguments */
 void arg_init(xhp_t*, int, char**);
-int  arg_parse(xhp_t*);
+void arg_parse(xhp_t*);
 void arg_print_usage(xhp_t*);
 
 /* configuration*/

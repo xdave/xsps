@@ -20,7 +20,7 @@ arg_init(xhp_t* xhp, int argc, char** argv)
 	arg_parse(xhp);
 }
 
-int
+void
 arg_parse(xhp_t* xhp)
 {
 	int c;
@@ -52,7 +52,6 @@ arg_parse(xhp_t* xhp)
 				break;
 		}
 	}
-	return 0;
 }
 
 void
@@ -69,5 +68,5 @@ arg_print_usage(xhp_t* xhp)
 "	  -b PACKAGE ...... build a PACKAGE\n",
 		xhp->arg->argv[0]);
 	xhp_free(xhp);
-	exit(1);
+	exit(EXIT_FAILURE);
 }

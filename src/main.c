@@ -16,5 +16,5 @@ main(int argc, char** argv)
 	log_warn(xhp, "%c %s %x %d", '!', "hi", (size_t)&main, 50);
 
 	xhp_free(xhp);
-	return 0;
+	return (EXIT_SUCCESS);
 }

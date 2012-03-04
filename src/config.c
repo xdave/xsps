@@ -43,7 +43,7 @@ config_init(xhp_t* xhp)
 			break;
 		case CFG_PARSE_ERROR:
 			xhp_free(xhp);
-			exit(1);
+			exit(EXIT_FAILURE);
 			break;
 		case CFG_SUCCESS:
 		default:

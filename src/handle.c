@@ -13,7 +13,7 @@ xhp_new(int argc, char** argv)
 	xhp = malloc(sizeof(xhp_t));
 	if (xhp == NULL) {
 		fprintf(stderr, "%s:%d: Out of memory!", __FILE__, __LINE__);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	str_init(xhp);
 	arg_init(xhp, argc, argv);
