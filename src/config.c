@@ -13,7 +13,7 @@ void
 config_init(xhp_t *xhp)
 {
 	cfg_opt_t opts[] = {
-		CFG_STR("XSPS_DISTDIR", "$HOME/src/xsps", CFGF_NONE),
+		CFG_STR("XSPS_DISTDIR", ".", CFGF_NONE),
 		CFG_STR("XSPS_SRCPKGS_REPOURL",
 		    "git://github.com/davehome/xsps.git", CFGF_NONE),
 		CFG_STR("XSPS_MASTERDIR", "$XSPS_DISTDIR/chroot", CFGF_NONE),
