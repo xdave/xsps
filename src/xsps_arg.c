@@ -8,21 +8,26 @@
 
 #include "xsps.h"
 
-void xsps_arg_init(xsps_handle_t* xhp) {
-	xhp->arg = malloc(sizeof(xsps_arg_t));
+void xsps_arg_init(xsps_handle_t* xhp, int argc, char** argv) {
+	xhp->arg = xmalloc(xhp, sizeof(xsps_arg_t));
+	xhp->arg->argc = argc;
+	xhp->arg->argv = argv;
+	xhp->arg->debug = false;
 	xhp->arg->config = xstrcpy(xhp, XSPS_CONFIG);
 	xhp->arg->build = xstrcpy(xhp, "base-chroot");
+	xsps_arg_parse(xhp);
 }
 
-int xsps_arg_parse(xsps_handle_t* xhp, int argc, char** argv) {
+int xsps_arg_parse(xsps_handle_t* xhp) {
 	int c;
 
-	if (argc == 1) { return xsps_arg_print_usage(xhp, argv[0]); }
+	if (xhp->arg->argc == 1)
+		xsps_arg_print_usage(xhp);
 
-	while ((c = getopt(argc, argv, "hdc:m:b:")) != EOF) {
+	while ((c = getopt(xhp->arg->argc,xhp->arg->argv,"hdc:m:b:")) != EOF) {
 		switch (c) {
 			case 'd':
-				/* TODO: ENABLE DEBUG LOGGING HERE */
+				xhp->arg->debug = true;
 				xsps_log_debug(xhp, "+FLAG -%c", c);
 				break;
 			case 'c':
@@ -42,14 +47,16 @@ int xsps_arg_parse(xsps_handle_t* xhp, int argc, char** argv) {
 				break;
 			case 'h':
 			default:
-				return xsps_arg_print_usage(xhp, argv[0]);
+				xsps_arg_print_usage(xhp);
 				break;
 		}
 	}
 	return 0;
 }
 
-int xsps_arg_print_usage(xsps_handle_t* xhp, const char* progname) {
+void
+xsps_arg_print_usage(xsps_handle_t* xhp)
+{
 	xsps_log_info(xhp,
 "Usage: %s [-h] [-d] [-c FILE] [-m DIR] -b PACKAGE\n\n"
 "	Options:\n"
@@ -59,6 +66,7 @@ int xsps_arg_print_usage(xsps_handle_t* xhp, const char* progname) {
 "	  -m DIR .......... override MASTERDIR config setting\n\n"
 "	Actions:\n"
 "	  -b PACKAGE ...... build a PACKAGE\n",
-		progname);
-	return 0;
+		xhp->arg->argv[0]);
+	xsps_handle_free(xhp);
+	exit(1);
 }

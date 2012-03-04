@@ -8,23 +8,19 @@
 
 #include "xsps.h"
 
-void xsps_log_all(xsps_handle_t* xhp, int c, FILE* target,
-		  const char *name, const char *fmt, ...) {
-	int error;
+void
+xsps_log_all(xsps_handle_t* xhp, int c, FILE* target,
+		const char *name, const char *fmt, ...)
+{
 	int	n;
 	size_t	size = 100;
-	char	buf[256];
 	char	*p, *np;
 	va_list ap;
 
-	errno = 0;
-	p = malloc(size);
-	if(errno > 0) {
-		strerror_r(errno, buf, 256);
-		fputs(buf, stderr); putchar('\n');
-		xsps_handle_free(xhp);
-		exit(1);
-	}
+	if (xstreq(name, "DEBUG") && xhp->arg->debug == false)
+		return;
+
+	p = xmalloc(xhp, size);
 
 	while(1) {
 		va_start(ap, fmt);
@@ -32,29 +28,13 @@ void xsps_log_all(xsps_handle_t* xhp, int c, FILE* target,
 		va_end(ap);
 		if(n > -1 && (size_t)n < size) break;
 		if(n > -1) size = (size_t)n+1;
-		np = realloc(p, size);
-		if(errno > 0) {
-			strerror_r(errno, buf, 256);
-			free(p);
-			fputs(buf, stderr); putchar('\n');
-			xsps_handle_free(xhp);
-			exit(1);
-		} else {
-			p = np;
-		}
+		np = xrealloc(xhp, p, size);
+		p = np;
 	}
-
-	error = errno;
-	errno = 0;
 
 	fprintf(target, "%c[%dm%c[%dm[%s] => %s%c[%dm\n",
 		COLOR_ESC, COLOR_BOLD, COLOR_ESC, c,
 		name, p, COLOR_ESC, COLOR_OFF);
 
-	if (error > 0) {
-		strerror_r(error, buf, 256);
-		xsps_log_error(xhp, "%s", buf);
-		xsps_handle_free(xhp);
-		exit(1);
-	}
+	free(p);
 }

@@ -8,40 +8,63 @@
 #include "xsps.h"
 
 /* creates a new strmgr */
-void xsps_strmgr_init(xsps_handle_t* xhp) {
-	xhp->strmgr = malloc(sizeof(xsps_strmgr_t));
+void
+xsps_strmgr_init(xsps_handle_t* xhp)
+{
+	xhp->strmgr = xmalloc(xhp, sizeof(xsps_strmgr_t));
 	xhp->strmgr->size = 0;
 	xhp->strmgr->items = NULL;
 }
 
-/* frees up all memory allocated by strmgr */
-void xsps_strmgr_free(xsps_strmgr_t* s) {
-	if (s != NULL) {
-		while(s->size > 0) xsps_strmgr_del(s);
-		free(s);
-		s = NULL;
-	}
-}
-
-/* works like strcpy() */
-char* xsps_strmgr_add(xsps_strmgr_t* s, const char* item) {
+/* works like strcpy().. kinda */
+char*
+xsps_strmgr_add(xsps_handle_t* xhp, const char* item)
+{
+	xsps_strmgr_t* s = xhp->strmgr;
 	size_t itemsize = strlen(item) + 1;
 	s->size++;
-	s->items = realloc(s->items, s->size * sizeof(char*));
-	s->items[s->size-1] = malloc(itemsize);
+	s->items = xrealloc(xhp, s->items, s->size * sizeof(char*));
+	s->items[s->size-1] = xmalloc(xhp, itemsize);
 	strncpy(s->items[s->size-1], item, itemsize);
 	s->items[s->size-1][itemsize-1] = '\0';
 	return s->items[s->size-1];
 }
 
-/* removes a string -- never call this directly; use xsps_strmgr_t_free(). */
-void xsps_strmgr_del(xsps_strmgr_t* s) {
-	if(s->size > 0) {
-		s->size--;
-		if(s->items[s->size] != NULL) {
-			free(s->items[s->size]);
-			s->items[s->size] = NULL;
-		}
-		s->items = realloc(s->items, sizeof(char*) * s->size);
+/* removes a string -- never call this directly; use xsps_strmgr_free(). */
+static void
+xsps_strmgr_del(xsps_handle_t* xhp)
+{
+	xsps_strmgr_t* s = xhp->strmgr;
+	s->size--;
+	if(s->items[s->size] != NULL) {
+		free(s->items[s->size]);
+		s->items[s->size] = NULL;
 	}
+	s->items = xrealloc(xhp, s->items, sizeof(char*) * s->size);
+}
+
+/* frees up all memory allocated by strmgr */
+void
+xsps_strmgr_free(xsps_handle_t* xhp)
+{
+	xsps_strmgr_t* s = xhp->strmgr;
+	if (s != NULL) {
+		while(s->size > 0) xsps_strmgr_del(xhp);
+		free(s);
+		s = NULL;
+	}
+}
+
+/* easier to check */
+bool
+xstreq(const char* s1, const char* s2)
+{
+	return ((strcmp(s1, s2)) == 0);
+}
+
+/* wrapper around xsps_strmgr_add() */
+char*
+xstrcpy(xsps_handle_t* xhp, const char* src)
+{
+	return xsps_strmgr_add(xhp, src);
 }
