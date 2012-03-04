@@ -8,11 +8,10 @@
 #include "xsps.h"
 
 /* creates a new strmgr */
-xsps_strmgr_t* xsps_strmgr_new() {
-	xsps_strmgr_t* s = malloc(sizeof(xsps_strmgr_t));
-	s->size = 0;
-	s->items = NULL;
-	return s;
+void xsps_strmgr_init(xsps_handle_t* xhp) {
+	xhp->strmgr = malloc(sizeof(xsps_strmgr_t));
+	xhp->strmgr->size = 0;
+	xhp->strmgr->items = NULL;
 }
 
 /* frees up all memory allocated by strmgr */
@@ -31,7 +30,7 @@ char* xsps_strmgr_add(xsps_strmgr_t* s, const char* item) {
 	s->items = realloc(s->items, s->size * sizeof(char*));
 	s->items[s->size-1] = malloc(itemsize);
 	strncpy(s->items[s->size-1], item, itemsize);
-	if(itemsize > 0) s->items[s->size-1][itemsize-1] = '\0';
+	s->items[s->size-1][itemsize-1] = '\0';
 	return s->items[s->size-1];
 }
 
