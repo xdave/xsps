@@ -25,19 +25,25 @@ void xsps_config_init(xsps_handle_t* xhp) {
 		CFG_END()
 	};
 
+	int error;
+	char error_buffer[256];
+
 	xhp->config = malloc(sizeof(xsps_config_t));
 	xhp->config->cfg = cfg_init(opts, CFGF_NONE);
 
 	switch(cfg_parse(xhp->config->cfg, xhp->arg->config)) {
 		case CFG_FILE_ERROR:
-			fprintf(stderr, "[confuse] Warning: configuration "
-				"file '%s' could not be read: %s\n",
-				xhp->arg->config, strerror(errno));
-				fprintf(stderr, "[confuse] using defaults...\n");
+			error = errno;
+			fprintf(stderr, "WARNING: configuration "
+				"file '%s' could not be read: ",
+				xhp->arg->config);
+				strerror_r(error, error_buffer, 256);
+				fprintf(stderr, "%s\nUsing defaults.\n",
+					error_buffer);
 			break;
 		case CFG_PARSE_ERROR:
 			xsps_handle_free(xhp);
-			abort();
+			exit(1);
 			break;
 		case CFG_SUCCESS:
 		default:
@@ -64,5 +70,5 @@ void xsps_config_init(xsps_handle_t* xhp) {
 	xhp->config->ccache = cfg_getbool(xhp->config->cfg, "XSPS_CCACHE");
 	xhp->config->makejobs = cfg_getint(xhp->config->cfg, "XSPS_MAKEJOBS");
 	xhp->config->compress_level = cfg_getint(xhp->config->cfg,
-							"XSPS_COMPRESS_LEVEL");
+		"XSPS_COMPRESS_LEVEL");
 }
