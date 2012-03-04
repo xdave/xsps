@@ -49,7 +49,6 @@ typedef struct xsps_arg_t {
 typedef struct xsps_config_t {
 	char* distdir;
 	char* repourl;
-	char* masterdir;
 	char* hostdir;
 	char* cflags;
 	char* cxxflags;
@@ -95,10 +94,10 @@ int xsps_arg_print_usage(xsps_handle_t*, const char*);
 void xsps_config_init(xsps_handle_t*);
 
 /* string manager*/
-xsps_strmgr_t*	 xsps_strmgr_new();
-void		 xsps_strmgr_free(xsps_strmgr_t*);
-char*		 xsps_strmgr_add(xsps_strmgr_t*, const char*);
-void		 xsps_strmgr_del(xsps_strmgr_t*);
+void	xsps_strmgr_init();
+void	xsps_strmgr_free(xsps_strmgr_t*);
+char*	xsps_strmgr_add(xsps_strmgr_t*, const char*);
+void	xsps_strmgr_del(xsps_strmgr_t*);
 
 /* misc string-related */
 bool xsps_streq(const char*, const char*);
