@@ -9,7 +9,7 @@
 xsps_handle_t* xsps_handle_new() {
 	xsps_handle_t* xhp;
 	xhp = malloc(sizeof(xsps_handle_t));
-	xhp->strmgr = xsps_strmgr_new();
+	xsps_strmgr_init(xhp);
 	xsps_log_init(xhp);
 	xsps_arg_init(xhp);
 	xsps_config_init(xhp);
