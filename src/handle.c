@@ -8,9 +8,9 @@
 #include "xsps.h"
 
 xhp_t*
-xhp_new(int argc, char** argv)
+xhp_new(int argc, char **argv)
 {
-	xhp_t* xhp;
+	xhp_t *xhp;
 	xhp = malloc(sizeof(xhp_t));
 	if (xhp == NULL) {
 		fprintf(stderr, "%s:%d: Out of memory!", __FILE__, __LINE__);
@@ -23,7 +23,7 @@ xhp_new(int argc, char** argv)
 }
 
 void
-xhp_free(xhp_t* xhp)
+xhp_free(xhp_t *xhp)
 {
 	str_free(xhp);
 

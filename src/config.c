@@ -10,7 +10,7 @@
 #include "xsps.h"
 
 void
-config_init(xhp_t* xhp)
+config_init(xhp_t *xhp)
 {
 	cfg_opt_t opts[] = {
 		CFG_STR("XSPS_DISTDIR", "$HOME/src/xsps", CFGF_NONE),

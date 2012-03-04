@@ -317,15 +317,15 @@ validate_pkg_section(cfg_t *cfg)
 	return 0;
 }
 
-static void
+/*static void
 usage(const char *p)
 {
 	fprintf(stderr, "usage: %s [-o prop] [-p pkgname] template\n", p);
 	exit(EXIT_FAILURE);
-}
+}*/
 
 int
-process_template(int argc, char **argv)
+process_template(xhp_t *xhp)
 {
 	/* package sections */
 	cfg_opt_t cfg_pkg_opts[] = {
@@ -401,41 +401,27 @@ process_template(int argc, char **argv)
 		CFG_END()
 	};
 	cfg_t *cfg, *cfgsec;
-	int rv, c;
-	const char *progname, *pkgname = NULL, *option = NULL;
+	int rv;
+	const char *option, *pkgname, *template;
 
-	progname = argv[0];
-
-	while ((c = getopt(argc, argv, "ho:p:")) != -1) {
-		switch (c) {
-		case 'o':
-			option = optarg;
-			break;
-		case 'p':
-			pkgname = optarg;
-			break;
-		case 'h':
-		default:
-			usage(progname);
-		}
-	}
-	argc -= optind;
-	argv += optind;
-
-	if (argc != 1)
-		usage(progname);
+	option = xhp->arg->option;
+	pkgname = xhp->arg->pkgname;
+	template = xhp->arg->template;
 
 	cfg = cfg_init(opts, CFGF_NONE);
 	cfg_set_validate_func(cfg, "make-depends", validate_mkdeps_section);
 	cfg_set_validate_func(cfg, "distfiles", validate_distfiles_section);
 
-	rv = cfg_parse(cfg, argv[0]);
+	rv = cfg_parse(cfg, template);
 	if (rv == CFG_FILE_ERROR) {
-		fprintf(stderr, "%s: cannot read %s (%s)\n",
-		    progname, argv[0], strerror(errno));
+		log_error(xhp, "%s: cannot read %s (%s)", xhp->arg->argv[0],
+		    template, strerror(errno));
+		xhp_free(xhp);
 		exit(EXIT_FAILURE);
 	} else if (rv == CFG_PARSE_ERROR) {
-		fprintf(stderr, "%s: failed to parse %s\n", progname, argv[0]);
+		log_error(xhp, "%s: failed to parse %s", xhp->arg->argv[0],
+		    template);
+		xhp_free(xhp);
 		exit(EXIT_FAILURE);
 	}
 	/*
@@ -447,8 +433,9 @@ process_template(int argc, char **argv)
 	if (pkgname) {
 		cfgsec = match_pkg_by_name(cfg, pkgname);
 		if (cfgsec == NULL) {
-			fprintf(stderr, "%s: no such package `%s' in %s.\n",
-			    progname, pkgname, argv[0]);
+			log_error(xhp, "%s: no such package `%s' in %s.",
+			    xhp->arg->argv[0], pkgname, template);
+			xhp_free(xhp);
 			exit(EXIT_FAILURE);
 		}
 		if (option)
@@ -463,5 +450,5 @@ process_template(int argc, char **argv)
 	}
 
 	cfg_free(cfg);
-	exit(EXIT_SUCCESS);
+	return (EXIT_SUCCESS);
 }

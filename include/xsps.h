@@ -53,6 +53,9 @@ typedef struct arg_t {
 	bool   debug;
 	char*  config;
 	char*  masterdir;
+	char*  option;
+	char*  pkgname;
+	char*  template;
 	char*  build;
 } arg_t;
 
@@ -84,33 +87,33 @@ typedef struct xhp_t {
 	config_t* config;
 } xhp_t;
 
-xhp_t* xhp_new(int, char**);
-void xhp_free(xhp_t*);
+xhp_t *xhp_new(int, char **);
+void xhp_free(xhp_t *);
 
 /* safe memory allocation */
-void *xmalloc(xhp_t*, size_t size);
-void *xcalloc(xhp_t*, size_t nmemb, size_t size);
-void *xrealloc(xhp_t*, void *ptr, size_t size);
+void *xmalloc (xhp_t *, size_t);
+void *xcalloc (xhp_t *, size_t, size_t);
+void *xrealloc(xhp_t *, void *, size_t);
 
 /* logging */
-void log_all(xhp_t*, int, FILE*, const char*, const char*, ...);
+void log_all(xhp_t *, int, FILE *, const char *, const char *, ...);
 
 /* command line arguments */
-void arg_init(xhp_t*, int, char**);
-void arg_parse(xhp_t*);
-void arg_print_usage(xhp_t*);
+void arg_init(xhp_t *, int, char **);
+void arg_parse(xhp_t *);
+void arg_print_usage(xhp_t *);
 
 /* configuration*/
-void config_init(xhp_t*);
+void config_init(xhp_t *);
 
 /* string managment*/
-void	str_init(xhp_t*);
-void	str_free(xhp_t*);
-char*	str_add(xhp_t*, const char*);
-bool	xstreq(const char*, const char*);
-char*	xstrcpy(xhp_t*, const char*);
+void	str_init(xhp_t *);
+void	str_free(xhp_t *);
+char	*str_add(xhp_t *, const char *);
+bool	xstreq(const char *, const char *);
+char	*xstrcpy(xhp_t *, const char *);
 
 /* template processing */
-int process_template(int, char**);
+int process_template(xhp_t *);
 
 #endif /* XSPS_H */

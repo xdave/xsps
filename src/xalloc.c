@@ -9,10 +9,10 @@
 
 #include "xsps.h"
 
-void*
-xmalloc(xhp_t* xhp, size_t size)
+void *
+xmalloc(xhp_t *xhp, size_t size)
 {
-	void* ptr;
+	void *ptr;
 
 	ptr = malloc(size);
 	if (ptr == NULL && size != 0) {
@@ -22,10 +22,10 @@ xmalloc(xhp_t* xhp, size_t size)
 	return ptr;
 }
 
-void*
-xcalloc(xhp_t* xhp, size_t nmemb, size_t size) 
+void *
+xcalloc(xhp_t *xhp, size_t nmemb, size_t size) 
 {
-	void* ptr;
+	void *ptr;
 
 	ptr = calloc(nmemb, size);
 	if (ptr == NULL && size != 0) {
@@ -35,10 +35,10 @@ xcalloc(xhp_t* xhp, size_t nmemb, size_t size)
 	return ptr;
 }
 
-void*
-xrealloc(xhp_t* xhp, void *old_ptr, size_t size)
+void *
+xrealloc(xhp_t *xhp, void *old_ptr, size_t size)
 {
-	void* ptr;
+	void *ptr;
 
 	ptr = realloc(old_ptr, size);
 	if (ptr == NULL && size != 0) {

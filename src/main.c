@@ -9,14 +9,14 @@
 #include "xsps.h"
 
 int
-main(int argc, char** argv)
+main(int argc, char **argv)
 {
-	xhp_t* xhp = xhp_new(argc, argv);
+	xhp_t *xhp = xhp_new(argc, argv);
 
 	/*
 	 * Test!
 	 */
-	process_template(argc, argv);
+	process_template(xhp);
 
 	xhp_free(xhp);
 	return (EXIT_SUCCESS);

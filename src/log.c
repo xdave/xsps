@@ -10,7 +10,7 @@
 #include "xsps.h"
 
 void
-log_all(xhp_t* xhp, int c, FILE* tgt, const char *name, const char *fmt, ...)
+log_all(xhp_t *xhp, int c, FILE *tgt, const char *name, const char *fmt, ...)
 {
 	int	n;
 	size_t	size = 100;

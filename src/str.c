@@ -10,7 +10,7 @@
 
 /* creates a new strmgr */
 void
-str_init(xhp_t* xhp)
+str_init(xhp_t *xhp)
 {
 	xhp->str = xmalloc(xhp, sizeof(str_t));
 	xhp->str->size = 0;
@@ -18,13 +18,13 @@ str_init(xhp_t* xhp)
 }
 
 /* works like strcpy().. kinda */
-char*
-str_add(xhp_t* xhp, const char* item)
+char *
+str_add(xhp_t *xhp, const char *item)
 {
-	str_t* s = xhp->str;
+	str_t *s = xhp->str;
 	size_t itemsize = strlen(item) + 1;
 	s->size++;
-	s->items = xrealloc(xhp, s->items, s->size * sizeof(char*));
+	s->items = xrealloc(xhp, s->items, s->size * sizeof(char *));
 	s->items[s->size-1] = xmalloc(xhp, itemsize);
 	strncpy(s->items[s->size-1], item, itemsize);
 	s->items[s->size-1][itemsize-1] = '\0';
@@ -33,9 +33,9 @@ str_add(xhp_t* xhp, const char* item)
 
 /* removes a string -- never call this directly; use xsps_strmgr_free(). */
 static void
-str_del(xhp_t* xhp)
+str_del(xhp_t *xhp)
 {
-	str_t* s = xhp->str;
+	str_t *s = xhp->str;
 	s->size--;
 	if(s->items[s->size] != NULL) {
 		free(s->items[s->size]);
@@ -46,9 +46,9 @@ str_del(xhp_t* xhp)
 
 /* frees up all memory allocated by str */
 void
-str_free(xhp_t* xhp)
+str_free(xhp_t *xhp)
 {
-	str_t* s = xhp->str;
+	str_t *s = xhp->str;
 	if (s != NULL) {
 		while(s->size > 0) str_del(xhp);
 		free(s);
@@ -58,14 +58,14 @@ str_free(xhp_t* xhp)
 
 /* easier to check */
 bool
-xstreq(const char* s1, const char* s2)
+xstreq(const char *s1, const char *s2)
 {
 	return ((strcmp(s1, s2)) == 0);
 }
 
 /* wrapper around str_add() */
-char*
-xstrcpy(xhp_t* xhp, const char* src)
+char *
+xstrcpy(xhp_t *xhp, const char *src)
 {
 	return str_add(xhp, src);
 }
