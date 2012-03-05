@@ -13,10 +13,6 @@ main(int argc, char **argv)
 {
 	xhp_t *xhp = xhp_new(argc, argv);
 
-	/* testing str_replace() */
-	log_debug(xhp, "Replace test: %s",
-	    str_replace(xhp, "This is a big test.", "big", "HUGE"));
-
 	/* testing config */
 	log_debug(xhp, "%s", "Configuration:");
 	log_debug(xhp, "file         = '%s'", xhp->arg->config);
