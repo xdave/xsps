@@ -13,13 +13,13 @@
 #ifndef XSPS_H
 #define XSPS_H 1
 
-#define XEFORMAT "%s:%d %s\n"
 #define XENOMEM "Out of memory!"
 
 #define DIE(xhp, fmt, ...)						\
 do {									\
-	log_error(xhp, fmt, __FILE__, __LINE__, __VA_ARGS__);		\
-	xhp_free(xhp);							\
+	fprintf(stderr, "Error (at %s:%d): ", __FILE__, __LINE__);	\
+	fprintf(stderr, fmt, __VA_ARGS__);				\
+	if(xhp != NULL) xhp_free(xhp);					\
 	exit(EXIT_FAILURE);						\
 } while (0)
 

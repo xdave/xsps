@@ -16,7 +16,7 @@ xmalloc(xhp_t *xhp, size_t size)
 
 	ptr = malloc(size);
 	if (ptr == NULL && size != 0) {
-		DIE(xhp, XEFORMAT, XENOMEM);
+		DIE(xhp, "%s\n", XENOMEM);
 	}
 
 	return ptr;
@@ -29,7 +29,7 @@ xcalloc(xhp_t *xhp, size_t nmemb, size_t size)
 
 	ptr = calloc(nmemb, size);
 	if (ptr == NULL && size != 0) {
-		DIE(xhp, XEFORMAT, XENOMEM);
+		DIE(xhp, "%s\n", XENOMEM);
 	}
 
 	return ptr;
@@ -42,7 +42,7 @@ xrealloc(xhp_t *xhp, void *old_ptr, size_t size)
 
 	ptr = realloc(old_ptr, size);
 	if (ptr == NULL && size != 0) {
-		DIE(xhp, XEFORMAT, XENOMEM);
+		DIE(xhp, "%s\n", XENOMEM);
 	}
 
 	return ptr;
