@@ -1,3 +1,8 @@
+# Copyright (c) 2012 davehome <davehome@redthumb.info.tm>.
+# All rights reserved.
+# Distributed under a modified BSD-style license.
+# See the COPYING file in the toplevel directory for license details. */
+
 TARGET := xsps
 XSPS_CONFIG_DIR := config
 
