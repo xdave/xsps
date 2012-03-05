@@ -112,7 +112,7 @@ void config_init(xhp_t *);
 void	str_init(xhp_t *);
 void	str_free(xhp_t *);
 char	*str_add(xhp_t *, const char *);
-char	*str_add_nocopy(xhp_t *, const char *);
+char	*str_add_nocopy(xhp_t *, char *);
 bool	xstreq(const char *, const char *);
 char	*xstrcpy(xhp_t *, const char *);
 char	*xstrfcpy(xhp_t *, const char *, ...);
