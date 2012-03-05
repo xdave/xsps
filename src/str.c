@@ -72,7 +72,7 @@ xstrcpy(xhp_t *xhp, const char *src)
 
 /* format version of xstrcpy() */
 char *
-xstrf(xhp_t *xhp, const char *fmt, ...)
+xstrfcpy(xhp_t *xhp, const char *fmt, ...)
 {
 	int	n;
 	size_t	size = 100;

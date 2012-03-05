@@ -406,7 +406,7 @@ process_template(xhp_t *xhp)
 
 	option = xhp->arg->option;
 	pkgname = xhp->arg->pkgname;
-	template = xstrf(xhp, "%s/srcpkgs/%s/template",
+	template = xstrfcpy(xhp, "%s/srcpkgs/%s/template",
 	    xhp->config->distdir, xhp->arg->template_name);
 
 	cfg = cfg_init(opts, CFGF_NONE);
