@@ -29,9 +29,9 @@
 
 #define XSPS_CONFIG XSPS_CONFIG_DIR "/xsps.conf"
 
-/* color */
+/* ANSI Colors
+ * Used in logging functions. */
 typedef enum {
-	COLOR_SIZE = 8,
 	COLOR_OFF = 0,
 	COLOR_BOLD = 1,
 	COLOR_UNDERLINE = 4,
@@ -48,51 +48,51 @@ typedef enum {
 
 /* command line arguments */
 typedef struct arg_t {
-	int    argc;
-	char** argv;
-	bool   debug;		/* optional */
-	char*  config;		/* optional */
-	char*  masterdir;	/* optional */
-	char*  option;		/* optional */
-	char*  pkgname;		/* optional */
-	char*  template_name;	/* optional */
-	char*  template;	/* internal */
-	char*  build;		/* TODO: not implemented */
+	int  argc;		/* from main() */
+	char **argv;		/* from main() */
+	bool debug;		/* enabled with -d, optional */
+	char *config;		/* enabled with -c, optional */
+	char *masterdir;	/* enabled with -m, optional */
+	char *option;		/* enabled with -o, optional */
+	char *pkgname;		/* enabled with -p, optional */
+	char *template_name;	/* last argument,   required */
+	char *template;
+	char *build;		/* TODO: not implemented */
 } arg_t;
 
 /* configuration */
 typedef struct config_t {
-	char* distdir;
-	char* repourl;
-	char* masterdir;
-	char* hostdir;
-	char* cflags;
-	char* cxxflags;
-	char* ldflags;
-	char* compress_cmd;
-	bool ccache;
-	uint16_t compress_level;
-	uint16_t makejobs;
-	cfg_t* cfg;
+	char *distdir;		 /* XSPS_DISTDIR */
+	char *repourl;		 /* XSPS_SRCPKGS_REPOURL */
+	char *masterdir;	 /* XSPS_MASTERDIR */
+	char *hostdir;		 /* XSPS_HOSTDIR */
+	char *cflags;		 /* XSPS_CFLAGS */
+	char *cxxflags;		 /* XSPS_CXXFLAGS */
+	char *ldflags;		 /* XSPS_LDFLAGS */
+	char *compress_cmd;	 /* XSPS_COMPRESS_CMD */
+	bool ccache;		 /* XSPS_CCACHE */
+	uint16_t compress_level; /* XSPS_COMPRESS_LEVEL */
+	uint16_t makejobs;	 /* XSPS_MAKEJOBS */
+	cfg_t *cfg;
 } config_t;
 
 /* string manager */
 typedef struct str_t {
-	size_t size;
-	char** items;
+	size_t size;	/* How many strings are we keeping track of? */
+	char **items;	/* Pointers which will be free()'d */
 } str_t;
 
 /* main xsps handle */
 typedef struct xhp_t {
-	str_t* str;
-	arg_t* arg;
-	config_t* config;
+	str_t *str;		/* String manager */
+	arg_t *arg;		/* Arguments parser */
+	config_t *config;	/* Configuration loader */
 } xhp_t;
 
-xhp_t *xhp_new(int, char **);
-void xhp_free(xhp_t *);
+xhp_t *xhp_new(int, char **);	/* Create a new xsps handle */
+void xhp_free(xhp_t *);		/* Free all memory xalloc()'d */
 
-/* safe memory allocation */
+/* safe memory allocation funcs */
 void *xmalloc (xhp_t *, size_t);
 void *xcalloc (xhp_t *, size_t, size_t);
 void *xrealloc(xhp_t *, void *, size_t);
