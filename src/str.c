@@ -31,6 +31,8 @@ str_add(xhp_t *xhp, const char *item)
 	return s->items[s->size-1];
 }
 
+/* like str_add(), but takes an already alloc'd pointer.
+ * item needs to be already NUL terminated. */
 char *
 str_add_nocopy(xhp_t *xhp, char *item)
 {
@@ -38,7 +40,6 @@ str_add_nocopy(xhp_t *xhp, char *item)
 	s->size++;
 	s->items = xrealloc(xhp, s->items, s->size * sizeof(char *));
 	s->items[s->size-1] = item;
-	s->items[s->size-1][strlen(item)] = '\0';
 	return s->items[s->size-1];
 }
 
