@@ -87,7 +87,7 @@ xstrfcpy(xhp_t *xhp, const char *fmt, ...)
 {
 	int	n;
 	size_t	size = 100;
-	char	*p, *np, *result;
+	char	*p, *np;
 	va_list ap;
 
 	p = xmalloc(xhp, size);
@@ -102,9 +102,7 @@ xstrfcpy(xhp_t *xhp, const char *fmt, ...)
 		p = np;
 	}
 
-	result = str_add(xhp, p);
-	free(p);
-	return result;
+	return str_add_nocopy(xhp, p);
 }
 
 /* Replaces all occurrences of pat with repl in orig. */
