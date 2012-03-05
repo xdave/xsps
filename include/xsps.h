@@ -13,9 +13,12 @@
 #ifndef XSPS_H
 #define XSPS_H 1
 
-#define XENOMEM(xhp)							\
+#define XEFORMAT "%s:%d %s\n"
+#define XENOMEM "Out of memory!"
+
+#define DIE(xhp, fmt, ...)						\
 do {									\
-	fprintf(stderr, "%s:%d: Out of memory!\n", __FILE__, __LINE__);	\
+	log_error(xhp, fmt, __FILE__, __LINE__, __VA_ARGS__);		\
 	xhp_free(xhp);							\
 	exit(EXIT_FAILURE);						\
 } while (0)
@@ -111,14 +114,14 @@ void arg_print_usage(xhp_t *);
 void config_init(xhp_t *);
 
 /* string managment*/
-void	str_init(xhp_t *);
-void	str_free(xhp_t *);
-char	*str_add(xhp_t *, const char *);
-char	*str_add_nocopy(xhp_t *, char *);
-bool	xstreq(const char *, const char *);
-char	*xstrcpy(xhp_t *, const char *);
-char	*xstrfcpy(xhp_t *, const char *, ...);
-char	*str_replace(xhp_t *, const char *, const char *, const char *);
+void str_init(xhp_t *);
+void str_free(xhp_t *);
+char *str_add(xhp_t *, const char *);
+char *str_add_nocopy(xhp_t *, char *);
+bool xstreq(const char *, const char *);
+char *xstrcpy(xhp_t *, const char *);
+char *xstrfcpy(xhp_t *, const char *, ...);
+char *str_replace(xhp_t *, const char *, const char *, const char *);
 
 /* template processing */
 int process_template(xhp_t *);
