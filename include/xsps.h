@@ -14,9 +14,11 @@
 #define XSPS_H 1
 
 #define XENOMEM(xhp)							\
+do {									\
 	fprintf(stderr, "%s:%d: Out of memory!\n", __FILE__, __LINE__);	\
 	xhp_free(xhp);							\
-	exit(EXIT_FAILURE)
+	exit(EXIT_FAILURE);						\
+} while (0)
 
 #define log_info(xhp, fmt, ...) \
 	log_all(xhp, COLOR_WHITE, stdout, "INFO ", fmt, __VA_ARGS__)
