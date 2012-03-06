@@ -150,3 +150,19 @@ str_replace(xhp_t *xhp, const char *orig, const char *pat, const char *repl)
 	}
 	return str_add_nocopy(xhp, returned);
 }
+
+/* works like getenv(), but on vars with ${braces} around them. */
+const char *
+getbenv(xhp_t *xhp, const char *input)
+{
+	size_t size;
+	const char *result;
+	char *tmp;
+	size = strlen(input);
+	tmp = xmalloc(xhp, size - 2);
+	tmp = strncpy(tmp, input + 2, size - 3);
+	tmp[size - 3] = '\0';
+	result = getenv(tmp);
+	free(tmp);
+	return result;
+}

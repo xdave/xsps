@@ -122,6 +122,7 @@ bool xstreq(const char *, const char *);
 char *xstrcpy(xhp_t *, const char *);
 char *xstrfcpy(xhp_t *, const char *, ...);
 char *str_replace(xhp_t *, const char *, const char *, const char *);
+const char *getbenv(xhp_t *, const char *);
 
 /* template processing */
 int process_template(xhp_t *);
