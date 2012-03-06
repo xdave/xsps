@@ -1,0 +1,118 @@
+# Template file for 'dovecot'
+#
+source = "dovecot"
+version = "2.1.1"
+maintainer = "Juan RP <xtraeme@gmail.com>"
+license = "LGPL-2.1"
+homepage = "http://dovecot.org"
+description = "
+ Dovecot is an open source IMAP and POP3 email server for Linux/UNIX-like
+ systems, written with security primarily in mind. Dovecot is an excellent
+ choice for both small and large installations. It's fast, simple to set
+ up, requires no special administration and it uses very little memory."
+
+distfiles = { 
+	"http://dovecot.org/releases/2.1/dovecot-2.1.1.tar.gz",
+	"f233a2d40f86785b0e568291a08312d5c15247c12de011be916c1eaf96276191"
+}
+build-style = "gnu-configure"
+configure-args = {
+	"--with-moduledir=/usr/lib/dovecot/modules", "--with-sql=plugin",
+	"--disable-static", "--with-nss", "--with-pam", "--with-mysql",
+	"--with-pgsql", "--with-sqlite", "--with-ssl=openssl", "--with-zlib",
+	"--with-ssldir=/etc/dovecot/ssl", "--with-gssapi", "--with-ldap=plugin",
+	"--with-bzlib", "--with-libcap", "--with-solr", "--with-docs",
+	"--with-systemdsystemunitdir=/lib/systemd/system"
+}
+make-depends = {
+	"openssl-devel", "mit-krb5-devel", "libmysqlclient-devel",
+	"postgresql-libs-devel", "sqlite-devel", "libldap-devel",
+	"libcap-devel", "pam-devel", "libcurl-devel", "expat-devel"
+}  
+
+package {
+	pkgname = "dovecot"
+	desc = "IMAP and POP3 server written with security primarily in mind"
+	systemd-services = { "dovecot.service true" }
+	system-accounts = {
+		"dovecot:/var/chroot:::",
+		"dovenull:/var/chroot:::"
+	}
+	conf-files = {
+		"/etc/dovecot/conf.d/10-auth.conf",
+		"/etc/dovecot/conf.d/10-director.conf",
+		"/etc/dovecot/conf.d/10-logging.conf",
+		"/etc/dovecot/conf.d/10-mail.conf",
+		"/etc/dovecot/conf.d/10-master.conf",
+		"/etc/dovecot/conf.d/10-ssl.conf",
+		"/etc/dovecot/conf.d/15-lda.conf",
+		"/etc/dovecot/conf.d/20-imap.conf",
+		"/etc/dovecot/conf.d/20-lmtp.conf",
+		"/etc/dovecot/conf.d/20-pop3.conf",
+		"/etc/dovecot/conf.d/90-acl.conf",
+		"/etc/dovecot/conf.d/90-plugin.conf",
+		"/etc/dovecot/conf.d/90-quota.conf",
+		"/etc/dovecot/conf.d/auth-checkpassword.conf.ext",
+		"/etc/dovecot/conf.d/auth-deny.conf.ext",
+		"/etc/dovecot/conf.d/auth-master.conf.ext",
+		"/etc/dovecot/conf.d/auth-passwdfile.conf.ext",
+		"/etc/dovecot/conf.d/auth-sql.conf.ext",
+		"/etc/dovecot/conf.d/auth-static.conf.ext",
+		"/etc/dovecot/conf.d/auth-system.conf.ext",
+		"/etc/dovecot/conf.d/auth-vpopmail.conf.ext",
+		"/etc/dovecot/dovecot.conf",
+		"/etc/ssl/dovecot-openssl.cnf"
+	}
+	depends = {
+		"glibc", "zlib", "bzip2", "libcurl", "expat", "pam",
+		"mit-krb5-libs", "libcap", "openssl"
+	}
+}
+
+package {
+	pkgname = "dovecot-plugin-ldap"
+	desc = "IMAP and POP3 server written with security primarily in mind - LDAP plugin"
+	conf-files = { "/etc/dovecot/conf.d/auth-ldap.conf.ext" }
+	depends = { "glibc", "libldap", "dovecot>=${version}" }
+	files = {
+		"/usr/lib/dovecot/modules/auth/libauthdb_ldap.so",
+		"/usr/share/doc/dovecot/example-config/conf.d/auth-ldap.conf.ext",
+		"/etc/dovecot/conf.d/auth-ldap.conf.ext"
+	}
+}
+
+package {
+	pkgname = "dovecot-plugin-mysql"
+	desc = "IMAP and POP3 server written with security primarily in mind - MySQL plugin"
+	depends = {
+		"glibc", "zlib", "libssl", "libmysqlclient",
+		"dovecot>=${version}"
+	}
+	files = {
+		"/usr/lib/dovecot/modules/auth/libdriver_mysql.so",
+		"/usr/lib/dovecot/modules/dict/libdriver_mysql.so",
+		"/usr/lib/dovecot/modules/libdriver_mysql.so"
+	}
+}
+
+package {
+	pkgname = "dovecot-plugin-pgsql"
+	desc = "IMAP and POP3 server written with security primarily in mind - PostgreSQL plugin"
+	depends = { "glibc", "postgresql-libs", "dovecot>=${version}" }
+	files = {
+		"/usr/lib/dovecot/modules/auth/libdriver_pgsql.so",
+		"/usr/lib/dovecot/modules/dict/libdriver_pgsql.so",
+		"/usr/lib/dovecot/modules/libdriver_pgsql.so"
+	}
+}
+
+package {
+	pkgname = "dovecot-plugin-sqlite"
+	desc = "IMAP and POP3 server written with security primarily in mind - SQLite plugin"
+	depends = { "glibc", "zlib", "sqlite", "dovecot>=${version}" }
+	files = {
+		"/usr/lib/dovecot/modules/auth/libdriver_sqlite.so",
+		"/usr/lib/dovecot/modules/dict/libdriver_sqlite.so",
+		"/usr/lib/dovecot/modules/libdriver_sqlite.so"
+	}
+}
