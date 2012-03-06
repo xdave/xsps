@@ -163,6 +163,7 @@ getbenv(xhp_t *xhp, const char *input)
 	tmp = strncpy(tmp, input + 2, size - 3);
 	tmp[size - 3] = '\0';
 	result = getenv(tmp);
+	if (result == NULL) result = input;
 	free(tmp);
 	return result;
 }
