@@ -12,10 +12,6 @@
 
 #include "xsps.h"
 
-#ifndef __arraycount
-# define __arraycount(a) (sizeof(a) / sizeof(*(a)))
-#endif
-
 /*
  * Global section options.
  */

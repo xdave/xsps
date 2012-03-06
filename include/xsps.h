@@ -13,6 +13,10 @@
 #ifndef XSPS_H
 #define XSPS_H 1
 
+#ifndef __arraycount
+# define __arraycount(a) (sizeof(a) / sizeof(*(a)))
+#endif
+
 #define XENOMEM "Out of memory!"
 
 #define DIE(xhp, fmt, ...)						\
