@@ -1,0 +1,34 @@
+# Template file for 'adobe-flash-plugin'
+
+source = "adobe-flash-plugin"
+version = "11.1.102.63"
+homepage = "http://www.adobe.com/flash"
+maintainer = "Juan RP <xtraeme@gmail.com>"
+license = "adobe"
+description = "This is the Adobe Flash Player plugin for Netscape compatible browsers."
+noextract = true
+distfiles = {
+	"http://www.adobe.com/products/eulas/pdfs/PlatformClients_PC_WWEULA_Combined_20100108_1657.pdf",
+	"3cb0a5f4576be735abcff7189ed18eda17c70b762c3a78a3379b6f44395fbc10"
+}
+distfiles-i686 = {
+	"http://fpdownload.macromedia.com/get/flashplayer/pdc/${version}/install_flash_player_11_linux.i386.tar.gz",
+	"dff9d475b3e8900e5c9a5d1d69ba766d0cdf9471217ef35c931ccefdf7b68246"
+}
+distfiles-x86_64 = {
+	"http://fpdownload.macromedia.com/get/flashplayer/pdc/${version}/install_flash_player_11_linux.x86_64.tar.gz",
+	"8e78ecf8262f318d26934a6a731cefa97b9cbd40e2312c1ab2e5b8634e600190"
+}
+make-depends = { "libXext-devel", "libXt-devel", "gtk+-devel", "nss-devel", "libcurl-devel" }
+
+package {
+	pkgname = "adobe-flash-plugin"
+	desc = "Adobe Flash Player plugin"
+	nonfree = true
+	depends = {
+		"curl", "hicolor-icon-theme", "desktop-file-utils", "libX11",
+		"libXext", "libXt", "freetype", "fontconfig", "glibc", "nspr",
+		"gtk+", "atk", "pango", "gdk-pixbuf", "cairo", "glib", "nss"
+	}
+	gtk-iconcache-dirs = { "/usr/share/icons/hicolor" }
+}
