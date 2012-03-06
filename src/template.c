@@ -199,7 +199,6 @@ cfg_exportvars(cfg_t *cfg, cfg_opt_t *opt, int argc, const char **argv)
 	char *var, *val;
 	int i;
 
-	(void)cfg;
 	(void)opt;
 
 	for (i = 0; i < argc; i++) {
