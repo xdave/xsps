@@ -153,6 +153,70 @@ validate_pkg_section(cfg_t *cfg)
 	return 0;
 }
 
+static char *
+get_export_value(const char *src)
+{
+	char *val;
+	size_t j, i = 0;
+	bool start = false;
+
+	val = malloc(strlen(src));
+	for (j = 0; j < strlen(src); j++) {
+		if (start)
+			val[i++] = src[j];
+		else if (src[j] == '=')
+			start = true;
+	}
+	if (!start) {
+		free(val);
+		return NULL;
+	}
+	val[i] = '\0';
+	return val;
+}
+
+static char *
+get_export_var(const char *src)
+{
+	char *var;
+	size_t j;
+
+	var = malloc(strlen(src));
+	for (j = 0; j < strlen(src); j++) {
+		if (src[j] == '=')
+			break;
+
+		var[j]= src[j];
+	}
+	var[j] = '\0';
+	return var;
+}
+
+static int
+cfg_exportvars(cfg_t *cfg, cfg_opt_t *opt, int argc, const char **argv)
+{
+	cfg_opt_t *nopt;
+	char *var, *val;
+	int i;
+
+	(void)cfg;
+	(void)opt;
+
+	for (i = 0; i < argc; i++) {
+		var = get_export_var(argv[i]);
+		if (var == NULL)
+			continue;
+		val = get_export_value(argv[i]);
+		if (val == NULL) {
+			/* get exported value from a specified option instead */
+			nopt = cfg_getopt(cfg, var);
+			val = cfg_opt_getnstr(nopt, 0);
+		}
+		printf("%s = %s\n", var, val);
+	}
+	return 0;
+}
+
 int
 process_template(xhp_t *xhp)
 {
@@ -219,6 +283,8 @@ process_template(xhp_t *xhp)
 		CFG_STR_LIST("make-depends-i686", NULL, CFGF_NONE),
 		CFG_STR_LIST("make-depends-x86_64", NULL, CFGF_NONE),
 		CFG_SEC("package", cfg_pkg_opts, CFGF_MULTI),
+		CFG_FUNC("export", &cfg_exportvars),
+		CFG_FUNC("include", &cfg_include),
 		CFG_END()
 	};
 	cfg_t *cfg;
