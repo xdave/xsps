@@ -38,6 +38,7 @@ static const char *package_opts[] = {
 	"xml-catalogs", "xml-entries", "conf-files", "files", "depends",
 	"triggers", "replaces", "provides", "conflicts", "register-shell",
 	"font-dirs", "gtk-iconcache-dirs", "systemd-services", "system-accounts",
+	"nostrip-files",
 };
 
 static cfg_t *
@@ -182,6 +183,7 @@ process_template(xhp_t *xhp)
 		CFG_STR_LIST("gtk-iconcache-dirs", NULL, CFGF_NONE),
 		CFG_STR_LIST("systemd-services", NULL, CFGF_NONE),
 		CFG_STR_LIST("system-accounts", NULL, CFGF_NONE),
+		CFG_STR_LIST("nostrip-files", NULL, CFGF_NONE),
 		CFG_END()
 	};
 	/* global section */
