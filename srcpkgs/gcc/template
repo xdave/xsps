@@ -13,17 +13,15 @@ description = "
  for ObjectiveC++ install gcc-objc++, for Go install gcc-go,
  for Fortran install gcc-fortran."
 
-distfiles { 
-	source = { "http://ftp.gnu.org/pub/gnu/gcc/gcc-4.6.3/gcc-4.6.3.tar.bz2" }
-	sha256 = { "e8f5853d4eec2f5ebaf8a72ae4d53c436aacf98153b2499f8635b48c4718a093" }
+distfiles = {
+	"http://ftp.gnu.org/pub/gnu/gcc/gcc-4.6.3/gcc-4.6.3.tar.bz2",
+	"e8f5853d4eec2f5ebaf8a72ae4d53c436aacf98153b2499f8635b48c4718a093"
 }
-make-depends {
-	all = {
-		"perl", "flex", "zlib-devel", "gmp-devel", "mpfr-devel",
-		"mpc-devel", "cloog-ppl-devel", "libelf-devel"
-	}
-	x86_64 = { "glibc32-devel", "zlib32-devel" }
+make-depends = {
+	"perl", "flex", "zlib-devel", "gmp-devel", "mpfr-devel",
+	"mpc-devel", "cloog-ppl-devel", "libelf-devel"
 }
+make-depends-x86_64 = { "glibc32-devel", "zlib32-devel" }
 required-abi = "4.4.0"
 
 package {

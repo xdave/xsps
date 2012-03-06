@@ -12,230 +12,33 @@
 
 #include "xsps.h"
 
-typedef enum confopt {
-	OPT_INT = 1,
-	OPT_STR,
-	OPT_STR_LIST,
-	OPT_BOOL,
-	OPT_SEC,
-} cfopt_t;
-
-struct sect_opts {
-	const char *name;
-	cfopt_t type;
-};
+#ifndef __arraycount
+# define __arraycount(a) (sizeof(a) / sizeof(*(a)))
+#endif
 
 /*
- * global section options.
+ * Global section options.
  */
-struct sect_opts tmpl_opts[] = {
-	{ "bootstrap", OPT_BOOL },
-	{ "create-wrksrc", OPT_BOOL },
-	{ "disable-parallel-build", OPT_BOOL },
-	{ "disable-as-needed", OPT_BOOL },
-	{ "noextract", OPT_BOOL },
-	{ "nofetch", OPT_BOOL },
-	{ "source", OPT_STR },
-	{ "version", OPT_STR },
-	{ "revision", OPT_STR },
-	{ "homepage", OPT_STR },
-	{ "maintainer", OPT_STR },
-	{ "license", OPT_STR },
-	{ "description", OPT_STR },
-	{ "build-style", OPT_STR },
-	{ "build-requires", OPT_STR },
-	{ "wrksrc", OPT_STR },
-	{ "build-wrksrc", OPT_STR },
-	{ "configure-script", OPT_STR },
-	{ "configure-args", OPT_STR_LIST },
-	{ "make-args", OPT_STR_LIST },
-	{ "make-install-args", OPT_STR_LIST },
-	{ "patch-args", OPT_STR },
-	{ "required-abi", OPT_STR },
-	{ "fetch-depends", OPT_STR_LIST },
-	{ "distfiles", OPT_SEC },
-	{ "make-depends", OPT_SEC },
-	{ "package", OPT_SEC },
-	{ NULL, 0 }
+static const char *global_opts[] = {
+	"bootstrap", "create-wrksrc", "disable-parallel-build", "wrksrc",
+	"disable-as-needed", "noextract", "nofetch", "source", "description",
+	"version", "revision", "homepage", "maintainer", "license",
+	"build-style", "build-requires", "build-wrksrc", "configure-script",
+	"configure-args", "make-args", "make-install-args", "patch-args",
+	"required-abi", "fetch-depends", "distfiles", "distfiles-i686",
+	"distfiles-x86_64", "make-depends", "make-depends-i686",
+	"make-depends-x86_64", "package",
 };
-
 /*
  * package section options.
  */
-struct sect_opts pkg_tmpl_opts[] = {
-	{ "noarch", OPT_BOOL },
-	{ "nostrip", OPT_BOOL },
-	{ "noverifyrdeps", OPT_BOOL },
-	{ "nonfree", OPT_BOOL },
-	{ "preserve", OPT_BOOL },
-	{ "pkgname", OPT_STR },
-	{ "desc", OPT_STR },
-	{ "arch", OPT_STR },
-	{ "make-dirs", OPT_STR },
-	{ "sgml-catalogs", OPT_STR },
-	{ "sgml-entries", OPT_STR },
-	{ "xml-catalogs", OPT_STR },
-	{ "xml-entries", OPT_STR },
-	{ "conf-files", OPT_STR_LIST },
-	{ "files", OPT_STR_LIST },
-	{ "depends", OPT_STR_LIST },
-	{ "triggers", OPT_STR_LIST },
-	{ "replaces", OPT_STR_LIST },
-	{ "provides", OPT_STR_LIST },
-	{ "conflicts", OPT_STR_LIST },
-	{ "register-shell", OPT_STR_LIST },
-	{ "font-dirs", OPT_STR_LIST },
-	{ "gtk-iconcache-dirs", OPT_STR_LIST },
-	{ "systemd-services", OPT_STR_LIST },
-	{ "system-accounts", OPT_STR_LIST },
-	{ NULL, 0 }
+static const char *package_opts[] = {
+	"noarch", "nostrip", "noverifyrdeps", "nonfree", "preserve", "pkgname",
+	"desc", "arch", "make-dirs", "sgml-catalogs", "sgml-entries",
+	"xml-catalogs", "xml-entries", "conf-files", "files", "depends",
+	"triggers", "replaces", "provides", "conflicts", "register-shell",
+	"font-dirs", "gtk-iconcache-dirs", "systemd-services", "system-accounts",
 };
-
-/*
- * distfiles section options.
- */
-struct sect_opts dfiles_tmpl_opts[] = {
-	{ "source", OPT_STR_LIST },
-	{ "sha256", OPT_STR_LIST },
-	{ NULL, 0 }
-};
-
-/*
- * make-depends section options.
- */
-struct sect_opts mkdeps_tmpl_opts[] = {
-	{ "all", OPT_STR_LIST },
-	{ "i686", OPT_STR_LIST },
-	{ "x86_64", OPT_STR_LIST },
-	{ NULL, 0 }
-};
-
-/*
- * Mapping between section name and options structure associated with it.
- */
-struct section {
-	const char *name;
-	struct sect_opts *sopts;
-} sections[] = {
-	{ "distfiles", dfiles_tmpl_opts },
-	{ "make-depends", mkdeps_tmpl_opts },
-	{ "package", pkg_tmpl_opts },
-	{ "", tmpl_opts },
-	{ NULL, NULL }
-};
-
-
-static void
-printopt(cfg_t *cfg, struct sect_opts *sopts, const char *indent, bool showopt)
-{
-	cfg_t *cfgsec;
-	struct section *sect;
-	struct sect_opts *nsopts;
-	unsigned int size, i;
-	const char *optstr;
-	bool optbool;
-	size_t optint;
-
-	switch (sopts->type) {
-	case OPT_BOOL:
-		optbool = cfg_getbool(cfg, sopts->name);
-		if (!optbool)
-			return;
-		if (showopt)
-			printf("%s%s: ", indent, sopts->name);
-
-		printf("true\n");
-		return;
-	case OPT_INT:
-		optint = (size_t)cfg_getint(cfg, sopts->name);
-		if (optint <= 0)
-			return;
-		if (showopt)
-			printf("%s%s: ", indent, sopts->name);
-
-		printf("%zu\n", optint);
-		return;
-	case OPT_STR:
-		optstr = cfg_getstr(cfg, sopts->name);
-		if (optstr == NULL)
-			return;
-		if (showopt)
-			printf("%s%s: ", indent, sopts->name);
-
-		printf("%s\n", optstr);
-		return;
-	case OPT_STR_LIST:
-		size = cfg_size(cfg, sopts->name);
-		if (size == 0)
-			return;
-		if (showopt)
-			printf("%s%s: ", indent, sopts->name);
-		for (i = 0; i < size; i++)
-			printf("%s ", cfg_getnstr(cfg, sopts->name, i));
-
-		printf("\n");
-		return;
-	case OPT_SEC:
-		size = cfg_size(cfg, sopts->name);
-		if (size == 0)
-			return;
-
-		for (i = 0; i < size; i++) {
-			if (showopt)
-				printf("%s[%s]\n", indent, sopts->name);
-			cfgsec = cfg_getnsec(cfg, sopts->name, i);
-			nsopts = sopts;
-			for (sect = sections; sect->name; sect++) {
-				if (strcmp(sect->name, sopts->name) == 0) {
-					nsopts = sect->sopts;
-					break;
-				}
-			}
-			for (; nsopts->name; nsopts++)
-				printopt(cfgsec, nsopts, "  ", showopt);
-		}
-		return;
-	}
-}
-
-static void
-print_all_options(cfg_t *cfg, const char *section, const char *indent)
-{
-	struct sect_opts *sopts;
-	struct section *sect;
-
-	if (section == NULL) {
-		for (sopts = tmpl_opts; sopts->name; sopts++)
-			printopt(cfg, sopts, indent, true);
-	} else {
-		for (sect = sections; sect->name; sect++) {
-			if (strcmp(sect->name, section))
-				continue;
-			for (sopts = sect->sopts; sopts->name; sopts++)
-				printopt(cfg, sopts, indent, true);
-		}
-	}
-}
-
-static void
-print_one_option(cfg_t *cfg, const char *option, const char *indent)
-{
-	struct sect_opts *sopts;
-	struct section *sect;
-	bool found = false;
-
-	for (sect = sections; sect->name; sect++) {
-		for (sopts = sect->sopts; sopts->name; sopts++) {
-			if (strcmp(sopts->name, option) == 0) {
-				printopt(cfg, sopts, indent, false);
-				found = true;
-				break;
-			}
-		}
-		if (found)
-			break;
-	}
-}
 
 static cfg_t *
 match_pkg_by_name(cfg_t *cfg, const char *name)
@@ -247,7 +50,7 @@ match_pkg_by_name(cfg_t *cfg, const char *name)
 	for (i = 0; i < cfg_size(cfg, "package"); i++) {
 		cfgsec = cfg_getnsec(cfg, "package", i);
 		pkgname = cfg_getstr(cfgsec, "pkgname");
-		if (strcmp(pkgname, name) == 0)
+		if (xstreq(pkgname, name))
 			break;
 
 		cfgsec = NULL;
@@ -255,54 +58,86 @@ match_pkg_by_name(cfg_t *cfg, const char *name)
 	return cfgsec;
 }
 
-static int
-validate_mkdeps_section(cfg_t *cfg, cfg_opt_t *opt)
+static void
+print_option(cfg_opt_t *cfg_opt, bool showopt)
 {
-	cfg_t *cfgsec;
 	unsigned int i;
-	bool found = false;
+	uint8_t size = 0;
 
-	(void)opt;
+	/* string list not set */
+	if (cfg_opt->flags == 192)
+		size = 1;
 
-	for (i = 0; i < cfg_size(cfg, "make-depends"); i++) {
-		cfgsec = cfg_getnsec(cfg, "make-depends", i);
-		if (cfg_size(cfgsec, "all")) {
-			found =  true;
-			break;
+	/* ignore options not set */
+	if (cfg_opt_size(cfg_opt) == size)
+		return;
+
+	if (showopt) {
+		cfg_opt_print(cfg_opt, stdout);
+	} else {
+		for (i = 0; i < cfg_opt_size(cfg_opt); i++) {
+			cfg_opt_nprint_var(cfg_opt, i, stdout);
+			printf(" ");
 		}
+		printf("\n");
 	}
-	if (!found) {
-		fprintf(stderr, "%s:%d incorrect build template: missing 'all' "
-		    "string list in make-depends section.\n",
-		    cfg->filename, cfg->line);
-		return -1;
-	}
-	return 0;
 }
 
-static int
-validate_distfiles_section(cfg_t *cfg, cfg_opt_t *opt)
+static void
+print_section(cfg_t *cfg, const char *pkgname, const char *option)
 {
 	cfg_t *cfgsec;
-	unsigned int i;
-	bool found_src = false, found_hash = false;
+	cfg_opt_t *cfg_opt;
+	const char *p = NULL;
+	unsigned int i, j;
+	bool showopt = true;
 
-	(void)opt;
+	if (option != NULL)
+		showopt = false;
 
-	for (i = 0; i < cfg_size(cfg, "distfiles"); i++) {
-		cfgsec = cfg_getnsec(cfg, "distfiles", i);
-		if (cfg_size(cfgsec, "source"))
-			found_src =  true;
-		if (cfg_size(cfgsec, "sha256"))
-			found_hash = true;
+	/* print options from global section */
+	for (i = 0; i < __arraycount(global_opts); i++) {
+		p = global_opts[i];
+		if (xstreq(p, "package"))
+			continue;
+		if ((option != NULL) && !xstreq(p, option))
+			continue;
+		cfg_opt = cfg_getopt(cfg, p);
+		if (cfg_opt == NULL)
+			continue;
+		print_option(cfg_opt, showopt);
+		if (option != NULL)
+			return;
 	}
-	if (!found_src || !found_hash) {
-		fprintf(stderr, "%s:%d incorrect build template: missing "
-		    "'%s' string in distfiles section.\n",
-		    cfg->filename, cfg->line, !found_src ? "source" : "sha256");
-		return -1;
+	if (pkgname != NULL) {
+		/* print options from specified package section */
+		cfgsec = match_pkg_by_name(cfg, pkgname);
+		if (cfgsec == NULL)
+			return;
+		for (i = 0; i < __arraycount(package_opts); i++) {
+			p = package_opts[i];
+			if ((option != NULL) && !xstreq(p, option))
+				continue;
+			cfg_opt = cfg_getopt(cfgsec, p);
+			if (cfg_opt == NULL)
+				continue;
+			print_option(cfg_opt, showopt);
+			if (option)
+				return;
+		}
+	} else {
+		/* print options from all package sections */
+		for (i = 0; i < cfg_size(cfg, "package"); i++) {
+			cfgsec = cfg_getnsec(cfg, "package", i);
+			for (j = 0; j < __arraycount(package_opts); j++) {
+				p = package_opts[j];
+				cfg_opt = cfg_getopt(cfgsec, p);
+				if (cfg_opt == NULL)
+					continue;
+				print_option(cfg_opt, true);
+			}
+		}
 	}
-	return 0;
 }
 
 static int
@@ -316,13 +151,6 @@ validate_pkg_section(cfg_t *cfg)
 	}
 	return 0;
 }
-
-/*static void
-usage(const char *p)
-{
-	fprintf(stderr, "usage: %s [-o prop] [-p pkgname] template\n", p);
-	exit(EXIT_FAILURE);
-}*/
 
 int
 process_template(xhp_t *xhp)
@@ -356,19 +184,6 @@ process_template(xhp_t *xhp)
 		CFG_STR_LIST("system-accounts", NULL, CFGF_NONE),
 		CFG_END()
 	};
-	/* distfiles section */
-	cfg_opt_t cfg_distfiles_opts[] = {
-		CFG_STR_LIST("source", NULL, CFGF_NONE),
-		CFG_STR_LIST("sha256", NULL, CFGF_NONE),
-		CFG_END()
-	};
-	/* make-depends section */
-	cfg_opt_t cfg_mkdeps_opts[] = {
-		CFG_STR_LIST("all", NULL, CFGF_NONE),
-		CFG_STR_LIST("i686", NULL, CFGF_NONE),
-		CFG_STR_LIST("x86_64", NULL, CFGF_NONE),
-		CFG_END()
-	};
 	/* global section */
 	cfg_opt_t opts[] = {
 		CFG_BOOL("bootstrap", false, CFGF_NONE),
@@ -395,12 +210,16 @@ process_template(xhp_t *xhp)
 		CFG_STR_LIST("make-args", NULL, CFGF_NONE),
 		CFG_STR_LIST("make-install-args", NULL, CFGF_NONE),
 		CFG_STR_LIST("fetch-depends", NULL, CFGF_NONE),
-		CFG_SEC("distfiles", cfg_distfiles_opts, CFGF_NONE),
-		CFG_SEC("make-depends", cfg_mkdeps_opts, CFGF_NONE),
+		CFG_STR_LIST("distfiles", NULL, CFGF_NONE),
+		CFG_STR_LIST("distfiles-i686", NULL, CFGF_NONE),
+		CFG_STR_LIST("distfiles-x86_64", NULL, CFGF_NONE),
+		CFG_STR_LIST("make-depends", NULL, CFGF_NONE),
+		CFG_STR_LIST("make-depends-i686", NULL, CFGF_NONE),
+		CFG_STR_LIST("make-depends-x86_64", NULL, CFGF_NONE),
 		CFG_SEC("package", cfg_pkg_opts, CFGF_MULTI),
 		CFG_END()
 	};
-	cfg_t *cfg, *cfgsec;
+	cfg_t *cfg;
 	int rv;
 	const char *option, *pkgname, *template;
 
@@ -410,9 +229,6 @@ process_template(xhp_t *xhp)
 	    xhp->config->distdir, xhp->arg->template_name);
 
 	cfg = cfg_init(opts, CFGF_NONE);
-	cfg_set_validate_func(cfg, "make-depends", validate_mkdeps_section);
-	cfg_set_validate_func(cfg, "distfiles", validate_distfiles_section);
-
 	rv = cfg_parse(cfg, template);
 	if (rv == CFG_FILE_ERROR) {
 		log_error(xhp, "%s: cannot read %s (%s)", xhp->arg->argv[0],
@@ -435,27 +251,7 @@ process_template(xhp_t *xhp)
 		xhp_free(xhp);
 		exit(EXIT_FAILURE);
 	}
-
-	if (pkgname) {
-		cfgsec = match_pkg_by_name(cfg, pkgname);
-		if (cfgsec == NULL) {
-			log_error(xhp, "%s: no such package `%s' in %s.",
-			    xhp->arg->argv[0], pkgname, template);
-			cfg_free(cfg);
-			xhp_free(xhp);
-			exit(EXIT_FAILURE);
-		}
-		if (option)
-			print_one_option(cfgsec, option, "");
-		else
-			print_all_options(cfgsec, "package", "");
-	} else {
-		if (option)
-			print_one_option(cfg, option, "");
-		else
-			print_all_options(cfg, NULL, "");
-	}
-
+	print_section(cfg, pkgname, option);
 	cfg_free(cfg);
-	return (EXIT_SUCCESS);
+	return 0;
 }
