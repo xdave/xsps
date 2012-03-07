@@ -20,6 +20,9 @@ xhp_new(int argc, char **argv)
 	}
 	str_init(xhp);
 	arg_init(xhp, argc, argv);
+
+	log_set_file(xhp, "test.log");
+
 	config_init(xhp);
 
 	uname(&u);
@@ -45,6 +48,8 @@ xhp_free(xhp_t *xhp)
 
 	if (xhp->config != NULL) free(xhp->config);
 	if (xhp->arg != NULL) free(xhp->arg);
+
+	log_close(xhp);
 
 	free(xhp);
 }

@@ -27,6 +27,7 @@ do {									\
 	exit(EXIT_FAILURE);						\
 } while (0)
 
+#define log(xhp, fmt, ...) log_all(xhp, 0, stdout, NULL, fmt, __VA_ARGS__)
 #define log_info(xhp, fmt, ...) \
 	log_all(xhp, COLOR_WHITE, stdout, "INFO ", fmt, __VA_ARGS__)
 #define log_warn(xhp, fmt, ...) \
@@ -97,6 +98,8 @@ typedef struct xhp_t {
 	str_t *str;		/* String manager */
 	arg_t *arg;		/* Arguments parser */
 	config_t *config;	/* Configuration loader */
+	FILE *log_file;
+	const char *log_filename;
 } xhp_t;
 
 xhp_t *xhp_new(int, char **);	/* Create a new xsps handle */
@@ -109,6 +112,8 @@ void *xrealloc(xhp_t *, void *, size_t);
 
 /* logging */
 void log_all(xhp_t *, int, FILE *, const char *, const char *, ...);
+void log_set_file(xhp_t *, const char *);
+void log_close(xhp_t *);
 
 /* command line arguments */
 void arg_init(xhp_t *, int, char **);
