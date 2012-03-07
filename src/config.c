@@ -51,31 +51,38 @@ config_init(xhp_t *xhp)
 		break;
 	}
 
-	/* TODO: parse environment variables in strings and
-	 * contextual vars within config
-	 * */
+	/* TODO: Make this better */
 
-	xhp->config->distdir = xstrcpy(xhp,
+	xhp->config->distdir = breplace(xhp,
 	    cfg_getstr(xhp->config->cfg, "XSPS_DISTDIR"));
-	xhp->config->repourl = xstrcpy(xhp,
+	setenv("XSPS_DISTDIR", xhp->config->distdir, 1);
+	xhp->config->repourl = breplace(xhp,
 	    cfg_getstr(xhp->config->cfg, "XSPS_SRCPKGS_REPOURL"));
+	setenv("XSPS_SRCPKGS_REPOURL", xhp->config->repourl, 1);
 	if(xhp->arg->masterdir == NULL) {
-		xhp->config->masterdir = xstrcpy(xhp,
+		xhp->config->masterdir = breplace(xhp,
 		    cfg_getstr(xhp->config->cfg, "XSPS_MASTERDIR"));
 	} else {
 		xhp->config->masterdir = xhp->arg->masterdir;
 	}
-	xhp->config->hostdir = xstrcpy(xhp,
+	setenv("XSPS_MASTERDIR", xhp->config->masterdir, 1);
+	xhp->config->hostdir = breplace(xhp,
 	    cfg_getstr(xhp->config->cfg, "XSPS_HOSTDIR"));
-	xhp->config->cflags = xstrcpy(xhp,
+	setenv("XSPS_HOSTDIR", xhp->config->hostdir, 1);
+	xhp->config->cflags = breplace(xhp,
 	    cfg_getstr(xhp->config->cfg, "XSPS_CFLAGS"));
-	xhp->config->cxxflags = xstrcpy(xhp,
+	setenv("XSPS_CFLAGS", xhp->config->cflags, 1);
+	xhp->config->cxxflags = breplace(xhp,
 	    cfg_getstr(xhp->config->cfg, "XSPS_CXXFLAGS"));
-	xhp->config->ldflags = xstrcpy(xhp,
+	setenv("XSPS_CXXFLAGS", xhp->config->cxxflags, 1);
+	xhp->config->ldflags = breplace(xhp,
 	    cfg_getstr(xhp->config->cfg, "XSPS_LDFLAGS"));
-	xhp->config->compress_cmd = xstrcpy(xhp,
+	setenv("XSPS_LDFLAGS", xhp->config->ldflags, 1);
+	xhp->config->compress_cmd = breplace(xhp,
 	    cfg_getstr(xhp->config->cfg, "XSPS_COMPRESS_CMD"));
+	setenv("XSPS_COMPRESS_CMD", xhp->config->compress_cmd, 1);
 
+	/* TODO: Make these work with setenv() */
 	xhp->config->ccache = cfg_getbool(xhp->config->cfg, "XSPS_CCACHE");
 	xhp->config->makejobs =
 	    (uint16_t)cfg_getint(xhp->config->cfg, "XSPS_MAKEJOBS");
