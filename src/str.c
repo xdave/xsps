@@ -128,7 +128,7 @@ str_replace(xhp_t *xhp, const char *orig, const char *pat, const char *repl)
 
 	/* allocate memory for the new string */
 	retlen = orilen + patcnt * (replen - patlen);
-	returned = xmalloc(xhp, sizeof(char) * (retlen + 1));
+	returned = xmalloc(xhp, retlen + 1);
 
 	if (returned != NULL) {
 		/* copy the original string,
@@ -147,6 +147,7 @@ str_replace(xhp_t *xhp, const char *orig, const char *pat, const char *repl)
 		}
 		/* copy the rest of the string. */
 		strcpy(retptr, oriptr);
+		returned[retlen] = '\0';
 	}
 	return str_add_nocopy(xhp, returned);
 }
@@ -206,6 +207,7 @@ breplace(xhp_t *xhp, const char *input)
 	input_len = strlen(input);
 	replacement = xmalloc(xhp, input_len + 1);
 	replacement = strncpy(replacement, input, input_len);
+	replacement[input_len] = '\0';
 
 	if (to_replace.size > 0) {
 		for (i = 0; i < to_replace.size; i++) {
@@ -217,7 +219,7 @@ breplace(xhp_t *xhp, const char *input)
 			replacement = xmalloc(xhp, tmp_len + 1);
 			replacement = strncpy(replacement, tmp, tmp_len);
 			replacement[tmp_len] = '\0';
-			free(tmp);
+			/* NOTE: 'tmp' is free()'d by the strmgr. */
 			free(item);
 		}
 	}
