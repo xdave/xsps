@@ -4,12 +4,14 @@
  * See the COPYING file in the toplevel directory for license details. */
 
 #include <stdlib.h>
+#include <sys/utsname.h>
 
 #include "xsps.h"
 
 xhp_t*
 xhp_new(int argc, char **argv)
 {
+	struct utsname u;
 	xhp_t *xhp;
 	xhp = malloc(sizeof(xhp_t));
 	if (xhp == NULL) {
@@ -19,6 +21,17 @@ xhp_new(int argc, char **argv)
 	str_init(xhp);
 	arg_init(xhp, argc, argv);
 	config_init(xhp);
+
+	uname(&u);
+	setenv("XSPS_MACHINE", u.machine, 1);
+	setenv("XSPS_VENDOR", "void", 1);
+	setenv("XSPS_KERNEL", "linux", 1);
+	setenv("XSPS_OS", "gnu", 1);
+	setenv("XSPS_BUILD_TRIPLET", breplace(xhp,
+	    "${XSPS_MACHINE}-${XSPS_VENDOR}-${XSPS_KERNEL}-${XSPS_OS}"), 1);
+
+	log_debug(xhp, "Welcome to XSPS on %s!", getenv("XSPS_BUILD_TRIPLET"));
+
 	return xhp;
 }
 
