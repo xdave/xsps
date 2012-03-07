@@ -45,12 +45,12 @@ log_all(xhp_t *xhp, int c, FILE *tgt, const char *name, const char *fmt, ...)
 			}
 		}
 	} else {
-		fprintf(tgt, "%s\n", p);
+		fprintf(tgt, "%s", p);
 		if (xhp->log_file != NULL) {
-			ret = fprintf(xhp->log_file, "%s\n", p);
+			ret = fprintf(xhp->log_file, "%s", p);
 			if (ret < 0) {
 				fprintf(stderr, "Can't write to log file '%s'"
-						" (%s)", xhp->log_filename,
+						" (%s)\n", xhp->log_filename,
 						strerror(errno));
 			}
 		}
@@ -66,7 +66,7 @@ log_set_file(xhp_t *xhp, const char *filename)
 
 	if (xhp->log_file == NULL) {
 		if ((xhp->log_file = fopen(filename, "w")) == NULL) {
-			DIE(xhp, "Cannot open log '%s' (%s)",
+			DIE(xhp, "Cannot open log '%s' (%s)\n",
 			    filename, strerror(errno));
 		}
 		xhp->log_filename = filename;
@@ -79,11 +79,11 @@ log_close(xhp_t *xhp)
 {
 	if (xhp->log_file != NULL) {
 		if((fflush(xhp->log_file)) != 0) {
-			DIE(xhp, "Cannot flush existing log: '%s' (%s)",
+			DIE(xhp, "Cannot flush existing log: '%s' (%s)\n",
 			    xhp->log_filename, strerror(errno));
 		}
 		if ((fclose(xhp->log_file)) != 0) {
-			DIE(xhp, "Cannot close existing log: '%s' (%s)",
+			DIE(xhp, "Cannot close existing log: '%s' (%s)\n",
 			    xhp->log_filename, strerror(errno));
 		}
 		xhp->log_file = NULL;
