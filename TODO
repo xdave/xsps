@@ -1,9 +1,3 @@
-include/xsps.h:60:	char*  build;		/* TODO: not implemented */
-src/config.c:54:	/* TODO: parse environment variables in strings and
-src/arg.c:61:			/* TODO: build action not implemented */
-
-...
-
 01:22:50        xdave | I'm going to create a env section in the code
 01:23:03        xdave | it will store all config vars and help you get env vars
 01:23:09        xdave | and two functions
@@ -12,3 +6,9 @@ src/arg.c:61:			/* TODO: build action not implemented */
 01:23:58        xdave | it'll be a reusable struct, so you can use it in
 			multiple contexts for templates too
 01:24:09      xtraeme | good idea
+
+
+include/xsps.h:70:	char *build; /* TODO: not implemented */
+src/arg.c:66:		/* TODO: build action not implemented */
+src/config.c:54:	/* TODO: Make this better */
+src/config.c:96:	/* TODO: Make these work with setenv() too */

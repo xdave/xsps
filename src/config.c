@@ -93,7 +93,7 @@ config_init(xhp_t *xhp)
 	    cfg_getstr(xhp->config->cfg, "XSPS_COMPRESS_CMD"));
 	setenv("XSPS_COMPRESS_CMD", xhp->config->compress_cmd, 1);
 
-	/* TODO: Make these work with setenv() */
+	/* TODO: Make these work with setenv() too */
 	xhp->config->ccache = cfg_getbool(xhp->config->cfg, "XSPS_CCACHE");
 
 	xhp->config->makejobs =
