@@ -10,39 +10,39 @@
 #include "xsps.h"
 
 void *
-xmalloc(xhp_t *xhp, size_t size)
+xmalloc(size_t size)
 {
 	void *ptr;
 
 	ptr = malloc(size);
 	if (ptr == NULL && size != 0) {
-		DIE(xhp, "%s\n", XENOMEM);
+		DIE("%s\n", XENOMEM);
 	}
 
 	return ptr;
 }
 
 void *
-xcalloc(xhp_t *xhp, size_t nmemb, size_t size) 
+xcalloc(size_t nmemb, size_t size) 
 {
 	void *ptr;
 
 	ptr = calloc(nmemb, size);
 	if (ptr == NULL && size != 0) {
-		DIE(xhp, "%s\n", XENOMEM);
+		DIE("%s\n", XENOMEM);
 	}
 
 	return ptr;
 }
 
 void *
-xrealloc(xhp_t *xhp, void *old_ptr, size_t size)
+xrealloc(void *old_ptr, size_t size)
 {
 	void *ptr;
 
 	ptr = realloc(old_ptr, size);
 	if (ptr == NULL && size != 0) {
-		DIE(xhp, "%s\n", XENOMEM);
+		DIE("%s\n", XENOMEM);
 	}
 
 	return ptr;

@@ -11,24 +11,24 @@
 int
 main(int argc, char **argv)
 {
-	xhp_t *xhp = xhp_new(argc, argv);
+	xhp_init(argc, argv);
 
 	/* testing config */
-	log_debug(xhp, "%s", "Configuration:");
-	log_debug(xhp, "file         = '%s'", xhp->arg->config);
-	log_debug(xhp, "distdir      = '%s'", xhp->config->distdir);
-	log_debug(xhp, "repourl      = '%s'", xhp->config->repourl);
-	log_debug(xhp, "masterdir    = '%s'", xhp->config->masterdir);
-	log_debug(xhp, "hostdir      = '%s'", xhp->config->hostdir);
-	log_debug(xhp, "cflags       = '%s'", xhp->config->cflags);
-	log_debug(xhp, "cxxflags     = '%s'", xhp->config->cxxflags);
-	log_debug(xhp, "ldflags      = '%s'", xhp->config->ldflags);
-	log_debug(xhp, "compress_cmd = '%s'", xhp->config->compress_cmd);
-	log_debug(xhp, "ccache       = '%d'", xhp->config->ccache);
-	log_debug(xhp, "makejobs     = '%d'", xhp->config->makejobs);
+	log_debug("%s", "Configuration:");
+	log_debug("file         = '%s'", xhp->arg->config);
+	log_debug("distdir      = '%s'", xhp->config->distdir);
+	log_debug("repourl      = '%s'", xhp->config->repourl);
+	log_debug("masterdir    = '%s'", xhp->config->masterdir);
+	log_debug("hostdir      = '%s'", xhp->config->hostdir);
+	log_debug("cflags       = '%s'", xhp->config->cflags);
+	log_debug("cxxflags     = '%s'", xhp->config->cxxflags);
+	log_debug("ldflags      = '%s'", xhp->config->ldflags);
+	log_debug("compress_cmd = '%s'", xhp->config->compress_cmd);
+	log_debug("ccache       = '%d'", xhp->config->ccache);
+	log_debug("makejobs     = '%d'", xhp->config->makejobs);
 
-	process_template(xhp);
+	process_template();
 
-	xhp_free(xhp);
+	xhp_free();
 	return (EXIT_SUCCESS);
 }

@@ -19,25 +19,26 @@
 
 #define XENOMEM "Out of memory!"
 
-#define DIE(xhp, fmt, ...)						\
+#define DIE(fmt, ...)						\
 do {									\
 	fprintf(stderr, "Error (at %s:%d): ", __FILE__, __LINE__);	\
 	fprintf(stderr, fmt, __VA_ARGS__);				\
-	if(xhp != NULL) xhp_free(xhp);					\
+	if(xhp != NULL) xhp_free();					\
 	exit(EXIT_FAILURE);						\
 } while (0)
 
-#define log(xhp, fmt, ...) log_all(xhp, 0, stdout, NULL, fmt, __VA_ARGS__)
-#define log_info(xhp, fmt, ...) \
-	log_all(xhp, COLOR_WHITE, stdout, "INFO ", fmt, __VA_ARGS__)
-#define log_warn(xhp, fmt, ...) \
-	log_all(xhp, COLOR_YELLOW, stdout, "WARN ", fmt, __VA_ARGS__)
-#define log_debug(xhp, fmt, ...) \
-	log_all(xhp, COLOR_CYAN, stderr, "DEBUG", fmt, __VA_ARGS__)
-#define log_error(xhp, fmt, ...) \
-	log_all(xhp, COLOR_RED, stderr, "ERROR", fmt, __VA_ARGS__)
+#define log(fmt, ...) log_all(0, stdout, NULL, fmt, __VA_ARGS__)
+#define log_info(fmt, ...) \
+	log_all(COLOR_WHITE, stdout, "INFO ", fmt, __VA_ARGS__)
+#define log_warn(fmt, ...) \
+	log_all(COLOR_YELLOW, stdout, "WARN ", fmt, __VA_ARGS__)
+#define log_debug(fmt, ...) \
+	log_all(COLOR_CYAN, stderr, "DEBUG", fmt, __VA_ARGS__)
+#define log_error(fmt, ...) \
+	log_all(COLOR_RED, stderr, "ERROR", fmt, __VA_ARGS__)
 
 #define XSPS_CONFIG XSPS_CONFIG_DIR "/xsps.conf"
+
 
 /* ANSI Colors
  * Used in logging functions. */
@@ -95,6 +96,7 @@ typedef struct str_t {
 
 /* main xsps handle */
 typedef struct xhp_t {
+	int init;
 	str_t *str;		/* String manager */
 	arg_t *arg;		/* Arguments parser */
 	config_t *config;	/* Configuration loader */
@@ -102,43 +104,47 @@ typedef struct xhp_t {
 	const char *log_filename;
 } xhp_t;
 
-xhp_t *xhp_new(int, char **);	/* Create a new xsps handle */
-void xhp_free(xhp_t *);		/* Free all memory xalloc()'d */
+/* Global xhp_t instance */
+xhp_t *xhp;
+
+/* Functions for dealing with global xhp_t instance */
+void xhp_init(int, char **);	/* Initialize the xsps handle */
+void xhp_free();		/* Free all memory xalloc()'d in xhp_t */
 
 /* safe memory allocation funcs */
-void *xmalloc (xhp_t *, size_t);
-void *xcalloc (xhp_t *, size_t, size_t);
-void *xrealloc(xhp_t *, void *, size_t);
+void *xmalloc (size_t);
+void *xcalloc (size_t, size_t);
+void *xrealloc(void *, size_t);
 
 /* logging */
-void log_all(xhp_t *, int, FILE *, const char *, const char *, ...);
-void log_set_file(xhp_t *, const char *);
-void log_close(xhp_t *);
+void log_all(int, FILE *, const char *, const char *, ...);
+void log_set_file(const char *);
+void log_close();
 
 /* command line arguments */
-void arg_init(xhp_t *, int, char **);
-void arg_parse(xhp_t *);
-void arg_print_usage(xhp_t *);
+void arg_init(int, char **);
+void arg_parse();
+void arg_print_usage();
 
 /* configuration*/
-void config_init(xhp_t *);
+void config_init();
 
 /* string managment*/
-void str_init(xhp_t *);
-void str_free(xhp_t *);
-char *str_add(xhp_t *, const char *);
-char *str_add_nocopy(xhp_t *, char *);
+void str_init();
+void str_free();
+char *str_add(const char *);
+char *str_add_nocopy(char *);
 bool xstreq(const char *, const char *);
-char *xstrcpy(xhp_t *, const char *);
-char *xstrfcpy(xhp_t *, const char *, ...);
-char *str_replace(xhp_t *, const char *, const char *, const char *);
+char *xstrcpy(const char *);
+char *xstrfcpy(const char *, ...);
+char *str_replace(const char *, const char *, const char *);
 
 /* Functions dealing with ${FOO} strings */
-const char *getbenv(xhp_t *, const char *);
-void bvars(xhp_t *, str_t *, const char *);
-char *breplace(xhp_t *, const char *);
+const char *getbenv(const char *);
+void bvars(str_t *, const char *);
+char *breplace(const char *);
 
 /* template processing */
-int process_template(xhp_t *);
+int process_template();
 
 #endif /* XSPS_H */

@@ -10,22 +10,22 @@
 
 /* creates a new strmgr */
 void
-str_init(xhp_t *xhp)
+str_init()
 {
-	xhp->str = xmalloc(xhp, sizeof(str_t));
+	xhp->str = xmalloc(sizeof(str_t));
 	xhp->str->size = 0;
 	xhp->str->items = NULL;
 }
 
 /* works like strcpy().. kinda */
 char *
-str_add(xhp_t *xhp, const char *item)
+str_add(const char *item)
 {
 	str_t *s = xhp->str;
 	size_t itemsize = strlen(item) + 1;
 	s->size++;
-	s->items = xrealloc(xhp, s->items, s->size * sizeof(char *));
-	s->items[s->size-1] = xmalloc(xhp, itemsize);
+	s->items = xrealloc(s->items, s->size * sizeof(char *));
+	s->items[s->size-1] = xmalloc(itemsize);
 	strncpy(s->items[s->size-1], item, itemsize);
 	s->items[s->size-1][itemsize-1] = '\0';
 	return s->items[s->size-1];
@@ -34,18 +34,18 @@ str_add(xhp_t *xhp, const char *item)
 /* like str_add(), but takes an already alloc'd pointer.
  * item needs to be already NUL terminated. */
 char *
-str_add_nocopy(xhp_t *xhp, char *item)
+str_add_nocopy(char *item)
 {
 	str_t *s = xhp->str;
 	s->size++;
-	s->items = xrealloc(xhp, s->items, s->size * sizeof(char *));
+	s->items = xrealloc(s->items, s->size * sizeof(char *));
 	s->items[s->size-1] = item;
 	return s->items[s->size-1];
 }
 
 /* removes a string -- never call this directly; use xsps_strmgr_free(). */
 static void
-str_del(xhp_t *xhp)
+str_del()
 {
 	str_t *s = xhp->str;
 	s->size--;
@@ -53,16 +53,16 @@ str_del(xhp_t *xhp)
 		free(s->items[s->size]);
 		s->items[s->size] = NULL;
 	}
-	s->items = xrealloc(xhp, s->items, sizeof(char*) * s->size);
+	s->items = xrealloc(s->items, sizeof(char*) * s->size);
 }
 
 /* frees up all memory allocated by str */
 void
-str_free(xhp_t *xhp)
+str_free()
 {
 	str_t *s = xhp->str;
 	if (s != NULL) {
-		while(s->size > 0) str_del(xhp);
+		while(s->size > 0) str_del();
 		free(s);
 		s = NULL;
 	}
@@ -77,21 +77,21 @@ xstreq(const char *s1, const char *s2)
 
 /* wrapper around str_add() */
 char *
-xstrcpy(xhp_t *xhp, const char *src)
+xstrcpy(const char *src)
 {
-	return str_add(xhp, src);
+	return str_add(src);
 }
 
 /* format version of xstrcpy() */
 char *
-xstrfcpy(xhp_t *xhp, const char *fmt, ...)
+xstrfcpy(const char *fmt, ...)
 {
 	int	n;
 	size_t	size = 100;
 	char	*p, *np;
 	va_list ap;
 
-	p = xmalloc(xhp, size);
+	p = xmalloc(size);
 
 	while(1) {
 		va_start(ap, fmt);
@@ -99,16 +99,16 @@ xstrfcpy(xhp_t *xhp, const char *fmt, ...)
 		va_end(ap);
 		if(n > -1 && (size_t)n < size) break;
 		if(n > -1) size = (size_t)n+1;
-		np = xrealloc(xhp, p, size);
+		np = xrealloc(p, size);
 		p = np;
 	}
 
-	return str_add_nocopy(xhp, p);
+	return str_add_nocopy(p);
 }
 
 /* Replaces all occurrences of pat with repl in orig. */
 char *
-str_replace(xhp_t *xhp, const char *orig, const char *pat, const char *repl)
+str_replace(const char *orig, const char *pat, const char *repl)
 {
 	size_t orilen = strlen(orig);
 	size_t patlen = strlen(pat);
@@ -124,7 +124,7 @@ str_replace(xhp_t *xhp, const char *orig, const char *pat, const char *repl)
 
 	/* Copy input to output if this is a useless call */
 	if (xstreq(pat, repl))
-	    return xstrcpy(xhp, orig);
+	    return xstrcpy(orig);
 
 	/* find how many times the pattern occurs in the original string */
 	for (; (patloc = strstr(oriptr, pat)); oriptr = patloc + patlen)
@@ -132,7 +132,7 @@ str_replace(xhp_t *xhp, const char *orig, const char *pat, const char *repl)
 
 	/* allocate memory for the new string */
 	retlen = orilen + patcnt * (replen - patlen);
-	returned = xmalloc(xhp, retlen + 1);
+	returned = xmalloc(retlen + 1);
 
 	if (returned != NULL) {
 		/* copy the original string,
@@ -153,18 +153,18 @@ str_replace(xhp_t *xhp, const char *orig, const char *pat, const char *repl)
 		strcpy(retptr, oriptr);
 		returned[retlen] = '\0';
 	}
-	return str_add_nocopy(xhp, returned);
+	return str_add_nocopy(returned);
 }
 
 /* Works like getenv(), but on vars with ${braces} around them. */
 const char *
-getbenv(xhp_t *xhp, const char *input)
+getbenv(const char *input)
 {
 	size_t size;
 	const char *result;
 	char *tmp;
 	size = strlen(input);
-	tmp = xmalloc(xhp, size - 2);
+	tmp = xmalloc(size - 2);
 	tmp = strncpy(tmp, input + 2, size - 3);
 	tmp[size - 3] = '\0';
 	result = getenv(tmp);
@@ -175,7 +175,7 @@ getbenv(xhp_t *xhp, const char *input)
 
 /* Extracts all ${FOO} vars from 'src' and stores them in 'dst' */
 void
-bvars(xhp_t *xhp, str_t *dst, const char *src)
+bvars(str_t *dst, const char *src)
 {
 	size_t i, len = 0;
 	const char *start = NULL, *end = NULL;
@@ -185,9 +185,9 @@ bvars(xhp_t *xhp, str_t *dst, const char *src)
 		len = (strlen(start) - strlen(end + 1));
 		if (len > 0 && start[1] == '{') {
 			i = dst->size;
-			dst->items = xrealloc(xhp, dst->items,
+			dst->items = xrealloc(dst->items,
 			    sizeof(char*)*(i+1));
-			dst->items[i] = xmalloc(xhp, len + 1);
+			dst->items[i] = xmalloc(len + 1);
 			dst->items[i] = strncpy(dst->items[i], start, len);
 			dst->items[i][len] = '\0';
 			dst->size++;
@@ -198,7 +198,7 @@ bvars(xhp_t *xhp, str_t *dst, const char *src)
 
 /* Returns new string with all ${FOO} vars replaced from getbenv() */
 char *
-breplace(xhp_t *xhp, const char *input)
+breplace(const char *input)
 {
 	size_t i, input_len, tmp_len;
 	const char *env;
@@ -206,26 +206,26 @@ breplace(xhp_t *xhp, const char *input)
 
 	/* Copy input to output if this is a useless call */
 	if ((strstr(input, "${") == NULL))
-	    return xstrcpy(xhp, input);
+	    return xstrcpy(input);
 
 	str_t to_replace;
 	to_replace.size = 0;
-	to_replace.items = xmalloc(xhp, sizeof(char *) * to_replace.size);
+	to_replace.items = xmalloc(sizeof(char *) * to_replace.size);
 
-	bvars(xhp, &to_replace, input);
+	bvars(&to_replace, input);
 	input_len = strlen(input);
-	replacement = xmalloc(xhp, input_len + 1);
+	replacement = xmalloc(input_len + 1);
 	replacement = strncpy(replacement, input, input_len);
 	replacement[input_len] = '\0';
 
 	if (to_replace.size > 0) {
 		for (i = 0; i < to_replace.size; i++) {
 			item = to_replace.items[i];
-			env = getbenv(xhp, item);
-			tmp = str_replace(xhp, replacement, item, env);
+			env = getbenv(item);
+			tmp = str_replace(replacement, item, env);
 			tmp_len = strlen(tmp);
 			free(replacement);
-			replacement = xmalloc(xhp, tmp_len + 1);
+			replacement = xmalloc(tmp_len + 1);
 			replacement = strncpy(replacement, tmp, tmp_len);
 			replacement[tmp_len] = '\0';
 			/* NOTE: 'tmp' is free()'d by the strmgr. */
@@ -233,5 +233,5 @@ breplace(xhp_t *xhp, const char *input)
 		}
 	}
 	free(to_replace.items);
-	return str_add_nocopy(xhp, replacement);
+	return str_add_nocopy(replacement);
 }

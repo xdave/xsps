@@ -213,7 +213,7 @@ cfg_exportvars(cfg_t *cfg, cfg_opt_t *opt, int argc, const char **argv)
 }
 
 int
-process_template(xhp_t *xhp)
+process_template()
 {
 	/* package sections */
 	cfg_opt_t cfg_pkg_opts[] = {
@@ -288,22 +288,22 @@ process_template(xhp_t *xhp)
 
 	option = xhp->arg->option;
 	pkgname = xhp->arg->pkgname;
-	template = xstrfcpy(xhp, "%s/srcpkgs/%s/template",
+	template = xstrfcpy("%s/srcpkgs/%s/template",
 	    xhp->config->distdir, xhp->arg->template_name);
 
 	cfg = cfg_init(opts, CFGF_NONE);
 	rv = cfg_parse(cfg, template);
 	if (rv == CFG_FILE_ERROR) {
-		log_error(xhp, "%s: cannot read %s (%s)", xhp->arg->argv[0],
+		log_error("%s: cannot read %s (%s)", xhp->arg->argv[0],
 		    template, strerror(errno));
 		cfg_free(cfg);
-		xhp_free(xhp);
+		xhp_free();
 		exit(EXIT_FAILURE);
 	} else if (rv == CFG_PARSE_ERROR) {
-		log_error(xhp, "%s: failed to parse %s", xhp->arg->argv[0],
+		log_error("%s: failed to parse %s", xhp->arg->argv[0],
 		    template);
 		cfg_free(cfg);
-		xhp_free(xhp);
+		xhp_free();
 		exit(EXIT_FAILURE);
 	}
 	/*
@@ -311,7 +311,7 @@ process_template(xhp_t *xhp)
 	 */
 	if (validate_pkg_section(cfg) == -1) {
 		cfg_free(cfg);
-		xhp_free(xhp);
+		xhp_free();
 		exit(EXIT_FAILURE);
 	}
 	print_section(cfg, pkgname, option);

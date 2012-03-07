@@ -10,7 +10,7 @@
 #include "xsps.h"
 
 void
-log_all(xhp_t *xhp, int c, FILE *tgt, const char *name, const char *fmt, ...)
+log_all(int c, FILE *tgt, const char *name, const char *fmt, ...)
 {
 	int	n;
 	size_t	size = 100;
@@ -21,7 +21,7 @@ log_all(xhp_t *xhp, int c, FILE *tgt, const char *name, const char *fmt, ...)
 	if (name != NULL && xstreq(name, "DEBUG") && xhp->arg->debug == false)
 		return;
 
-	p = xmalloc(xhp, size);
+	p = xmalloc(size);
 
 	while(1) {
 		va_start(ap, fmt);
@@ -29,7 +29,7 @@ log_all(xhp_t *xhp, int c, FILE *tgt, const char *name, const char *fmt, ...)
 		va_end(ap);
 		if(n > -1 && (size_t)n < size) break;
 		if(n > -1) size = (size_t)n+1;
-		np = xrealloc(xhp, p, size);
+		np = xrealloc(p, size);
 		p = np;
 	}
 	if (name != NULL) {
@@ -60,30 +60,30 @@ log_all(xhp_t *xhp, int c, FILE *tgt, const char *name, const char *fmt, ...)
 }
 
 void
-log_set_file(xhp_t *xhp, const char *filename)
+log_set_file(const char *filename)
 {
-	log_close(xhp);
+	log_close();
 
 	if (xhp->log_file == NULL) {
 		if ((xhp->log_file = fopen(filename, "w")) == NULL) {
-			DIE(xhp, "Cannot open log '%s' (%s)\n",
+			DIE("Cannot open log '%s' (%s)\n",
 			    filename, strerror(errno));
 		}
 		xhp->log_filename = filename;
-		log_debug(xhp, "Using log file '%s'", filename);
+		log_debug("Using log file '%s'", filename);
 	}
 }
 
 void
-log_close(xhp_t *xhp)
+log_close()
 {
 	if (xhp->log_file != NULL) {
 		if((fflush(xhp->log_file)) != 0) {
-			DIE(xhp, "Cannot flush existing log: '%s' (%s)\n",
+			DIE("Cannot flush existing log: '%s' (%s)\n",
 			    xhp->log_filename, strerror(errno));
 		}
 		if ((fclose(xhp->log_file)) != 0) {
-			DIE(xhp, "Cannot close existing log: '%s' (%s)\n",
+			DIE("Cannot close existing log: '%s' (%s)\n",
 			    xhp->log_filename, strerror(errno));
 		}
 		xhp->log_file = NULL;
