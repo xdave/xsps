@@ -126,7 +126,11 @@ bool xstreq(const char *, const char *);
 char *xstrcpy(xhp_t *, const char *);
 char *xstrfcpy(xhp_t *, const char *, ...);
 char *str_replace(xhp_t *, const char *, const char *, const char *);
+
+/* Functions dealing with ${FOO} strings */
 const char *getbenv(xhp_t *, const char *);
+void bvars(xhp_t *, str_t *, const char *);
+char *breplace(xhp_t *, const char *);
 
 /* template processing */
 int process_template(xhp_t *);

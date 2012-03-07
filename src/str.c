@@ -151,7 +151,7 @@ str_replace(xhp_t *xhp, const char *orig, const char *pat, const char *repl)
 	return str_add_nocopy(xhp, returned);
 }
 
-/* works like getenv(), but on vars with ${braces} around them. */
+/* Works like getenv(), but on vars with ${braces} around them. */
 const char *
 getbenv(xhp_t *xhp, const char *input)
 {
@@ -166,4 +166,61 @@ getbenv(xhp_t *xhp, const char *input)
 	if (result == NULL) result = input;
 	free(tmp);
 	return result;
+}
+
+/* Extracts all ${FOO} vars from 'src' and stores them in 'dst' */
+void
+bvars(xhp_t *xhp, str_t *dst, const char *src)
+{
+	size_t i, len = 0;
+	const char *start = NULL, *end = NULL;
+
+	while (((start = strchr(src, '$')) != NULL) &&
+	       ((end   = strchr(src, '}')) != NULL)) {
+		len = (strlen(start) - strlen(end + 1));
+		if (len > 0 && start[1] == '{') {
+			i = dst->size;
+			dst->items = xrealloc(xhp, dst->items,
+			    sizeof(char*)*(i+1));
+			dst->items[i] = xmalloc(xhp, len + 1);
+			dst->items[i] = strncpy(dst->items[i], start, len);
+			dst->items[i][len] = '\0';
+			dst->size++;
+		}
+		src = (end + 1);
+	}
+}
+
+/* Returns new string with all ${FOO} vars replaced from getbenv() */
+char *
+breplace(xhp_t *xhp, const char *input)
+{
+	size_t i, input_len, tmp_len;
+	const char *env;
+	char *item, *tmp = NULL, *replacement = NULL;
+	str_t to_replace;
+	to_replace.size = 0;
+	to_replace.items = xmalloc(xhp, sizeof(char *) * to_replace.size);
+
+	bvars(xhp, &to_replace, input);
+	input_len = strlen(input);
+	replacement = xmalloc(xhp, input_len + 1);
+	replacement = strncpy(replacement, input, input_len);
+
+	if (to_replace.size > 0) {
+		for (i = 0; i < to_replace.size; i++) {
+			item = to_replace.items[i];
+			env = getbenv(xhp, item);
+			tmp = str_replace(xhp, replacement, item, env);
+			tmp_len = strlen(tmp);
+			free(replacement);
+			replacement = xmalloc(xhp, tmp_len + 1);
+			replacement = strncpy(replacement, tmp, tmp_len);
+			replacement[tmp_len] = '\0';
+			free(tmp);
+			free(item);
+		}
+	}
+	free(to_replace.items);
+	return str_add_nocopy(xhp, replacement);
 }
