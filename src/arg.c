@@ -89,7 +89,7 @@ void
 arg_print_usage(xhp_t *xhp)
 {
 	fprintf(stderr,
-"Usage: %s [-dh] [-c file] [-x dir] [-m dir] [-o prop] [-p pkgname] template\n"
+"Usage: %s [flags...] [config...] [options...] template\n"
 "\n"
 "  Flags:\n"
 "    -h ............ display this message\n"
