@@ -82,6 +82,7 @@ arg_parse(xhp_t *xhp)
 	}
 
 	xhp->arg->template_name = argv[0];
+	log_debug(xhp, "+TEMPLATE: '%s'", argv[0]);
 }
 
 void
