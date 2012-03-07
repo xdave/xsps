@@ -122,6 +122,10 @@ str_replace(xhp_t *xhp, const char *orig, const char *pat, const char *repl)
 	char *returned;
 	char *retptr;
 
+	/* Copy input to output if this is a useless call */
+	if (xstreq(pat, repl))
+	    return xstrcpy(xhp, orig);
+
 	/* find how many times the pattern occurs in the original string */
 	for (; (patloc = strstr(oriptr, pat)); oriptr = patloc + patlen)
 		patcnt++;
@@ -199,6 +203,11 @@ breplace(xhp_t *xhp, const char *input)
 	size_t i, input_len, tmp_len;
 	const char *env;
 	char *item, *tmp = NULL, *replacement = NULL;
+
+	/* Copy input to output if this is a useless call */
+	if ((strstr(input, "${") == NULL))
+	    return xstrcpy(xhp, input);
+
 	str_t to_replace;
 	to_replace.size = 0;
 	to_replace.items = xmalloc(xhp, sizeof(char *) * to_replace.size);
