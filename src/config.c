@@ -53,13 +53,17 @@ config_init(xhp_t *xhp)
 
 	/* TODO: Make this better */
 
-	xhp->config->distdir = breplace(xhp,
-	    cfg_getstr(xhp->config->cfg, "XSPS_DISTDIR"));
+	if (xhp->arg->distdir == NULL) {
+		xhp->config->distdir = breplace(xhp,
+		    cfg_getstr(xhp->config->cfg, "XSPS_DISTDIR"));
+	} else {
+		xhp->config->distdir = xhp->arg->distdir;
+	}
 	setenv("XSPS_DISTDIR", xhp->config->distdir, 1);
 	xhp->config->repourl = breplace(xhp,
 	    cfg_getstr(xhp->config->cfg, "XSPS_SRCPKGS_REPOURL"));
 	setenv("XSPS_SRCPKGS_REPOURL", xhp->config->repourl, 1);
-	if(xhp->arg->masterdir == NULL) {
+	if (xhp->arg->masterdir == NULL) {
 		xhp->config->masterdir = breplace(xhp,
 		    cfg_getstr(xhp->config->cfg, "XSPS_MASTERDIR"));
 	} else {

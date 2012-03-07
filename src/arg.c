@@ -17,6 +17,7 @@ arg_init(xhp_t *xhp, int argc, char **argv)
 	xhp->arg->argv = argv;
 	xhp->arg->debug = false;
 	xhp->arg->config = xstrcpy(xhp, XSPS_CONFIG);
+	xhp->arg->distdir = NULL;
 	xhp->arg->masterdir = NULL;
 	xhp->arg->option = NULL;
 	xhp->arg->pkgname = NULL;
@@ -35,7 +36,7 @@ arg_parse(xhp_t *xhp)
 	argc = xhp->arg->argc;
 	argv = xhp->arg->argv;
 
-	while ((c = getopt(argc, argv,"hdc:m:o:p:b:")) != EOF) {
+	while ((c = getopt(argc, argv,"hdc:x:m:o:p:b:")) != EOF) {
 		switch (c) {
 		case 'd':
 			xhp->arg->debug = true;
@@ -43,6 +44,10 @@ arg_parse(xhp_t *xhp)
 			break;
 		case 'c':
 			xhp->arg->config = xstrcpy(xhp, optarg);
+			log_debug(xhp, "+OPTION -%c: '%s'", c, optarg);
+			break;
+		case 'x':
+			xhp->arg->distdir = xstrcpy(xhp, optarg);
 			log_debug(xhp, "+OPTION -%c: '%s'", c, optarg);
 			break;
 		case 'm':
@@ -82,18 +87,20 @@ arg_parse(xhp_t *xhp)
 void
 arg_print_usage(xhp_t *xhp)
 {
-	log_info(xhp,
-"Usage: %s [-dh] [-c file] [-m dir] [-o prop] [-p pkgname] template\n\n"
-"	Flags:\n"
-"	  -h ............ display this message\n"
-"	  -d ............ display extra debugging messages\n\n"
-"	Config:\n"
-"	  -c file ....... specifiy alternate config file\n"
-"	  -m dir ........ override master dir config setting\n\n"
-"	Options:\n"
-"	  -p pkgname .... specify package name within a template\n"
-"	  -o prop ....... show property from package for selected template\n\n"
-"	template ........ the source package template to use\n",
+	fprintf(stderr,
+"Usage: %s [-dh] [-c file] [-x dir] [-m dir] [-o prop] [-p pkgname] template\n"
+"\n"
+"  Flags:\n"
+"    -h ............ display this message\n"
+"    -d ............ display extra debugging messages\n"
+"  Config:\n"
+"    -c file ....... specifiy alternate config file\n"
+"    -x dir ........ override distdir config setting\n"
+"    -m dir ........ override master dir config setting\n"
+"  Options:\n"
+"    -p pkgname .... specify package name within a template\n"
+"    -o prop ....... show property from package for selected template\n\n"
+"  template ........ the source package template to use\n\n",
 	    xhp->arg->argv[0]);
 	xhp_free(xhp);
 	exit(EXIT_FAILURE);

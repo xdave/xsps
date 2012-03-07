@@ -61,6 +61,7 @@ typedef struct arg_t {
 	char **argv;		/* from main() */
 	bool debug;		/* enabled with -d, optional */
 	char *config;		/* enabled with -c, optional */
+	char *distdir;		/* enabled with -x, optional */
 	char *masterdir;	/* enabled with -m, optional */
 	char *option;		/* enabled with -o, optional */
 	char *pkgname;		/* enabled with -p, optional */
