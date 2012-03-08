@@ -85,7 +85,6 @@ typedef struct config_t {
 	bool ccache;		 /* XSPS_CCACHE */
 	uint16_t compress_level; /* XSPS_COMPRESS_LEVEL */
 	uint16_t makejobs;	 /* XSPS_MAKEJOBS */
-	cfg_t *cfg;
 } config_t;
 
 /* string manager */

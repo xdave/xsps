@@ -20,7 +20,7 @@ config_init()
 		CFG_STR("XSPS_HOSTDIR", "${XSPS_DISTDIR}/host", CFGF_NONE),
 		CFG_STR("XSPS_CFLAGS", "-O2 -pipe -mtune=generic", CFGF_NONE),
 		CFG_STR("XSPS_CXXFLAGS", "${XSPS_CFLAGS} ", CFGF_NONE),
-		CFG_BOOL("XSPS_CCACHE", false, CFGF_NONE),
+		CFG_BOOL("XSPS_CCACHE", cfg_false, CFGF_NONE),
 		CFG_STR("XSPS_LDFLAGS", "-Wl,--as-needed", CFGF_NONE),
 		CFG_INT("XSPS_MAKEJOBS", 1, CFGF_NONE),
 		CFG_STR("XSPS_COMPRESS_CMD", "xz", CFGF_NONE),
@@ -30,11 +30,12 @@ config_init()
 
 	int  error;
 	char error_buffer[256];
+	cfg_t *cfg;
 
 	xhp->config = xmalloc(sizeof(config_t));
-	xhp->config->cfg = cfg_init(opts, CFGF_NONE);
+	cfg = cfg_init(opts, CFGF_NONE);
 
-	switch(cfg_parse(xhp->config->cfg, xhp->arg->config)) {
+	switch(cfg_parse(cfg, xhp->arg->config)) {
 	case CFG_FILE_ERROR:
 		error = errno;
 		strerror_r(error, error_buffer, 256);
@@ -43,6 +44,7 @@ config_init()
 		log_warn("%s", "Using defaults.");
 		break;
 	case CFG_PARSE_ERROR:
+		cfg_free(cfg);
 		xhp_free();
 		exit(EXIT_FAILURE);
 		break;
@@ -55,50 +57,52 @@ config_init()
 
 	if (xhp->arg->distdir == NULL) {
 		xhp->config->distdir = breplace(
-		    cfg_getstr(xhp->config->cfg, "XSPS_DISTDIR"));
+		    cfg_getstr(cfg, "XSPS_DISTDIR"));
 	} else {
 		xhp->config->distdir = xhp->arg->distdir;
 	}
 	setenv("XSPS_DISTDIR", xhp->config->distdir, 1);
 
 	xhp->config->repourl = breplace(
-	    cfg_getstr(xhp->config->cfg, "XSPS_SRCPKGS_REPOURL"));
+	    cfg_getstr(cfg, "XSPS_SRCPKGS_REPOURL"));
 	setenv("XSPS_SRCPKGS_REPOURL", xhp->config->repourl, 1);
 
 	if (xhp->arg->masterdir == NULL) {
 		xhp->config->masterdir = breplace(
-		    cfg_getstr(xhp->config->cfg, "XSPS_MASTERDIR"));
+		    cfg_getstr(cfg, "XSPS_MASTERDIR"));
 	} else {
 		xhp->config->masterdir = xhp->arg->masterdir;
 	}
 	setenv("XSPS_MASTERDIR", xhp->config->masterdir, 1);
 
 	xhp->config->hostdir = breplace(
-	    cfg_getstr(xhp->config->cfg, "XSPS_HOSTDIR"));
+	    cfg_getstr(cfg, "XSPS_HOSTDIR"));
 	setenv("XSPS_HOSTDIR", xhp->config->hostdir, 1);
 
 	xhp->config->cflags = breplace(
-	    cfg_getstr(xhp->config->cfg, "XSPS_CFLAGS"));
+	    cfg_getstr(cfg, "XSPS_CFLAGS"));
 	setenv("XSPS_CFLAGS", xhp->config->cflags, 1);
 
 	xhp->config->cxxflags = breplace(
-	    cfg_getstr(xhp->config->cfg, "XSPS_CXXFLAGS"));
+	    cfg_getstr(cfg, "XSPS_CXXFLAGS"));
 	setenv("XSPS_CXXFLAGS", xhp->config->cxxflags, 1);
 
 	xhp->config->ldflags = breplace(
-	    cfg_getstr(xhp->config->cfg, "XSPS_LDFLAGS"));
+	    cfg_getstr(cfg, "XSPS_LDFLAGS"));
 	setenv("XSPS_LDFLAGS", xhp->config->ldflags, 1);
 
 	xhp->config->compress_cmd = breplace(
-	    cfg_getstr(xhp->config->cfg, "XSPS_COMPRESS_CMD"));
+	    cfg_getstr(cfg, "XSPS_COMPRESS_CMD"));
 	setenv("XSPS_COMPRESS_CMD", xhp->config->compress_cmd, 1);
 
 	/* TODO: Make these work with setenv() too */
-	xhp->config->ccache = cfg_getbool(xhp->config->cfg, "XSPS_CCACHE");
+	xhp->config->ccache = cfg_getbool(cfg, "XSPS_CCACHE");
 
 	xhp->config->makejobs =
-	    (uint16_t)cfg_getint(xhp->config->cfg, "XSPS_MAKEJOBS");
+	    (uint16_t)cfg_getint(cfg, "XSPS_MAKEJOBS");
 
 	xhp->config->compress_level =
-	    (uint16_t)cfg_getint(xhp->config->cfg, "XSPS_COMPRESS_LEVEL");
+	    (uint16_t)cfg_getint(cfg, "XSPS_COMPRESS_LEVEL");
+
+	cfg_free(cfg);
 }

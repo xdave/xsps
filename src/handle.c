@@ -45,9 +45,6 @@ xhp_free()
 	if (xhp != NULL) {
 		xhp->init = 0;
 		if (xhp->str != NULL) str_free();
-		if (xhp->config != NULL && xhp->config->cfg != NULL)
-			cfg_free(xhp->config->cfg);
-
 		if (xhp->config != NULL) free(xhp->config);
 		if (xhp->arg != NULL) free(xhp->arg);
 
