@@ -33,6 +33,7 @@ public class Log {
 	public static void
 	debug(string fmt, ...)
 	{
+		if (xhp.args.debug)
 		Log.all(Color.CYAN, stderr, "DEBUG", fmt.vprintf(va_list()));
 	}
 
