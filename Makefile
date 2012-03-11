@@ -6,11 +6,11 @@ VALAC := valac
 PKGCONFIG := pkg-config
 
 ## pkg-config
-PKGS := glib-2.0 gio-2.0 gobject-2.0 gee-1.0
-PKG_CFLAGS  := `$(PKGCONFIG) --cflags $(PKGS)`
-PKG_LDFLAGS := `$(PKGCONFIG) --libs $(PKGS)`
+PKGS := glib-2.0 gobject-2.0 gio-2.0 gee-1.0
+PKG_CFLAGS  := $(shell $(PKGCONFIG) --cflags $(PKGS))
+PKG_LDFLAGS := $(shell $(PKGCONFIG) --libs $(PKGS))
 VPKGS := $(foreach pkg,$(PKGS),$(subst $(pkg),--pkg=$(pkg),$(pkg))) \
-	--pkg=stdlib --pkg=xsps_c --pkg=confuse
+	--pkg=posix --pkg=stdlib --pkg=xsps_c --pkg=confuse
 
 ## Directories
 CONFIG_DIR	:= config
@@ -56,13 +56,13 @@ $(VHEADER): $(VSRC)
 	@mkdir -p ${@D}
 	@echo "[VGEN]	$@"
 	@$(VALAC) --nostdpkg --vapidir=$(INC_DIR) $(VPKGS) --ccode --compile \
-		--basedir=$(VSRC_DIR) --directory $(VGEN_DIR) \
-		--library=$(TARGET) --header=$@ $^
+		--basedir=$(VSRC_DIR) --directory=$(VGEN_DIR) \
+		--library=$(TARGET) --header=$@ --thread $^
 
 $(TMP_DIR)/%.vo: $(VGEN_DIR)/%.c
 	@mkdir -p ${@D}
 	@echo "[VCC]	$@"
-	@$(CC) $(VWARN) $(CFLAGS) -c $< -o $@
+	@$(CC) $(WARN) $(CFLAGS) -c $< -o $@
 
 $(TMP_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p ${@D}
