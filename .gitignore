@@ -2,3 +2,6 @@
 xsps
 tmp
 *.log
+defuse.c
+generated
+old_src

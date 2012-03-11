@@ -104,7 +104,7 @@ typedef struct xhp_t {
 } xhp_t;
 
 /* Global xhp_t instance */
-xhp_t *xhp;
+/*xhp_t *xhp;*/
 
 /* Functions for dealing with global xhp_t instance */
 void xhp_init(int, char **);	/* Initialize the xsps handle */

@@ -4,12 +4,16 @@
  * Distributed under a modified BSD-style license.
  * See the COPYING file in the toplevel directory for license details. */
 
+#include <confuse.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
 #include <sys/utsname.h>
+#include <inttypes.h>
 
+#include "xsps_c.h"
 #include "xsps.h"
 
 /*
@@ -47,7 +51,7 @@ match_pkg_by_name(cfg_t *cfg, const char *name)
 	for (i = 0; i < cfg_size(cfg, "package"); i++) {
 		cfgsec = cfg_getnsec(cfg, "package", i);
 		pkgname = cfg_getstr(cfgsec, "pkgname");
-		if (xstreq(pkgname, name))
+		if ((strcmp(pkgname, name)) == 0)
 			break;
 
 		cfgsec = NULL;
@@ -95,9 +99,9 @@ print_section(cfg_t *cfg, const char *pkgname, const char *option)
 	/* print options from global section */
 	for (i = 0; i < __arraycount(global_opts); i++) {
 		p = global_opts[i];
-		if (xstreq(p, "package"))
+		if ((strcmp(p, "package")) == 0)
 			continue;
-		if ((option != NULL) && !xstreq(p, option))
+		if ((option != NULL) && (strcmp(p, option) != 0))
 			continue;
 		cfg_opt = cfg_getopt(cfg, p);
 		if (cfg_opt == NULL)
@@ -113,7 +117,7 @@ print_section(cfg_t *cfg, const char *pkgname, const char *option)
 			return;
 		for (i = 0; i < __arraycount(package_opts); i++) {
 			p = package_opts[i];
-			if ((option != NULL) && !xstreq(p, option))
+			if ((option != NULL) && (strcmp(p, option) != 0))
 				continue;
 			cfg_opt = cfg_getopt(cfgsec, p);
 			if (cfg_opt == NULL)
@@ -286,24 +290,23 @@ process_template()
 	int rv;
 	const char *option, *pkgname, *template;
 
-	option = xhp->arg->option;
-	pkgname = xhp->arg->pkgname;
-	template = xstrfcpy("%s/srcpkgs/%s/template",
-	    xhp->config->distdir, xhp->arg->template_name);
+	option = xhp->args->option;
+	pkgname = xhp->args->package;
+	template = xhp->args->template_filename;
 
 	cfg = cfg_init(opts, CFGF_NONE);
 	rv = cfg_parse(cfg, template);
 	if (rv == CFG_FILE_ERROR) {
-		log_error("%s: cannot read %s (%s)", xhp->arg->argv[0],
+		xsps_log_error("%s: cannot read %s (%s)", xhp->args->progname,
 		    template, strerror(errno));
 		cfg_free(cfg);
-		xhp_free();
+		/*xhp_free();*/
 		exit(EXIT_FAILURE);
 	} else if (rv == CFG_PARSE_ERROR) {
-		log_error("%s: failed to parse %s", xhp->arg->argv[0],
+		xsps_log_error("%s: failed to parse %s", xhp->args->progname,
 		    template);
 		cfg_free(cfg);
-		xhp_free();
+		/*xhp_free();*/
 		exit(EXIT_FAILURE);
 	}
 	/*
@@ -311,7 +314,7 @@ process_template()
 	 */
 	if (validate_pkg_section(cfg) == -1) {
 		cfg_free(cfg);
-		xhp_free();
+		/*xhp_free();*/
 		exit(EXIT_FAILURE);
 	}
 	print_section(cfg, pkgname, option);
