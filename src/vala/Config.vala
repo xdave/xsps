@@ -17,9 +17,7 @@ public class Config {
 	public
 	Config()
 	{
-
 	}
-
 }
 
 } // namepsace xsps

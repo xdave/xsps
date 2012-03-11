@@ -9,7 +9,9 @@ public class Main {
 	public GLib.FileStream log_file;
 	public string log_filename;
 
-	public Main(string[] argv) {
+	public
+	Main(string[] argv)
+	{
 		this.args = new Args();
 		this.config = new Config();
 		this.args.parse(argv);
@@ -20,6 +22,7 @@ public class Main {
 	{
 		xhp = new Main(argv);
 		process_template();
+		config_init();
 		Process.exit(EXIT_SUCCESS);
 	}
 
