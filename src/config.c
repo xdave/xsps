@@ -10,7 +10,7 @@
 #include "xsps_c.h"
 #include "xsps.h"
 
-void
+int
 config_init()
 {
 	cfg_opt_t opts[] = {
@@ -33,21 +33,20 @@ config_init()
 	char error_buffer[256];
 	cfg_t *cfg;
 
-	xhp->config = xmalloc(sizeof(config_t));
+	/*xhp->config = xmalloc(sizeof(config_t));*/
 	cfg = cfg_init(opts, CFGF_NONE);
 
-	switch(cfg_parse(cfg, xhp->arg->config)) {
+	switch(cfg_parse(cfg, xhp->args->config)) {
 	case CFG_FILE_ERROR:
 		error = errno;
 		strerror_r(error, error_buffer, 256);
-		log_warn("Can't read config file '%s': %s.",
-		    xhp->arg->config, error_buffer);
-		log_warn("%s", "Using defaults.");
+		xsps_log_warn("Can't read config file '%s': %s.",
+		    xhp->args->config, error_buffer);
+		xsps_log_warn("%s", "Using defaults.");
 		break;
 	case CFG_PARSE_ERROR:
 		cfg_free(cfg);
-		xhp_free();
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 		break;
 	case CFG_SUCCESS:
 	default:
@@ -56,45 +55,45 @@ config_init()
 
 	/* TODO: Make this better */
 
-	if (xhp->arg->distdir == NULL) {
-		xhp->config->distdir = breplace(
-		    cfg_getstr(cfg, "XSPS_DISTDIR"));
+	if (xhp->args->distdir == NULL) {
+		xhp->config->distdir =
+		    cfg_getstr(cfg, "XSPS_DISTDIR");
 	} else {
-		xhp->config->distdir = xhp->arg->distdir;
+		xhp->config->distdir = xhp->args->distdir;
 	}
-	setenv("XSPS_DISTDIR", xhp->config->distdir, 1);
+	/*setenv("XSPS_DISTDIR", xhp->config->distdir, 1);*/
 
-	xhp->config->repourl = breplace(
-	    cfg_getstr(cfg, "XSPS_SRCPKGS_REPOURL"));
-	setenv("XSPS_SRCPKGS_REPOURL", xhp->config->repourl, 1);
+	xhp->config->repourl =
+	    cfg_getstr(cfg, "XSPS_SRCPKGS_REPOURL");
+	/*setenv("XSPS_SRCPKGS_REPOURL", xhp->config->repourl, 1);*/
 
-	if (xhp->arg->masterdir == NULL) {
-		xhp->config->masterdir = breplace(
-		    cfg_getstr(cfg, "XSPS_MASTERDIR"));
+	if (xhp->args->masterdir == NULL) {
+		xhp->config->masterdir =
+		    cfg_getstr(cfg, "XSPS_MASTERDIR");
 	} else {
-		xhp->config->masterdir = xhp->arg->masterdir;
+		xhp->config->masterdir = xhp->args->masterdir;
 	}
-	setenv("XSPS_MASTERDIR", xhp->config->masterdir, 1);
+	/*setenv("XSPS_MASTERDIR", xhp->config->masterdir, 1);*/
 
-	xhp->config->hostdir = breplace(
-	    cfg_getstr(cfg, "XSPS_HOSTDIR"));
-	setenv("XSPS_HOSTDIR", xhp->config->hostdir, 1);
+	xhp->config->hostdir =
+	    cfg_getstr(cfg, "XSPS_HOSTDIR");
+	/*setenv("XSPS_HOSTDIR", xhp->config->hostdir, 1);*/
 
-	xhp->config->cflags = breplace(
-	    cfg_getstr(cfg, "XSPS_CFLAGS"));
-	setenv("XSPS_CFLAGS", xhp->config->cflags, 1);
+	xhp->config->cflags =
+	    cfg_getstr(cfg, "XSPS_CFLAGS");
+	/*setenv("XSPS_CFLAGS", xhp->config->cflags, 1);*/
 
-	xhp->config->cxxflags = breplace(
-	    cfg_getstr(cfg, "XSPS_CXXFLAGS"));
-	setenv("XSPS_CXXFLAGS", xhp->config->cxxflags, 1);
+	xhp->config->cxxflags =
+	    cfg_getstr(cfg, "XSPS_CXXFLAGS");
+	/*setenv("XSPS_CXXFLAGS", xhp->config->cxxflags, 1);*/
 
-	xhp->config->ldflags = breplace(
-	    cfg_getstr(cfg, "XSPS_LDFLAGS"));
-	setenv("XSPS_LDFLAGS", xhp->config->ldflags, 1);
+	xhp->config->ldflags =
+	    cfg_getstr(cfg, "XSPS_LDFLAGS");
+	/*setenv("XSPS_LDFLAGS", xhp->config->ldflags, 1);*/
 
-	xhp->config->compress_cmd = breplace(
-	    cfg_getstr(cfg, "XSPS_COMPRESS_CMD"));
-	setenv("XSPS_COMPRESS_CMD", xhp->config->compress_cmd, 1);
+	xhp->config->compress_cmd =
+	    cfg_getstr(cfg, "XSPS_COMPRESS_CMD");
+	/*setenv("XSPS_COMPRESS_CMD", xhp->config->compress_cmd, 1);*/
 
 	/* TODO: Make these work with setenv() too */
 	xhp->config->ccache = cfg_getbool(cfg, "XSPS_CCACHE");

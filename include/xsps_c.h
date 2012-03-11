@@ -37,7 +37,7 @@ do {									\
 #define log_error(fmt, ...) \
 	log_all(COLOR_RED, stderr, "ERROR", fmt, __VA_ARGS__)
 
-#define XSPS_CONFIG CONFIG_DIR "/xsps.conf"
+#define CONFIG CONFIG_DIR "/xsps.conf"
 
 
 /* ANSI Colors
@@ -126,7 +126,7 @@ void arg_parse();
 void arg_print_usage();
 
 /* configuration*/
-void config_init();
+int config_init();
 
 /* string managment*/
 void str_init();

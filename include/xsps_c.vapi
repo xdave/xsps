@@ -1,8 +1,8 @@
-[CCode (cname = "XSPS_CONFIG_DIR", cheader_filename = "xsps_c.h")]
-public extern const string XSPS_CONFIG_DIR;
+[CCode (cname = "CONFIG_DIR", cheader_filename = "xsps_c.h")]
+public extern const string CONFIG_DIR;
 
-[CCode (cname = "XSPS_CONFIG", cheader_filename = "xsps_c.h")]
-public extern const string XSPS_CONFIG;
+[CCode (cname = "CONFIG", cheader_filename = "xsps_c.h")]
+public extern const string CONFIG;
 
 [CCode (cname = "struct config_t", cheader_filename = "xsps_c.h")]
 public extern struct config_t {

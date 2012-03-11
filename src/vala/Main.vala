@@ -4,12 +4,14 @@ namespace xsps {
 
 public class Main {
 	public Args args;
+	public Config config;
 
 	public GLib.FileStream log_file;
 	public string log_filename;
 
 	public Main(string[] argv) {
 		this.args = new Args();
+		this.config = new Config();
 		this.args.parse(argv);
 	}
 

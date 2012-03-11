@@ -2,9 +2,9 @@ namespace xsps {
 
 public class Args {
 
-	public OptionContext context;
-	public OptionEntry[] entries;
-	public string usage_text;
+	OptionContext context;
+	OptionEntry[] entries;
+	string usage_text;
 	public string progname;
 
 	public bool debug;
@@ -21,7 +21,7 @@ public class Args {
 	Args()
 	{
 		debug = false;
-		config = XSPS_CONFIG;
+		config = CONFIG;
 
 		usage_text = "[-d] [-c FILE] [-x DIR] [-m DIR]\n" +
 			"	[-p PKG] [-o OPTION] TEMPLATE";
