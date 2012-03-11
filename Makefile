@@ -1,72 +1,66 @@
 TARGET   := xsps
-XSPS_CONFIG_DIR := config
 
-CC := gcc
+## Programs
+CC := ccache gcc
 VALAC := valac
-
 PKGCONFIG := pkg-config
-PKGS := glib-2.0 gobject-2.0 gee-1.0
+
+## pkg-config
+PKGS := glib-2.0 gio-2.0 gobject-2.0 gee-1.0
 PKG_CFLAGS  := `$(PKGCONFIG) --cflags $(PKGS)`
 PKG_LDFLAGS := `$(PKGCONFIG) --libs $(PKGS)`
-
-SRC_DIR  := src
-TMP_DIR  := tmp
-INC_DIR  := include
-
-VGEN_DIR := generated
-
-VSRC_DIR := $(SRC_DIR)/vala
-VINC_DIR := $(VOUT_DIR)/include
-
-VAPI_OUT := $(TARGET).vapi
-VHEADER  := $(VGEN_DIR)/$(TARGET).h
-
-VSRC  := $(shell find $(VSRC_DIR) -type f -name '*.vala')
-VCSRC := $(VGEN_DIR)/$(TARGET).c
 VPKGS := $(foreach pkg,$(PKGS),$(subst $(pkg),--pkg=$(pkg),$(pkg)))
 
-CSRC := $(shell find $(SRC_DIR) -type f -name '*.c')
+## Directories
+CONFIG_DIR	:= config
+SRC_DIR		:= src
+TMP_DIR		:= tmp
+INC_DIR		:= include
+VGEN_DIR	:= generated
+VSRC_DIR	:= $(SRC_DIR)/vala
 
+## Sources
+VHEADER   := $(VGEN_DIR)/$(TARGET).h
+VSRC	  := $(shell find $(VSRC_DIR) -type f -name '*.vala')
+VCSRC	  := $(patsubst $(VSRC_DIR)/%.vala,$(VGEN_DIR)/%.c,$(VSRC))
+CSRC	  := $(shell find $(SRC_DIR) -type f -name '*.c')
+
+## Object files
 VOBJ :=	$(patsubst $(VGEN_DIR)/%.c,$(TMP_DIR)/%.vo,$(VCSRC))
-COBJ := $(patsubst $(SRC_DIR)/%.c,$(TMP_DIR)/%.o,$(CSRC))
-OBJ  := $(VOBJ) $(COBJ)
+COBJ :=	$(patsubst $(SRC_DIR)/%.c,$(TMP_DIR)/%.o,$(CSRC))
 
-STD   := -std=c99
-OPTZ  := -O2 -pipe -mtune=generic -fPIC -funroll-loops -fno-exceptions
-SSP   := -fstack-protector-all -D_FORTIFY_SOURCE=2 --param ssp-buffer-size=1
-DEBUG := -ggdb -DXSPS_DEBUG
-DEF := -DXSPS_CONFIG_DIR=\"$(XSPS_CONFIG_DIR)\" -D_REENTRANT -D_XOPEN_SOURCE=600
-WARN_COMMON :=  -Werror -Wshadow -Wnested-externs -Wvla -Wno-overlength-strings\
+## Compiler flags
+#NOTE: With these below warning flags, gcc doesn't like the code Vala generates
+# -Wextra -Wformat=2 -Wformat-security -Wconversion $(WARN_COMMON)
+STD     := -std=c99
+OPTZ    := -O2 -pipe -mtune=generic -fPIC -funroll-loops -fno-exceptions
+SSP     := -fstack-protector-all -D_FORTIFY_SOURCE=2 --param ssp-buffer-size=1
+DEBUG   := -ggdb -DXSPS_DEBUG
+DEF     := -DCONFIG_DIR=\"$(CONFIG_DIR)\" -D_REENTRANT -D_XOPEN_SOURCE=600
+WARN    := -Werror -Wshadow -Wnested-externs -Wvla -Wno-overlength-strings \
 		-Wmissing-declarations -Wdisabled-optimization
-# With these below warning flags, gcc doesn't like the code Vala generates.
-#WARN := -Wextra -Wformat=2 -Wformat-security -Wconversion $(WARN_COMMON)
-WARN := $(WARN_COMMON)
-VWARN := $(WARN_COMMON)
 INCLUDE := -I$(INC_DIR) -I$(VGEN_DIR)
-STATIC :=
-CFLAGS := $(STC) $(STD) $(OPTZ) $(SSP) $(DEBUG) $(DEF) $(INCLUDE) $(PKG_CFLAGS)
+STATIC  :=
+CFLAGS  := $(STC) $(STD) $(OPTZ) $(SSP) $(DEBUG) $(DEF) $(INCLUDE) $(PKG_CFLAGS)
 LDFLAGS := $(STC) $(PKG_LDFLAGS) -lconfuse -Wl,--as-needed
 
-all: $(TARGET)
+## Targets
+all: $(VHEADER) $(TARGET)
 
-$(VGEN_DIR)/xsps.vala: $(VSRC)
-	@mkdir -p ${@D}
-	@echo "[GEN]	$@"
-	@cat $^ > $@
-
-$(VGEN_DIR)/%.c: $(VGEN_DIR)/%.vala
-	@mkdir -p ${@D}
-	@echo "[GEN]	$@"
-	@$(VALAC) --cc=true -C -c -b $(VGEN_DIR) -d $(VGEN_DIR) -H $(VHEADER) \
-		--library=xsps --vapidir=$(INC_DIR) --pkg=xsps_c $^
-
-$(TARGET): $(OBJ)
+$(TARGET): $(VOBJ) $(COBJ)
 	@echo "[LD]	$@"
 	@$(CC) -o $@ $^ $(LDFLAGS)
 
+$(VHEADER): $(VSRC)
+	@mkdir -p ${@D}
+	@echo "[VGEN]	$@"
+	@$(VALAC) --nostdpkg $(VPKGS) --ccode --compile --basedir=$(VSRC_DIR) \
+		--directory $(VGEN_DIR) --library=$(TARGET) --header=$@\
+		--vapidir=$(INC_DIR) --pkg=xsps_c $^
+
 $(TMP_DIR)/%.vo: $(VGEN_DIR)/%.c
 	@mkdir -p ${@D}
-	@echo "[CC]	$@"
+	@echo "[VCC]	$@"
 	@$(CC) $(VWARN) $(CFLAGS) -c $< -o $@
 
 $(TMP_DIR)/%.o: $(SRC_DIR)/%.c
@@ -74,9 +68,10 @@ $(TMP_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo "[CC]	$@"
 	@$(CC) $(WARN) $(CFLAGS) -c $< -o $@
 
+
 clean:
 	@echo "[RM]	Clean."
-	@rm -rf $(TMP_DIR) $(TARGET) $(VGEN_DIR)
+	@rm -rf $(TMP_DIR) $(VGEN_DIR) $(TARGET)
 
 .PHONY: all clean
-.PRECIOUS: $(VHEADER) $(VCSRC)
+.PRECIOUS: $(VHEADERS) $(VAPI) $(VCSRC)
