@@ -9,7 +9,8 @@ PKGCONFIG := pkg-config
 PKGS := glib-2.0 gio-2.0 gobject-2.0 gee-1.0
 PKG_CFLAGS  := `$(PKGCONFIG) --cflags $(PKGS)`
 PKG_LDFLAGS := `$(PKGCONFIG) --libs $(PKGS)`
-VPKGS := $(foreach pkg,$(PKGS),$(subst $(pkg),--pkg=$(pkg),$(pkg)))
+VPKGS := $(foreach pkg,$(PKGS),$(subst $(pkg),--pkg=$(pkg),$(pkg))) \
+	--pkg=xsps_c
 
 ## Directories
 CONFIG_DIR	:= config
@@ -54,9 +55,9 @@ $(TARGET): $(VOBJ) $(COBJ)
 $(VHEADER): $(VSRC)
 	@mkdir -p ${@D}
 	@echo "[VGEN]	$@"
-	@$(VALAC) --nostdpkg $(VPKGS) --ccode --compile --basedir=$(VSRC_DIR) \
-		--directory $(VGEN_DIR) --library=$(TARGET) --header=$@\
-		--vapidir=$(INC_DIR) --pkg=xsps_c $^
+	@$(VALAC) --nostdpkg --vapidir=$(INC_DIR) $(VPKGS) --ccode --compile \
+		--basedir=$(VSRC_DIR) --directory $(VGEN_DIR) \
+		--library=$(TARGET) --header=$@ $^
 
 $(TMP_DIR)/%.vo: $(VGEN_DIR)/%.c
 	@mkdir -p ${@D}
