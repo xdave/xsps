@@ -300,24 +300,21 @@ process_template()
 		xsps_log_error("%s: cannot read %s (%s)", xhp->args->progname,
 		    template, strerror(errno));
 		cfg_free(cfg);
-		/*xhp_free();*/
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	} else if (rv == CFG_PARSE_ERROR) {
 		xsps_log_error("%s: failed to parse %s", xhp->args->progname,
 		    template);
 		cfg_free(cfg);
-		/*xhp_free();*/
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	}
 	/*
 	 * Validate the "package" section, we need at least one.
 	 */
 	if (validate_pkg_section(cfg) == -1) {
 		cfg_free(cfg);
-		/*xhp_free();*/
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	}
 	print_section(cfg, pkgname, option);
 	cfg_free(cfg);
-	return 0;
+	return (EXIT_SUCCESS);
 }
