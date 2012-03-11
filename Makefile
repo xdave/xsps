@@ -38,6 +38,7 @@ DEBUG := -ggdb -DXSPS_DEBUG
 DEF := -DXSPS_CONFIG_DIR=\"$(XSPS_CONFIG_DIR)\" -D_REENTRANT -D_XOPEN_SOURCE=600
 WARN_COMMON :=  -Werror -Wshadow -Wnested-externs -Wvla -Wno-overlength-strings\
 		-Wmissing-declarations -Wdisabled-optimization
+# With these below warning flags, gcc doesn't like the code Vala generates.
 #WARN := -Wextra -Wformat=2 -Wformat-security -Wconversion $(WARN_COMMON)
 WARN := $(WARN_COMMON)
 VWARN := $(WARN_COMMON)
