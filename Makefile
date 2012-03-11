@@ -10,7 +10,7 @@ PKGS := glib-2.0 gio-2.0 gobject-2.0 gee-1.0
 PKG_CFLAGS  := `$(PKGCONFIG) --cflags $(PKGS)`
 PKG_LDFLAGS := `$(PKGCONFIG) --libs $(PKGS)`
 VPKGS := $(foreach pkg,$(PKGS),$(subst $(pkg),--pkg=$(pkg),$(pkg))) \
-	--pkg=xsps_c
+	--pkg=stdlib --pkg=xsps_c --pkg=confuse
 
 ## Directories
 CONFIG_DIR	:= config
