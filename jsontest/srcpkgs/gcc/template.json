@@ -1,0 +1,188 @@
+{
+"source": "gcc",
+"version": "4.6.3",
+"revision": "3",
+"homepage": "http://gcc.gnu.org",
+"maintainer": "Juan RP <xtraeme@gmail.com>",
+"license": "GFDL-1.2, GPL-3, LGPL-2.1",
+"description": "
+ The GNU C Compiler, with support for building C code.
+
+ For C++ install gcc-c++, for ObjectiveC install gcc-objc,
+ for ObjectiveC++ install gcc-objc++, for Go install gcc-go,
+ for Fortran install gcc-fortran.",
+
+"distfiles": [
+	{
+	"arch": "all",
+	"uri": "http://ftp.gnu.org/pub/gnu/gcc/gcc-4.6.3/gcc-4.6.3.tar.bz2",
+	"sha256":"e8f5853d4eec2f5ebaf8a72ae4d53c436aacf98153b2499f8635b48c4718a093"
+	}
+],
+"make-depends": [
+	"perl", "flex", "zlib-devel", "gmp-devel", "mpfr-devel",
+	"mpc-devel", "cloog-ppl-devel", "libelf-devel"
+],
+"make-depends-x86_64": [ "glibc32-devel", "zlib32-devel" ],
+"required-abi": "4.4.0",
+
+"packages": [ {
+	"pkgname": "gcc-c++-multilib",
+	"arch": "x86_64",
+	"desc": "GCC C++ compiler (multilib files)",
+	"noverifyrdeps": true,
+	"depends": [
+		"gcc-c++>=${MAJORVER}", "gcc-multilib>=${MAJORVER}",
+		"libstdc++32-devel>=${MAJORVER}"
+	],
+	"files": [ "/usr/lib32/libstdc++.a", "/usr/lib32/libsupc++.a" ]
+	},
+
+	{
+	"pkgname": "gcc-c++",
+	"desc": "GCC C++ support",
+	"depends": [ "gcc>=${MAJORVER}", "libstdc++-devel>=${MAJORVER}" ],
+	"files": [
+		"/usr/bin/g++", "/usr/bin/c++", "/usr/bin/${XBPS_BUILD_TRIPLET}-g++",
+		"/usr/bin/${XBPS_BUILD_TRIPLET}-c++",
+		"/usr/lib/gcc/${XBPS_BUILD_TRIPLET}/${MAJORVER}/cc1plus",
+		"/usr/share/man/man1/g++.1"
+	]
+	},
+
+	{
+	"pkgname": "gcc-fortran",
+	"desc": "GCC Fortran compiler frontend",
+	"depends":[ "gcc>=${MAJORVER}", "libgfortran-devel>=${MAJORVER}" ],
+	"files": [
+		"/usr/bin/*gfortran",
+		"/usr/lib/gcc/${XBPS_BUILD_TRIPLET}/${MAJORVER}/f*",
+		"/usr/share/info/gfortran.info",
+		"/usr/share/man/man1/gfortran.1"
+	]
+	},
+
+	{
+	"pkgname": "gcc-go",
+	"desc": "GCC Go compiler frontend",
+	"depends": [ "gcc>=${MAJORVER}", "libgo-devel>=${MAJORVER}" ],
+	"files": [
+		"/usr/bin/*gccgo", "/usr/lib/go",
+		"/usr/lib/gcc/${XBPS_BUILD_TRIPLET}/${MAJORVER}/go1",
+		"usr/share/info/gccgo.info", "/usr/share/man/man1/gccgo.1"
+	]
+	},
+
+	{
+	"pkgname": "gcc-multilib",
+	"arch": "x86_64",
+	"noverifyrdeps": true,
+	"desc": "GCC C compiler (multilib files)",
+	"depends": [
+		"gcc>=${MAJORVER}", "libgcc32>=${MAJORVER}",
+		"libgomp32>=${VERSION}", "zlib32", "glibc32-devel"
+	],
+	"files": [
+		"/usr/lib/gcc/${XBPS_BUILD_TRIPLET}/${MAJORVER}/specs",
+		"/usr/lib/gcc/${XBPS_BUILD_TRIPLET}/${MAJORVER}/32",
+		"/usr/lib32/libssp*.a"
+	]
+	},
+
+	{
+	"pkgname": "gcc-objc++",
+	"desc": "GCC Objective-C++ support",
+	"depends": [ "gcc-c++>=${MAJORVER}", "gcc-objc>=${MAJORVER}" ],
+	"files": [ "/usr/lib/gcc/${XBPS_BUILD_TRIPLET}/${MAJORVER}/cc1objplus"]
+	},
+
+	{
+	"pkgname": "gcc-objc",
+	"desc": "GCC Objective-C support",
+	"depends": [ "gcc>=${MAJORVER}", "libobjc>=${MAJORVER}" ],
+	"files": [
+		"/usr/lib/gcc/${XBPS_BUILD_TRIPLET}/${MAJORVER}/include/objc",
+		"/usr/lib/gcc/${XBPS_BUILD_TRIPLET}/${MAJORVER}/cc1obj"
+	]
+	},
+
+	{
+	"pkgname": "libgcc",
+	"desc": "GCC shared library support",
+	"noverifyrdeps": true,
+	"files": [ "/usr/lib/libgcc_s.so*" ]
+	},
+
+	{
+	"pkgname": "libgcc32",
+	"desc": "GCC shared library support (32bit)",
+	"arch": "x86_64",
+	"noverifyrdeps": true,
+	"files": [ "/usr/lib32/libgcc_s.so*" ]
+	}
+
+	{
+	"pkgname": "libgfortran",
+	"desc": "GCC fortran shared library support",
+	"files": [ "/usr/lib/libgfortran.so*", "/usr/lib/libgfortran.spec" ]
+	},
+
+	{
+	"pkgname": "libgfortran-devel",
+	"desc": "GCC fortran shared library support -- development files",
+	"depends": [ "libgfortran>=${MAJORVER}" ],
+	"files": [
+		"/usr/lib/libgfortran.a",
+		"/usr/lib/gcc/${XBPS_BUILD_TRIPLET}/${MAJORVER}/libgfortran*"
+	]
+	},
+
+	{
+	"pkgname": "libgo",
+	"desc": "GCC Go shared library support",
+	"files": [ "/usr/lib/libgo.so*" ]
+	},
+
+	{
+	"pkgname": "libgo-devel",
+	"desc": "GCC Go shared library support -- development files",
+	"depends": [ "libgo>=${MAJORVER}" ],
+	"files": [ "/usr/lib/libgo*.a" ]
+	},
+
+	{
+	"pkgname": "libgomp",
+	"desc": "GCC OpenMP v3.0 shared library support",
+	"replaces": [ "gcc>=4.6.3<4.6.3_3" ],
+	"files": [
+		"/usr/lib/gcc/${XBPS_BUILD_TRIPLET}/${MAJORVER}/include/omp.h",
+		"/usr/lib/libgomp.s*"
+	]
+	},
+
+	{
+	"pkgname": "libgomp-devel",
+	"desc": "GCC OpenMP v3.0 shared library support -- development files",
+	"depends": [ "libgomp>=${MAJORVER}" ],
+	"files": [ "/usr/lib/libgomp.a", "/usr/share/info/libgomp.info" ]
+	},
+
+	{
+	"pkgname": "libgomp32",
+	"desc": "GCC OpenMP v3.0 shared support library (32bit)",
+	"depends": [ "libgcc32>=${MAJORVER}", "glibc32" ],
+	"arch": "x86_64",
+	"noverifyrdeps": true,
+	"files": [ "/usr/lib32/libgomp.*" ]
+	},
+
+	{
+	"pkgname": "gcc",
+	"desc": "The GNU C Compiler",
+	"depends": [
+		"libgomp>=${MAJORVER}", "binutils", "libelf",
+		"libssp-devel>=${MAJORVER}"
+	]
+	}
+]
+}
