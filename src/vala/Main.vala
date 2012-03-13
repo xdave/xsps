@@ -6,10 +6,16 @@ namespace xsps {
 private static int
 main(string[] argv)
 {
+	int rv;
 	xhp = new Main(argv);
-	config_init();
-	process_template();
-	Process.exit(EXIT_SUCCESS);
+
+	rv = config_init();
+	if (rv == EXIT_FAILURE) Process.exit(rv);
+
+	rv = process_template();
+	if (rv == EXIT_FAILURE) Process.exit(rv);
+
+	Process.exit(rv);
 }
 
 public class Main {
