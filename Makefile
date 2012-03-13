@@ -6,11 +6,11 @@ VALAC := valac
 PKGCONFIG := pkg-config
 
 ## pkg-config
-PKGS := glib-2.0 gobject-2.0 gio-2.0 gee-1.0
+PKGS := glib-2.0 gobject-2.0 gio-2.0 gee-1.0 #confuse
 PKG_CFLAGS  := $(shell $(PKGCONFIG) --cflags $(PKGS))
-PKG_LDFLAGS := $(shell $(PKGCONFIG) --libs $(PKGS))
+PKG_LDFLAGS := $(shell $(PKGCONFIG) --libs $(PKGS)) -lconfuse # temp
 VPKGS := $(foreach pkg,$(PKGS),$(subst $(pkg),--pkg=$(pkg),$(pkg))) \
-	--pkg=posix --pkg=stdlib --pkg=xsps_c --pkg=confuse
+	--pkg=posix --pkg=stdlib --pkg=xsps_c #--pkg=confuse
 
 ## Directories
 CONFIG_DIR	:= config
@@ -43,9 +43,10 @@ WARN    := -Werror -Wshadow -Wnested-externs -Wvla -Wno-overlength-strings \
 INCLUDE := -I$(INC_DIR) -I$(VGEN_DIR)
 STATIC  :=
 CFLAGS  := $(STC) $(STD) $(OPTZ) $(SSP) $(DEBUG) $(DEF) $(INCLUDE) $(PKG_CFLAGS)
-LDFLAGS := $(STC) $(PKG_LDFLAGS) -lconfuse -Wl,--as-needed
+LDFLAGS := $(STC) $(PKG_LDFLAGS) -Wl,--as-needed
 
 ## Targets
+
 all: $(VHEADER) $(TARGET)
 
 $(TARGET): $(VOBJ) $(COBJ)
