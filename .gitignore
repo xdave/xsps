@@ -4,3 +4,6 @@ tmp
 *.log
 defuse.c
 generated
+jsontest/jsontest
+test-confuse/test-confuse
+test-confuse/test-confuse.c
