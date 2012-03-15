@@ -1,5 +1,7 @@
 *~
-xsps
+*.so*
+*.a
+include/xsps/xsps.h
 tmp
 *.log
 defuse.c
