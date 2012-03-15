@@ -24,8 +24,7 @@ namespace Log {
 	{
 		var l = va_list();
 		if ((xhp.arg != null) && xhp.arg.debug)
-			Log.all(Color.CYAN, stderr, "DEBUG",
-			    fmt.vprintf(l));
+			Log.all(Color.CYAN, stderr, "DEBUG", fmt.vprintf(l));
 	}
 
 	public static void
