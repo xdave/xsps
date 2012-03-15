@@ -67,8 +67,8 @@ VFLAGS       := --nostdpkg --ccode --enable-experimental \
 		--vapidir=$(IDIR)/$(NAME) $(VPKGS)
 
 PKG_STATIC := $(PKG_STATIC) $(shell $(PKGC) --libs --static $(PKGS))
-PKG_STATIC := $(subst -ldl ,,$(PKG_STATIC))
-PKG_STATIC := $(PKG_STATIC) -lpcre -Wl,-Bdynamic -ldl
+PKG_STATIC := $(subst -ldl,,$(PKG_STATIC))
+PKG_STATIC := -Wl,-Bstatic $(PKG_STATIC) -lpcre -Wl,-Bdynamic -ldl
 
 BINS := $(XSPS) $(XSPS_STATIC) $(LIBXSPS) $(LIBXSPS_STATIC)
 		 
@@ -78,9 +78,7 @@ all: $(XSPS_TARGETS)
 ## This builds the static executable
 $(XSPS_STATIC): $(LIBXSPS_STATIC)
 	@echo "[LD]	$@"
-	@$(CC) -o $@ $(XSPS_MOBJ) $^ $(LDFLAGS) -Wl,-Bstatic $(PKG_STATIC) \
-		-Wl,--as-needed
-
+	@$(CC) -o $@ $(XSPS_MOBJ) $^ $(LDFLAGS) $(PKG_STATIC) -Wl,--as-needed
 
 ## This builds the static library
 $(LIBXSPS_STATIC): $(XSPS_OBJ)
