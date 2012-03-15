@@ -109,7 +109,7 @@ $(TDIR)/%.c.o: $(SDIR)/%.c
 $(TDIR)/%.vala.o: $(TDIR)/%.c
 	@echo "[CC]	$@"
 	@mkdir -p ${@D}
-	@$(CC) -c $< -o $@ $(CFLAGS) $(XSPS_CFLAGS) $(PKG_SLFLAGS)
+	@$(CC) -c $< -o $@ $(CFLAGS) $(XSPS_CFLAGS)
 
 ## This generates all C code/header from all of the Vala files
 $(TDIR)/%.c: $(SDIR)/%.vala
