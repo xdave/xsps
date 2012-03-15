@@ -12,18 +12,18 @@ MINVER  := 0
 PATVER  := 0
 VERSION := $(MAJVER).$(MINVER).$(PATVER)
 
+## Directories
+SDIR := src
+IDIR := include
+TDIR := tmp
+CDIR := config
+
 ## Targets
 XSPS           := $(NAME)
 XSPS_STATIC    := $(XSPS).static
 LIBXSPS        := lib$(NAME).so.$(VERSION)
 LIBXSPS_STATIC := lib$(NAME).a
 XSPS_TARGETS   := $(XSPS_STATIC) $(XSPS)
-
-## Directories
-SDIR := src
-IDIR := include
-TDIR := tmp
-CDIR := config
 
 ## Vala and C source/headers/objects
 XSPS_C     := $(shell find $(SDIR) -type f -name '*.c')
@@ -115,7 +115,7 @@ $(TDIR)/%.vala.o: $(TDIR)/%.c
 $(TDIR)/%.c: $(SDIR)/%.vala
 	@mkdir -p ${@D}
 	@echo "[VALA]	Generating source..."
-	@$(VALAC) $(VFLAGS) --header=$(XSPS_VHEAD) --library=$(XSPS) $(XSPS_V)
+	@$(VALAC) $(VFLAGS) --header=$(XSPS_VHEAD) --library=$(NAME) $(XSPS_V)
 
 ## Strips debugging symbols from binaries
 strip:
