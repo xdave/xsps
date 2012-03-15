@@ -9,16 +9,14 @@ namespace Log {
 	info(string fmt, ...)
 	{
 		var l = va_list();
-		Log.all(Color.WHITE, stdout, "INFO ",
-		    fmt.vprintf(va_list.copy(l)));
+		Log.all(Color.WHITE, stdout, "INFO ", fmt.vprintf(l));
 	}
 
 	public static void
 	warn(string fmt, ...)
 	{
 		var l = va_list();
-		Log.all(Color.YELLOW, stdout, "WARN ",
-		    fmt.vprintf(va_list.copy(l)));
+		Log.all(Color.YELLOW, stdout, "WARN ", fmt.vprintf(l));
 	}
 
 	public static void
@@ -27,29 +25,28 @@ namespace Log {
 		var l = va_list();
 		if ((xhp.arg != null) && xhp.arg.debug)
 			Log.all(Color.CYAN, stderr, "DEBUG",
-			    fmt.vprintf(va_list.copy(l)));
+			    fmt.vprintf(l));
 	}
 
 	public static void
 	error(string fmt, ...)
 	{
 		var l = va_list();
-		Log.all(Color.RED, stderr, "ERROR",
-		    fmt.vprintf(va_list.copy(l)));
+		Log.all(Color.RED, stderr, "ERROR", fmt.vprintf(l));
 	}
 
 	public static void
 	plain(FileStream *target, string fmt, ...)
 	{
 		var l = va_list();
-		target->vprintf(fmt, va_list.copy(l));
+		target->vprintf(fmt, l);
 	}
 
 	public static void
 	custom(string name, Color color, string fmt, ...)
 	{
 		var l = va_list();
-		Log.all(color, stdout, name, fmt.vprintf(va_list.copy(l)));
+		Log.all(color, stdout, name, fmt.vprintf(l));
 	}
 
 	public static void
