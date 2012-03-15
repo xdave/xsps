@@ -66,6 +66,10 @@ VFLAGS       := --nostdpkg --ccode --enable-experimental \
 		--basedir=$(SDIR) --directory=$(TDIR) \
 		--vapidir=$(IDIR)/$(NAME) $(VPKGS)
 
+PKG_STATIC := $(PKG_STATIC) $(shell $(PKGC) --libs --static $(PKGS))
+PKG_STATIC := $(subst -ldl ,,$(PKG_STATIC))
+PKG_STATIC := $(PKG_STATIC) -lpcre -Wl,-Bdynamic -ldl
+
 BINS := $(XSPS) $(XSPS_STATIC) $(LIBXSPS) $(LIBXSPS_STATIC)
 		 
 ## Targets
@@ -73,8 +77,10 @@ all: $(XSPS_TARGETS)
 
 ## This builds the static executable
 $(XSPS_STATIC): $(LIBXSPS_STATIC)
-	@echo "[LD]	$@ [this is a noop until we have static glib stuff]"
-#	@$(CC) -static $(LDFLAGS) $(XSPS_LDFLAGS) -o $@ $(XSPS_MOBJ) $^
+	@echo "[LD]	$@"
+	@$(CC) -o $@ $(XSPS_MOBJ) $^ $(LDFLAGS) -Wl,-Bstatic $(PKG_STATIC) \
+		-Wl,--as-needed
+
 
 ## This builds the static library
 $(LIBXSPS_STATIC): $(XSPS_OBJ)
@@ -105,7 +111,7 @@ $(TDIR)/%.c.o: $(SDIR)/%.c
 $(TDIR)/%.vala.o: $(TDIR)/%.c
 	@echo "[CC]	$@"
 	@mkdir -p ${@D}
-	@$(CC) -c $< -o $@ $(CFLAGS) $(XSPS_CFLAGS)
+	@$(CC) -c $< -o $@ $(CFLAGS) $(XSPS_CFLAGS) $(PKG_SLFLAGS)
 
 ## This generates all C code/header from all of the Vala files
 $(TDIR)/%.c: $(SDIR)/%.vala
