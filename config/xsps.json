@@ -1,0 +1,42 @@
+/* XSPS Configuration file */
+/* Both the key and value of each option must be a string in double quotes. */
+{
+	/* Where the code lives */
+	"XSPS_DISTDIR": "${HOME}/xsps",
+
+	/* git repository to download source package templates from */
+	"XSPS_SRCPKGS_REPO_URL": "git://github.com/davehome/xsps.git",
+
+	/* Chroot to build pkgs in */
+	"XSPS_MASTERDIR": "${XSPS_DISTDIR}/chroot",
+
+	/* Host directory to mount into the chroot */
+	"XSPS_HOSTDIR": "${XSPS_DISTDIR}/host",
+
+	/* Use ccache for compiling? */
+	"XSPS_CCACHE": "false",
+
+	/* C Compiler to use */
+	"XSPS_CC": "gcc",
+
+	/* C++ Compiler to use */
+	"XSPS_CXX": "g++",
+
+	/* C Compiler flags */
+	"XSPS_CFLAGS": "-O2 -pipe -mtune=generic",
+
+	/* C++ Compiler flags */
+	"XSPS_CXXFLAGS": "${XSPS_CFLAGS}",
+
+	/* Linker flags */
+	"XSPS_LDFLAGS": "-Wl,--as-needed",
+
+	/* Number to pass to make -j */
+	"XSPS_MAKEJOBS": "1",
+
+	/* Compress binary packages with this program */
+	"XSPS_COMPRESS_CMD": "xz",
+
+	/* Level of compression to use */
+	"XSPS_COMPRESS_LEVEL": "9"
+}
