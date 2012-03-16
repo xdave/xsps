@@ -4,6 +4,8 @@
 *.log
 
 tmp
+chroot
+host
 
 defuse.c
 jsontest/jsontest
