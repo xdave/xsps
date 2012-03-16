@@ -1,8 +1,8 @@
 public struct XHP {
 
-public Env env;
-public Arg arg;
-public Config config;
+public Env? env;
+public Arg? arg;
+public Config? config;
 
 public
 XHP()
