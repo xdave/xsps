@@ -26,15 +26,15 @@ LIBXSPS_STATIC := lib$(NAME).a
 XSPS_TARGETS   := $(XSPS_STATIC) $(XSPS)
 
 ## Vala and C source/headers/objects
-XSPS_C     := $(shell find $(SDIR) -type f -name '*.c')
-XSPS_V     := $(shell find $(SDIR) -type f -name '*.vala')
-XSPS_VM    := $(shell find $(SDIR) -type f -name 'main.*')
-XSPS_VC    := $(patsubst $(SDIR)/%.vala,$(TDIR)/%.c,$(XSPS_V))
-XSPS_VHEAD := $(IDIR)/$(NAME)/$(XSPS).h
-XSPS_VOBJ  := $(patsubst $(TDIR)/%.c,$(TDIR)/%.vala.o,$(XSPS_VC))
-XSPS_COBJ  := $(patsubst $(SDIR)/%.c,$(TDIR)/%.c.o,$(XSPS_C))
-XSPS_OBJ   := $(XSPS_VOBJ) $(XSPS_COBJ)
-XSPS_MOBJ  := $(patsubst $(SDIR)/%,$(TDIR)/%.o,$(XSPS_VM))
+XSPS_C      := $(shell find $(SDIR) -type f -name '*.c')
+XSPS_V      := $(shell find $(SDIR) -type f -name '*.vala')
+XSPS_VM     := $(shell find $(SDIR) -type f -name 'main.*')
+XSPS_VC     := $(patsubst $(SDIR)/%.vala,$(TDIR)/%.c,$(XSPS_V))
+XSPS_VHEAD  := $(IDIR)/$(NAME)/$(XSPS).h
+XSPS_VOBJ   := $(patsubst $(TDIR)/%.c,$(TDIR)/%.vala.o,$(XSPS_VC))
+XSPS_COBJ   := $(patsubst $(SDIR)/%.c,$(TDIR)/%.c.o,$(XSPS_C))
+XSPS_OBJ    := $(XSPS_VOBJ) $(XSPS_COBJ)
+XSPS_MOBJ   := $(patsubst $(SDIR)/%,$(TDIR)/%.o,$(XSPS_VM))
 LIBXSPS_OBJ := $(subst $(XSPS_MOBJ),,$(XSPS_OBJ))
 
 ## Build programs
@@ -44,7 +44,7 @@ VALAC  := valac
 ## Required packages -- internal and external
 PKGS  := glib-2.0 gobject-2.0 gee-1.0 json-glib-1.0
 VPKGS := $(foreach pkg,$(PKGS),$(subst $(pkg),--pkg=$(pkg),$(pkg))) \
-		--pkg=stdlib --pkg=defs
+		--pkg=posix --pkg=stdlib --pkg=defs
 
 ## Common C Compiler flags
 WARN := -std=c99 -Werror -Wshadow -Wnested-externs -Wno-overlength-strings \
@@ -65,6 +65,8 @@ XSPS_LDFLAGS := $(PKG_LFLAGS) -Wl,--as-needed
 VFLAGS       := --nostdpkg --ccode --basedir=$(SDIR) --directory=$(TDIR) \
 		--vapidir=$(IDIR)/$(NAME) $(VPKGS)
 
+## pkg-config and hack to build all glib stuff statically into a shared
+## executable
 PKG_STATIC := $(PKG_STATIC) $(shell $(PKGC) --libs --static $(PKGS))
 PKG_STATIC := $(subst -ldl,,$(PKG_STATIC))
 PKG_STATIC := -Wl,-Bstatic $(PKG_STATIC) -lpcre -Wl,-Bdynamic -ldl
@@ -74,7 +76,7 @@ BINS := $(XSPS) $(XSPS_STATIC) $(LIBXSPS) $(LIBXSPS_STATIC)
 ## Targets
 all: $(XSPS_TARGETS)
 
-## This builds the static executable
+## This builds the half-static executable
 $(XSPS_STATIC): $(LIBXSPS_STATIC)
 	@echo "[LD]	$@"
 	@$(CC) -o $@ $(XSPS_MOBJ) $^ $(LDFLAGS) $(PKG_STATIC) -Wl,--as-needed
@@ -125,8 +127,14 @@ strip:
 		fi; \
 	done
 
-## This removes all Vala-generated files, object files, and the shared the
-## library/executable
+## Shows the CFLAGS and LDFLAGS to help you find the required libs to build
+show-flags:
+	@echo "cflags: \"$(PKG_CFLAGS)\"\n"
+	@echo "ldflags: \"$(PKG_LFLAGS)\"\n"
+	@echo "static ldflags: \"$(PKG_STATIC)\""
+
+## This removes all Vala-generated files, object files, the shared
+## library/executable and the static library/executable
 clean:
 	@rm -rf $(XSPS_VHEAD) $(TDIR) $(BINS) *.so*
 	@echo "[Clean]"
@@ -139,4 +147,4 @@ c: clean
 .PRECIOUS: $(XSPS_VC)
 
 ## Tell Make to not do filesystem lookups for these targets
-.PHONY: all strip clean c
+.PHONY: all strip show-flags clean c
