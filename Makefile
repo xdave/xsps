@@ -47,7 +47,8 @@ VPKGS := $(foreach pkg,$(PKGS),$(subst $(pkg),--pkg=$(pkg),$(pkg))) \
 		--pkg=posix --pkg=stdlib --pkg=defs
 
 ## Common C Compiler flags
-WARN := -std=c99 -Werror -Wshadow -Wnested-externs -Wno-overlength-strings \
+STD  := -std=c99
+WARN := -Werror -Wshadow -Wnested-externs -Wno-overlength-strings \
 	-Wvla -Wmissing-declarations -Wdisabled-optimization -pedantic
 OPT  := -O2 -pipe -mtune=generic -fPIC -funroll-loops -fno-exceptions
 SSP  := -fstack-protector-all -D_FORTIFY_SOURCE=2 --param ssp-buffer-size=1
@@ -60,7 +61,7 @@ DEF  := -DXSPS_NAME=\"$(NAME)\" -DXSPS_MAJOR=\"$(MAJVER)\" \
 PKG_CFLAGS   := $(shell $(PKGC) --cflags $(PKGS))
 PKG_LFLAGS   := $(shell $(PKGC) --libs   $(PKGS))
 CINC         := -I. -I$(IDIR)
-XSPS_CFLAGS  := $(WARN) $(OPT) $(SSP) $(DEF) $(DEB) $(PKG_CFLAGS) $(CINC)
+XSPS_CFLAGS  := $(STD) $(WARN) $(OPT) $(SSP) $(DEF) $(DEB) $(PKG_CFLAGS) $(CINC)
 XSPS_LDFLAGS := $(PKG_LFLAGS) -Wl,--as-needed
 VFLAGS       := --nostdpkg --ccode --basedir=$(SDIR) --directory=$(TDIR) \
 		--vapidir=$(IDIR)/$(NAME) $(VPKGS)

@@ -11,9 +11,9 @@ Env()
 
 	try {
 		regex = new Regex("{(.[^{}]*)}",
-			RegexCompileFlags.DOTALL	|
-			RegexCompileFlags.OPTIMIZE	|
-			RegexCompileFlags.EXTENDED	|
+			RegexCompileFlags.DOTALL   |
+			RegexCompileFlags.OPTIMIZE |
+			RegexCompileFlags.EXTENDED |
 			RegexCompileFlags.MULTILINE);
 	} catch (RegexError error) {
 		stderr.printf("[ERROR] => [ENV-REGEX] %s\n", error.message);
@@ -58,7 +58,8 @@ replace(string input)
 	string env = null;
 	string repl = null;
 
-	regex.match(tmp, RegexMatchFlags.NEWLINE_ANY, out info);
+	regex.match(tmp, RegexMatchFlags.NEWLINE_ANY | RegexMatchFlags.NOTEMPTY,
+	    out info);
 
 	/* stderr.printf("[DEBUG] [ENV-REPL] INPUT: %s\n", input); */
 
