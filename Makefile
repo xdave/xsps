@@ -62,8 +62,7 @@ PKG_LFLAGS   := $(shell $(PKGC) --libs   $(PKGS))
 CINC         := -I. -I$(IDIR)
 XSPS_CFLAGS  := $(WARN) $(OPT) $(SSP) $(DEF) $(DEB) $(PKG_CFLAGS) $(CINC)
 XSPS_LDFLAGS := $(PKG_LFLAGS) -Wl,--as-needed
-VFLAGS       := --nostdpkg --ccode --enable-experimental \
-		--basedir=$(SDIR) --directory=$(TDIR) \
+VFLAGS       := --nostdpkg --ccode --basedir=$(SDIR) --directory=$(TDIR) \
 		--vapidir=$(IDIR)/$(NAME) $(VPKGS)
 
 PKG_STATIC := $(PKG_STATIC) $(shell $(PKGC) --libs --static $(PKGS))
