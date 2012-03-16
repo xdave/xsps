@@ -42,15 +42,6 @@ load()
 		map.set(name, repl);
 	});
 
-	if (xhp.arg.distdir != null) {
-		map.set("XSPS_DISTDIR", xhp.arg.distdir);
-		Env.set("XSPS_DISTDIR", xhp.arg.distdir);
-	}
-	if (xhp.arg.masterdir != null) {
-		map.set("XSPS_MASTERDIR", xhp.arg.masterdir);
-		Env.set("XSPS_MASTERDIR", xhp.arg.distdir);
-	}
-
 }
 
 } /* class Config */
