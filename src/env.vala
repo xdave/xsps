@@ -11,7 +11,7 @@ Env()
 
 	try {
 		regex = new Regex("{(.[^{}]*)}",
-			/*RegexCompileFlags.DOTALL	|*/
+			RegexCompileFlags.DOTALL	|
 			RegexCompileFlags.OPTIMIZE	|
 			RegexCompileFlags.EXTENDED	|
 			RegexCompileFlags.MULTILINE);
@@ -20,6 +20,15 @@ Env()
 		exit(EXIT_FAILURE);
 	}
 
+	Env.set("XSPS_MACHINE", Posix.utsname().machine);
+	Env.set("XSPS_VENDOR", "void");
+	Env.set("XSPS_KERNEL", "linux");
+	Env.set("XSPS_OS", "gnu");
+	Env.set("XSPS_BUILD_TRIPLET",
+	    Env.get("XSPS_MACHINE") + "-" +
+	    Env.get("XSPS_VENDOR") + "-" +
+	    Env.get("XSPS_KERNEL") + "-" +
+	    Env.get("XSPS_OS"));
 }
 
 public static string
@@ -79,8 +88,8 @@ convert(string name, string value)
 {
 	string tmp = Env.get(name);
 	if (tmp == null) {
-		Env.set(name, xhp.env.replace(value));
-		return xhp.env.replace(Env.get(name));
+		Env.set(name, this.replace(value));
+		return this.replace(Env.get(name));
 	}
 	return tmp;
 }
