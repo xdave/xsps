@@ -11,12 +11,12 @@ Env()
 
 	try {
 		regex = new Regex("{(.[^{}]*)}",
-			RegexCompileFlags.DOTALL	|
+			/*RegexCompileFlags.DOTALL	|*/
 			RegexCompileFlags.OPTIMIZE	|
 			RegexCompileFlags.EXTENDED	|
 			RegexCompileFlags.MULTILINE);
 	} catch (RegexError error) {
-		stderr.printf("[ENV-REGEX] %s\n", error.message);
+		stderr.printf("[ERROR] => [ENV-REGEX] %s\n", error.message);
 		exit(EXIT_FAILURE);
 	}
 
@@ -32,6 +32,12 @@ public static void
 set(string key, string value)
 {
 	Environment.set_variable(key, value, true);
+}
+
+public static void
+unset(string key)
+{
+	Environment.unset_variable(key);
 }
 
 public string
@@ -51,7 +57,7 @@ replace(string input)
 		while (info.matches()) {
 			matches = info.fetch_all();
 			key = matches[0];
-			env = get(matches[1]);
+			env = Env.get(matches[1]);
 			repl = (env != null) ? env : ("$" + key);
 			tmp = tmp.replace("$" + key, repl);
 			matches = null;
@@ -59,7 +65,7 @@ replace(string input)
 		}
 
 	} catch (RegexError error) {
-		stderr.printf("[ENV-REPL] %s\n", error.message);
+		stderr.printf("[ERROR] => [ENV-REPL] %s\n", error.message);
 		exit(EXIT_FAILURE);
 	}
 
@@ -71,8 +77,12 @@ replace(string input)
 public string
 convert(string name, string value)
 {
-	Env.set(name, xhp.env.replace(value));
-	return xhp.env.replace(Env.get(name));
+	string tmp = Env.get(name);
+	if (tmp == null) {
+		Env.set(name, xhp.env.replace(value));
+		return xhp.env.replace(Env.get(name));
+	}
+	return tmp;
 }
 
 } /* class Env */
