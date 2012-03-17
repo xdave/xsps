@@ -50,7 +50,7 @@ VPKGS := $(foreach pkg,$(PKGS),$(subst $(pkg),--pkg=$(pkg),$(pkg))) \
 STD  := -std=c99
 WARN := -Werror -Wshadow -Wnested-externs -Wno-overlength-strings \
 	-Wvla -Wmissing-declarations -Wdisabled-optimization -pedantic
-OPT  := -O2 -pipe -mtune=generic -fPIC -funroll-loops -fno-exceptions
+OPT  := -O2 -pipe -mtune=generic -fPIC -fPIE -funroll-loops -fno-exceptions
 SSP  := -fstack-protector-all -D_FORTIFY_SOURCE=2 --param ssp-buffer-size=1
 DEB  := -ggdb -DXSPS_DEBUG
 DEF  := -DXSPS_NAME=\"$(NAME)\" -DXSPS_MAJOR=\"$(MAJVER)\" \
@@ -60,17 +60,12 @@ DEF  := -DXSPS_NAME=\"$(NAME)\" -DXSPS_MAJOR=\"$(MAJVER)\" \
 ## CFLAGS, LDFLAGS and options passed to gcc/valac
 PKG_CFLAGS   := $(shell $(PKGC) --cflags $(PKGS))
 PKG_LFLAGS   := $(shell $(PKGC) --libs   $(PKGS))
+PKG_STATIC   := $(shell $(PKGC) --libs --static $(PKGS))
 CINC         := -I. -I$(IDIR)
 XSPS_CFLAGS  := $(STD) $(WARN) $(OPT) $(SSP) $(DEF) $(DEB) $(PKG_CFLAGS) $(CINC)
-XSPS_LDFLAGS := $(PKG_LFLAGS) -Wl,--as-needed
+XSPS_LDFLAGS := -L. -l$(NAME) $(PKG_LFLAGS) -Wl,--as-needed
 VFLAGS       := --nostdpkg --ccode --basedir=$(SDIR) --directory=$(TDIR) \
 		--vapidir=$(IDIR)/$(NAME) $(VPKGS)
-
-## pkg-config and hack to build all glib stuff statically into a shared
-## executable
-PKG_STATIC := $(PKG_STATIC) $(shell $(PKGC) --libs --static $(PKGS))
-PKG_STATIC := $(subst -ldl,,$(PKG_STATIC))
-PKG_STATIC := -Wl,-Bstatic $(PKG_STATIC) -lpcre -Wl,-Bdynamic -ldl
 
 BINS := $(XSPS) $(XSPS_STATIC) $(LIBXSPS) $(LIBXSPS_STATIC)
 		 
@@ -78,9 +73,12 @@ BINS := $(XSPS) $(XSPS_STATIC) $(LIBXSPS) $(LIBXSPS_STATIC)
 all: $(XSPS_TARGETS)
 
 ## This builds the half-static executable
+## Uses a hack with the linker to build all glib stuff statically
 $(XSPS_STATIC): $(LIBXSPS_STATIC)
 	@echo "[LD]	$@"
-	@$(CC) -o $@ $(XSPS_MOBJ) $^ $(LDFLAGS) $(PKG_STATIC) -Wl,--as-needed
+	@$(CC) -pie -Wl,-Bstatic -o $@ $(XSPS_MOBJ) \
+		-L. -l$(NAME) $(LDFLAGS) $(PKG_STATIC) -Wl,-Bdynamic \
+		-Wl,--as-needed
 
 ## This builds the static library
 $(LIBXSPS_STATIC): $(XSPS_OBJ)
@@ -90,8 +88,7 @@ $(LIBXSPS_STATIC): $(XSPS_OBJ)
 ## This builds the shared executable
 $(XSPS): $(LIBXSPS)
 	@echo "[LD]	$@ [shared]"
-	@$(CC) $(LDFLAGS) $(XSPS_LDFLAGS) -o $@ \
-		$(XSPS_MOBJ) lib$(NAME).so.$(MAJVER) 
+	@$(CC) -pie $(LDFLAGS) $(XSPS_LDFLAGS) -o $@ $(XSPS_MOBJ)
 
 ## This builds the shared library
 $(LIBXSPS): $(XSPS_OBJ)
