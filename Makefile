@@ -55,7 +55,7 @@ SSP  := -fstack-protector-all -D_FORTIFY_SOURCE=2 --param ssp-buffer-size=1
 DEB  := -ggdb -DXSPS_DEBUG
 DEF  := -DXSPS_NAME=\"$(NAME)\" -DXSPS_MAJOR=\"$(MAJVER)\" \
 	-DXSPS_MINOR=\"$(MINVER)\" -DXSPS_PATCH=\"$(PATVER)\" \
-	-DXSPS_CONFIG_DIR=\"$(CDIR)\" 
+	-DXSPS_CONFIG_DIR=\"$(CDIR)\" -D_XOPEN_SOURCE=600
 
 ## CFLAGS, LDFLAGS and options passed to gcc/valac
 PKG_CFLAGS   := $(shell $(PKGC) --cflags $(PKGS))
