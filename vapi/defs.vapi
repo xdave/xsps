@@ -14,14 +14,10 @@ public extern const string XSPS_MAJOR;
 [CCode (cname = "XSPS_MINOR")]
 public extern const string XSPS_MINOR;
 
-/* Patch level version number */
-[CCode (cname = "XSPS_PATCH")]
-public extern const string XSPS_PATCH;
-
 /* Compile-time determined global configuration directory */
 [CCode (cname = "XSPS_CONFIG_DIR")]
 public extern const string XSPS_CONFIG_DIR;
 
-
-[CCode (cheader_filename = "xsps/defs.h", cname = "XSPS_CONFIG")]
+/* Compile-time determined global configuration file */
+[CCode (cname = "XSPS_CONFIG")]
 public extern const string XSPS_CONFIG;

@@ -29,14 +29,14 @@ Arg()
 	debug = false;
 	json = false;
 
-	utext = @"PACKAGE... (The X Source Packaging System v$(ver))\n\n" +
+	utext = @"PACKAGE... (The X Source Packaging System v$ver)\n\n" +
 
 		"  Copyright (c) 2012 The AUTHORS. See the AUTHORS file.\n" +
 		"  See the COPYING file for license/distribution details.\n\n" +
 
 		"  You may override any configuration option by setting an\n" +
 		"  environment variable for any option you wish to change.\n" +
-		@"  [see $(XSPS_CONFIG) for available options]";
+		@"  [see $XSPS_CONFIG_DIR/$XSPS_CONFIG for available options]";
 
 	config_group = new OptionGroup("config", "Configuration Options:",
 	    "Show configuration options");

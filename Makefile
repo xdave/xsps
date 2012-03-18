@@ -3,25 +3,36 @@
 # Distributed under a modified BSD-style license.
 # See the COPYING file in the toplevel directory for license details.
 
-### TODO: (un)install targets
-
 ## Program name and version
 NAME    := xsps
 MAJVER  := 0
 MINVER  := 0
 VERSION := $(MAJVER).$(MINVER)
 
-## Targets
+## Build Targets
 XSPS        := $(NAME)
 XSPS_STATIC := $(NAME).static
 TARGETS     := $(XSPS) $(XSPS_STATIC)
 
-## Directories
-SRCDIR  := src
-INCDIR  := include/$(NAME)
-VAPIDIR := vapi
-TMPDIR  := tmp
-CDIR    := config
+## Build directories
+SRCDIR    := src
+INCDIR    := include/$(NAME)
+VAPIDIR   := vapi
+TMPDIR    := tmp
+
+## Install Directories
+DESTDIR     := $(HOME)/xsps_install
+PREFIX      := $(DESTDIR)/usr/local
+SYSCONF_DIR := $(DESTDIR)/etc
+CDIR        := $(SYSCONF_DIR)/xsps
+
+## Configuration file name
+CONF        := xsps.json
+
+## Install targets
+INST_TARGET=$(PREFIX)/bin/$(XSPS)
+STATIC_INST_TARGET=$(PREFIX)/bin/$(XSPS_STATIC)
+INSTALL_TARGETS := $(INST_TARGET) $(STATIC_INST_TARGET) $(CDIR)/$(CONF)
 
 ## Vala and C source/headers/objects
 C_SRC    := $(shell find $(SRCDIR) -type f -name '*.c')
@@ -46,15 +57,16 @@ V_PKGS             := $(patsubst %,--pkg=%,$(V_INTERNAL_PKGS) $(PKGS))
 
 ## Common C Compiler flags
 STD  := -std=c99
-OPT  := -O2 -pipe -mtune=generic -fPIC -fPIE -funroll-loops -fno-exceptions
+OPT  := -O2 -pipe -mtune=generic -fPIC -fPIE -fno-exceptions
 SSP  := -fstack-protector-all -D_FORTIFY_SOURCE=2 --param ssp-buffer-size=1
 INC  := -I. -Iinclude -I$(INCDIR) -I$(TMPDIR)
 WARN := -Werror -Wshadow -Wnested-externs -Wno-overlength-strings \
-	-Wvla -Wmissing-declarations -Wdisabled-optimization -pedantic
+	-Wvla -Wmissing-declarations -Wdisabled-optimization -pedantic \
+	-Wformat -Wformat-security -Werror=format-security
 DEB  := -ggdb -DXSPS_DEBUG
 DEF  := -D_XOPEN_SOURCE=600 -DXSPS_NAME=\"$(NAME)\" \
 	-DXSPS_MAJOR=\"$(MAJVER)\" -DXSPS_MINOR=\"$(MINVER)\"  \
-	-DXSPS_CONFIG_DIR=\"$(CDIR)\"
+	-DXSPS_CONFIG_DIR=\"$(CDIR)\" -DXSPS_CONFIG=\"$(CONF)\"
 
 ## CFLAGS, LDFLAGS and options passed to gcc/valac
 XSPS_CFLAGS  := $(CFLAGS) $(STD) $(OPT) $(SSP) $(WARN) $(DEF) $(DEB) $(INC)
@@ -68,25 +80,25 @@ all: $(V_VAPI) $(TARGETS)
 ## This builds the half-static executable
 ## Uses a hack with the linker to build all glib stuff statically
 $(XSPS_STATIC): $(ALL_OBJ)
-	@echo "[CCLD]	${@F}"
+	@echo "[CCLD]		${@F}"
 	@$(CCACHE) $(CC) -Wl,-Bstatic $^ $(PKG_STATIC_LDFLAGS) \
 		$(XSPS_LDFLAGS) -Wl,-Bdynamic -o $@
 
 ## This builds the shared executable
 $(XSPS): $(ALL_OBJ)
-	@echo "[CCLD]	${@F}"
+	@echo "[CCLD]		${@F}"
 	@$(CCACHE) $(CC) -pie $^ $(PKG_LDFLAGS) $(LDFLAGS) -o $@
 
 ## This compiles the C source files to C objects
 $(TMPDIR)/%.o: $(SRCDIR)/%.c $(V_HEADER)
 	@mkdir -p ${@D}
-	@echo "[CC]	${@F}"
+	@echo "[CC]		${@F}"
 	@$(CCACHE) $(CC) -c $< $(PKG_CFLAGS) $(XSPS_CFLAGS) -o $@
 
 ## This compiles the Vala source directly to C objects 
 $(TMPDIR)/%.vo: $(TMPDIR)/%.vapi
 	@mkdir -p ${@D}
-	@echo "[VALAC]	${@F}"
+	@echo "[VALAC]		${@F}"
 	@$(VALAC) $(VFLAGS) --compile --cc="$(CCACHE) $(CC)" \
 		$(patsubst %,--Xcc=%,$(XSPS_CFLAGS)) \
 		$(subst $(FVAPI)=$<,,$(patsubst %,$(FVAPI)=%,$(V_VAPI))) \
@@ -95,7 +107,7 @@ $(TMPDIR)/%.vo: $(TMPDIR)/%.vapi
 ## Generates .vapi files to satisfy the symbol resolution for the above target
 $(TMPDIR)/%.vapi: $(SRCDIR)/%.vala
 	@mkdir -p ${@D}
-	@echo "[VALAC]	${@F}"
+	@echo "[VALAC]		${@F}"
 	@$(VALAC) $(VFLAGS) --fast-vapi=$@ $<
 	@touch $@
 
@@ -104,14 +116,46 @@ $(TMPDIR)/%.vapi: $(SRCDIR)/%.vala
 ## This is only generated if there are actual plain C files to build
 $(V_HEADER): $(V_SRC)
 	@mkdir -p ${@D}
-	@echo "[VALAC]	${@F}"
+	@echo "[VALAC]		${@F}"
 	@$(VALAC) $(VFLAGS) --compile --cc=true --header=$@ $^
+
+## Install targets
+
+## This installs the shared executable
+$(INST_TARGET): $(XSPS)
+	@echo "[INSTALL]	$@"
+	@test -d ${@D} || mkdir -p ${@D}
+	@install -m 0755 $^ $@
+
+## This installs the half-static executable
+$(STATIC_INST_TARGET): $(XSPS_STATIC)
+	@echo "[INSTALL]	$@"
+	@test -d ${@D} || mkdir -p ${@D}
+	@install -m 0755 $^ $@
+
+## This installs the global configuration file
+$(CDIR)/$(CONF): config/xsps.json
+	@echo "[INSTALL]	$@"
+	@test -d ${@D} || mkdir -p ${@D}
+	@install -m 0644 $^ $@
+
+## This installs everything above
+install: all $(INSTALL_TARGETS)
+
+## This uninstalls everything above
+uninstall:
+	@for f in $(INSTALL_TARGETS); do \
+		if [ -f $$f ]; then \
+			echo "[UNINSTALL]	$$f" && \
+			rm -f $$f; \
+		fi; \
+	done
 
 ## Strips debugging symbols from binaries
 strip:
 	@for f in $(TARGETS); do \
 		if [ -f $$f ]; then \
-			echo "[STRIP]	$$f" && \
+			echo "[STRIP]		$$f" && \
 			strip --strip-debug $$f; \
 		fi; \
 	done
@@ -131,4 +175,4 @@ clean:
 c: clean
 
 ## Tell Make to not do filesystem lookups for these targets
-.PHONY: all strip show-flags clean c
+.PHONY: all install uninstall strip show-flags clean c

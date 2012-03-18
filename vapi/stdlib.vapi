@@ -1,7 +1,6 @@
 /* 
  * Misc system stuff
  */
-
 [CCode (cheader_filename = "stdlib.h", cname = "exit")]
 public extern void exit(int status);
 

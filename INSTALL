@@ -9,7 +9,10 @@ BASIC:
 
 	$ sudo make uninstall
 
-	(By default, everything is installed in /usr/local)
+	* By default, everything is installed in $HOME/xsps_install/usr/local
+
+	* The global configuration file is installed into:
+		$HOME/xsps_install/etc/xsps
 
 	Done!
 
@@ -21,10 +24,12 @@ ADVANCED:
 
 	For example:
 
-	$ make CXX=clang STATIC=-static STD=-std=c89
+	$ make DESTDIR=~/somewhere PREFIX=/usr CCACHE=ccache -j10
 	$ make DESTDIR=~/somewhere PREFIX=/usr install
 
-	The xsps executable is copied to the bin/ directory of the PREFIX under
+	(Note, you must specify the DESTDIR and PREFIX while only buliding, too)
+
+	The xsps executables is copied to the bin/ directory of the PREFIX under
 	the chosen DESTDIR.  The default DESTDIR is blank (defaults to /).
 
 	NOTE: The same command used to install xsps must be used to uninstall
@@ -41,5 +46,4 @@ ADVANCED:
 	Just change the word 'install' to 'uninstall'.
 
 
-Any questions?  Come to #xsps on irc.freenode.net and ask!
-
+Any questions?  Come to #xbps on irc.freenode.net and ask!

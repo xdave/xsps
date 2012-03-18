@@ -10,7 +10,7 @@ public HashMap<string,string> map;
 public
 Config()
 {
-	file = XSPS_CONFIG;
+	file = @"$XSPS_CONFIG_DIR/$XSPS_CONFIG";
 	parser = new Json.Parser();
 }
 
