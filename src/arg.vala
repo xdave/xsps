@@ -25,7 +25,7 @@ public string[] templates;
 public
 Arg()
 {
-	string ver = @"$(XSPS_MAJOR).$(XSPS_MINOR).$(XSPS_PATCH)";
+	string ver = @"$(XSPS_MAJOR).$(XSPS_MINOR)";
 	debug = false;
 	json = false;
 
