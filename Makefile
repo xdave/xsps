@@ -69,25 +69,25 @@ all: $(V_VAPI) $(TARGETS)
 ## Uses a hack with the linker to build all glib stuff statically
 $(XSPS_STATIC): $(ALL_OBJ)
 	@echo "[CCLD]	${@F}"
-	@$(CC) -pie -Wl,-Bstatic $^ $(PKG_STATIC_LDFLAGS) $(XSPS_LDFLAGS) \
-		-Wl,-Bdynamic -o $@ 
+	@$(CCACHE) $(CC) -pie -Wl,-Bstatic $^ $(PKG_STATIC_LDFLAGS) \
+		$(XSPS_LDFLAGS) -Wl,-Bdynamic -o $@
 
 ## This builds the shared executable
 $(XSPS): $(ALL_OBJ)
 	@echo "[CCLD]	${@F}"
-	@$(CC) -pie $^ $(PKG_LDFLAGS) $(LDFLAGS) -o $@
+	@$(CCACHE) $(CC) -pie $^ $(PKG_LDFLAGS) $(LDFLAGS) -o $@
 
 ## This compiles the C source files to C objects
 $(TMPDIR)/%.o: $(SRCDIR)/%.c $(V_HEADER)
 	@mkdir -p ${@D}
 	@echo "[CC]	${@F}"
-	@$(CC) -c $< $(PKG_CFLAGS) $(XSPS_CFLAGS) -o $@
+	@$(CCACHE) $(CC) -c $< $(PKG_CFLAGS) $(XSPS_CFLAGS) -o $@
 
 ## This compiles the Vala source directly to C objects 
 $(TMPDIR)/%.vo: $(TMPDIR)/%.vapi
 	@mkdir -p ${@D}
 	@echo "[VALAC]	${@F}"
-	@$(VALAC) $(VFLAGS) --compile \
+	@$(VALAC) $(VFLAGS) --compile --cc="$(CCACHE) $(CC)" \
 		$(patsubst %,--Xcc=%,$(XSPS_CFLAGS)) \
 		$(subst $(FVAPI)=$<,,$(patsubst %,$(FVAPI)=%,$(V_VAPI))) \
 		$(patsubst $(TMPDIR)/%.vapi,$(SRCDIR)/%.vala,$<) --Xcc=-o$@
