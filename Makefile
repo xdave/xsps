@@ -9,116 +9,105 @@
 NAME    := xsps
 MAJVER  := 0
 MINVER  := 0
-PATVER  := 0
-VERSION := $(MAJVER).$(MINVER).$(PATVER)
+VERSION := $(MAJVER).$(MINVER)
 
 ## Directories
-SDIR := src
-IDIR := include
-TDIR := tmp
-CDIR := config
+SRCDIR  := src
+INCDIR  := include/$(NAME)
+VAPIDIR := vapi
+TMPDIR  := tmp
+CDIR    := config
 
 ## Targets
-XSPS           := $(NAME)
-XSPS_STATIC    := $(XSPS).static
-LIBXSPS        := lib$(NAME).so.$(VERSION)
-LIBXSPS_STATIC := lib$(NAME).a
-XSPS_TARGETS   := $(XSPS_STATIC) $(XSPS)
+XSPS        := $(NAME)
+XSPS_STATIC := $(NAME).static
+TARGETS     := $(XSPS) $(XSPS_STATIC)
 
 ## Vala and C source/headers/objects
-XSPS_C      := $(shell find $(SDIR) -type f -name '*.c')
-XSPS_V      := $(shell find $(SDIR) -type f -name '*.vala')
-XSPS_VM     := $(shell find $(SDIR) -type f -name 'main.*')
-XSPS_VC     := $(patsubst $(SDIR)/%.vala,$(TDIR)/%.c,$(XSPS_V))
-XSPS_VHEAD  := $(IDIR)/$(NAME)/$(XSPS).h
-XSPS_VOBJ   := $(patsubst $(TDIR)/%.c,$(TDIR)/%.vala.o,$(XSPS_VC))
-XSPS_COBJ   := $(patsubst $(SDIR)/%.c,$(TDIR)/%.c.o,$(XSPS_C))
-XSPS_OBJ    := $(XSPS_VOBJ) $(XSPS_COBJ)
-XSPS_MOBJ   := $(patsubst $(SDIR)/%,$(TDIR)/%.o,$(XSPS_VM))
-LIBXSPS_OBJ := $(subst $(XSPS_MOBJ),,$(XSPS_OBJ))
+C_SRC    := $(shell find $(SRCDIR) -type f -name '*.c')
+V_SRC    := $(shell find $(SRCDIR) -type f -name '*.vala')
+V_VAPI   := $(patsubst $(SRCDIR)/%.vala,$(TMPDIR)/%.vapi,$(V_SRC))
+V_HEADER := $(TMPDIR)/$(NAME).h
+C_OBJ    := $(patsubst $(SRCDIR)/%.c,$(TMPDIR)/%.o,$(C_SRC))
+V_OBJ    := $(patsubst $(SRCDIR)/%.vala,$(TMPDIR)/%.vo,$(V_SRC))
+ALL_OBJ  := $(V_OBJ) $(C_OBJ)
 
 ## Build programs
-PKGC   := pkg-config
-VALAC  := valac
+PKGC := pkg-config
+VALAC := valac
 
 ## Required packages -- internal and external
-PKGS  := glib-2.0 gobject-2.0 gee-1.0 json-glib-1.0
-VPKGS := $(foreach pkg,$(PKGS),$(subst $(pkg),--pkg=$(pkg),$(pkg))) \
-		--pkg=posix --pkg=stdlib --pkg=defs
+PKGS               := glib-2.0 gobject-2.0 gee-1.0 json-glib-1.0
+PKG_CFLAGS         := $(shell $(PKGC) --cflags $(PKGS))
+PKG_LDFLAGS        := $(shell $(PKGC) --libs $(PKGS))
+PKG_STATIC_LDFLAGS := $(shell $(PKGC) --libs --static $(PKGS))
+V_INTERNAL_PKGS    := posix defs stdlib
+V_PKGS             := $(patsubst %,--pkg=%,$(V_INTERNAL_PKGS) $(PKGS))
 
 ## Common C Compiler flags
 STD  := -std=c99
-WARN := -Werror -Wshadow -Wnested-externs -Wno-overlength-strings \
-	-Wvla -Wmissing-declarations -Wdisabled-optimization -pedantic
 OPT  := -O2 -pipe -mtune=generic -fPIC -fPIE -funroll-loops -fno-exceptions
 SSP  := -fstack-protector-all -D_FORTIFY_SOURCE=2 --param ssp-buffer-size=1
+INC  := -I. -Iinclude -I$(INCDIR) -I$(TMPDIR)
+WARN := -Werror -Wshadow -Wnested-externs -Wno-overlength-strings \
+	-Wvla -Wmissing-declarations -Wdisabled-optimization -pedantic
 DEB  := -ggdb -DXSPS_DEBUG
-DEF  := -DXSPS_NAME=\"$(NAME)\" -DXSPS_MAJOR=\"$(MAJVER)\" \
-	-DXSPS_MINOR=\"$(MINVER)\" -DXSPS_PATCH=\"$(PATVER)\" \
-	-DXSPS_CONFIG_DIR=\"$(CDIR)\" -D_XOPEN_SOURCE=600
+DEF  := -D_XOPEN_SOURCE=600 -DXSPS_NAME=\"$(NAME)\" \
+	-DXSPS_MAJOR=\"$(MAJVER)\" -DXSPS_MINOR=\"$(MINVER)\"  \
+	-DXSPS_CONFIG_DIR=\"$(CDIR)\"
 
 ## CFLAGS, LDFLAGS and options passed to gcc/valac
-PKG_CFLAGS   := $(shell $(PKGC) --cflags $(PKGS))
-PKG_LFLAGS   := $(shell $(PKGC) --libs   $(PKGS))
-PKG_STATIC   := $(shell $(PKGC) --libs --static $(PKGS))
-CINC         := -I. -I$(IDIR)
-XSPS_CFLAGS  := $(STD) $(WARN) $(OPT) $(SSP) $(DEF) $(DEB) $(PKG_CFLAGS) $(CINC)
-XSPS_LDFLAGS := -L. -l$(NAME) $(PKG_LFLAGS) -Wl,--as-needed
-VFLAGS       := --nostdpkg --ccode --basedir=$(SDIR) --directory=$(TDIR) \
-		--vapidir=$(IDIR)/$(NAME) $(VPKGS)
+XSPS_CFLAGS  := $(CFLAGS) $(STD) $(OPT) $(SSP) $(WARN) $(DEF) $(DEB) $(INC)
+XSPS_LDFLAGS := $(LDFLAGS) -Wl,--as-needed
+VFLAGS       := --nostdpkg --thread --vapidir=$(VAPIDIR) $(V_PKGS) \
+		--basedir=$(SRCDIR) --directory=$(TMPDIR)
+FVAPI        := --use-fast-vapi
 
-BINS := $(XSPS) $(XSPS_STATIC) $(LIBXSPS) $(LIBXSPS_STATIC)
-		 
-## Targets
-all: $(XSPS_TARGETS)
+all: $(V_VAPI) $(TARGETS)
 
 ## This builds the half-static executable
 ## Uses a hack with the linker to build all glib stuff statically
-$(XSPS_STATIC): $(LIBXSPS_STATIC)
-	@echo "[LD]	$@"
-	@$(CC) -pie -Wl,-Bstatic -o $@ $(XSPS_MOBJ) \
-		-L. -l$(NAME) $(LDFLAGS) $(PKG_STATIC) -Wl,-Bdynamic \
-		-Wl,--as-needed
-
-## This builds the static library
-$(LIBXSPS_STATIC): $(XSPS_OBJ)
-	@echo "[AR]	$@"
-	@rm -f $@ && ar rcs $@ $(LIBXSPS_OBJ)
+$(XSPS_STATIC): $(ALL_OBJ)
+	@echo "[CCLD]	${@F}"
+	@$(CC) -pie -Wl,-Bstatic $^ $(PKG_STATIC_LDFLAGS) $(XSPS_LDFLAGS) \
+		-Wl,-Bdynamic -o $@ 
 
 ## This builds the shared executable
-$(XSPS): $(LIBXSPS)
-	@echo "[LD]	$@ [shared]"
-	@$(CC) -pie $(LDFLAGS) $(XSPS_LDFLAGS) -o $@ $(XSPS_MOBJ)
+$(XSPS): $(ALL_OBJ)
+	@echo "[CCLD]	${@F}"
+	@$(CC) -pie $^ $(PKG_LDFLAGS) $(LDFLAGS) -o $@
 
-## This builds the shared library
-$(LIBXSPS): $(XSPS_OBJ)
-	@echo "[LD]	$@ [lib$(NAME).so.$(MAJVER)]"
-	@$(CC) -shared -Wl,-soname,lib$(NAME).so.$(MAJVER) \
-		$(LDFLAGS) $(XSPS_LDFLAGS) -o $@ $(LIBXSPS_OBJ)
-	@ln -sf $@ lib$(NAME).so.$(MAJVER)
-	@ln -sf $@ lib$(NAME).so
-
-## This builds all plain C files
-$(TDIR)/%.c.o: $(SDIR)/%.c
-	@echo "[CC]	$@"
+## This compiles the C source files to C objects
+$(TMPDIR)/%.o: $(SRCDIR)/%.c $(V_HEADER)
 	@mkdir -p ${@D}
-	@$(CC) -c $< -o $@ $(CFLAGS) $(XSPS_CFLAGS) 
+	@echo "[CC]	${@F}"
+	@$(CC) $(XSPS_CFLAGS) -c $< $(PKG_CFLAGS) -o $@
 
-## This builds all Vala-generated C files
-$(TDIR)/%.vala.o: $(TDIR)/%.c
-	@echo "[CC]	$@"
+## This compiles the Vala source directly to C objects 
+$(TMPDIR)/%.vo: $(TMPDIR)/%.vapi
 	@mkdir -p ${@D}
-	@$(CC) -c $< -o $@ $(CFLAGS) $(XSPS_CFLAGS)
+	@echo "[VALAC]	${@F}"
+	@$(VALAC) $(VFLAGS) --compile \
+		$(patsubst %,--Xcc=%,$(XSPS_CFLAGS)) \
+		$(subst $(FVAPI)=$<,,$(patsubst %,$(FVAPI)=%,$(V_VAPI))) \
+		$(patsubst $(TMPDIR)/%.vapi,$(SRCDIR)/%.vala,$<) --Xcc=-o$@
 
-## This generates all C code/header from all of the Vala files
-$(TDIR)/%.c: $(SDIR)/%.vala
+## Generates .vapi files to satisfy the symbol resolution for the above target
+$(TMPDIR)/%.vapi: $(SRCDIR)/%.vala
 	@mkdir -p ${@D}
-	@echo "[VALA]	Generating source..."
-	@$(VALAC) $(VFLAGS) --header=$(XSPS_VHEAD) --library=$(NAME) $(XSPS_V)
+	@echo "[VALAC]	${@F}"
+	@$(VALAC) $(VFLAGS) --fast-vapi=$@ $<
+	@touch $@
+
+## Generates a C header from all of the Vala files to provide an API to plain C
+$(V_HEADER): $(V_SRC)
+	@mkdir -p ${@D}
+	@echo "[VALAC]	${@F}"
+	@$(VALAC) $(VFLAGS) --compile --cc=true --header=$@ $^
 
 ## Strips debugging symbols from binaries
 strip:
-	@for f in $(BINS); do \
+	@for f in $(TARGETS); do \
 		if [ -f $$f ]; then \
 			echo "[STRIP]	$$f" && \
 			strip --strip-debug $$f; \
@@ -128,21 +117,16 @@ strip:
 ## Shows the CFLAGS and LDFLAGS to help you find the required libs to build
 show-flags:
 	@echo "cflags: \"$(PKG_CFLAGS)\"\n"
-	@echo "ldflags: \"$(PKG_LFLAGS)\"\n"
-	@echo "static ldflags: \"$(PKG_STATIC)\""
+	@echo "ldflags: \"$(PKG_LDFLAGS)\"\n"
+	@echo "static ldflags: \"$(PKG_STATIC_LDFLAGS)\""
 
-## This removes all Vala-generated files, object files, the shared
-## library/executable and the static library/executable
+## Removes the tmp dir and the binaries
 clean:
-	@rm -rf $(XSPS_VHEAD) $(TDIR) $(BINS) *.so*
+	@rm -rf $(TMPDIR) $(TARGETS)
 	@echo "[Clean]"
 
 ## Shortcut for 'clean'
 c: clean
-
-## Prevents Make from removing some files (it thinks they are temporary
-## intermediate files)
-.PRECIOUS: $(XSPS_VC)
 
 ## Tell Make to not do filesystem lookups for these targets
 .PHONY: all strip show-flags clean c
