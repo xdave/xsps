@@ -69,7 +69,7 @@ all: $(V_VAPI) $(TARGETS)
 ## Uses a hack with the linker to build all glib stuff statically
 $(XSPS_STATIC): $(ALL_OBJ)
 	@echo "[CCLD]	${@F}"
-	@$(CCACHE) $(CC) -pie -Wl,-Bstatic $^ $(PKG_STATIC_LDFLAGS) \
+	@$(CCACHE) $(CC) -Wl,-Bstatic $^ $(PKG_STATIC_LDFLAGS) \
 		$(XSPS_LDFLAGS) -Wl,-Bdynamic -o $@
 
 ## This builds the shared executable
