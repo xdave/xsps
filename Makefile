@@ -11,6 +11,11 @@ MAJVER  := 0
 MINVER  := 0
 VERSION := $(MAJVER).$(MINVER)
 
+## Targets
+XSPS        := $(NAME)
+XSPS_STATIC := $(NAME).static
+TARGETS     := $(XSPS) $(XSPS_STATIC)
+
 ## Directories
 SRCDIR  := src
 INCDIR  := include/$(NAME)
@@ -18,22 +23,17 @@ VAPIDIR := vapi
 TMPDIR  := tmp
 CDIR    := config
 
-## Targets
-XSPS        := $(NAME)
-XSPS_STATIC := $(NAME).static
-TARGETS     := $(XSPS) $(XSPS_STATIC)
-
 ## Vala and C source/headers/objects
 C_SRC    := $(shell find $(SRCDIR) -type f -name '*.c')
 V_SRC    := $(shell find $(SRCDIR) -type f -name '*.vala')
-V_VAPI   := $(patsubst $(SRCDIR)/%.vala,$(TMPDIR)/%.vapi,$(V_SRC))
 V_HEADER := $(TMPDIR)/$(NAME).h
+V_VAPI   := $(patsubst $(SRCDIR)/%.vala,$(TMPDIR)/%.vapi,$(V_SRC))
 C_OBJ    := $(patsubst $(SRCDIR)/%.c,$(TMPDIR)/%.o,$(C_SRC))
 V_OBJ    := $(patsubst $(SRCDIR)/%.vala,$(TMPDIR)/%.vo,$(V_SRC))
 ALL_OBJ  := $(V_OBJ) $(C_OBJ)
 
 ## Build programs
-PKGC := pkg-config
+PKGC  := pkg-config
 VALAC := valac
 
 ## Required packages -- internal and external
@@ -81,7 +81,7 @@ $(XSPS): $(ALL_OBJ)
 $(TMPDIR)/%.o: $(SRCDIR)/%.c $(V_HEADER)
 	@mkdir -p ${@D}
 	@echo "[CC]	${@F}"
-	@$(CC) $(XSPS_CFLAGS) -c $< $(PKG_CFLAGS) -o $@
+	@$(CC) -c $< $(PKG_CFLAGS) $(XSPS_CFLAGS) -o $@
 
 ## This compiles the Vala source directly to C objects 
 $(TMPDIR)/%.vo: $(TMPDIR)/%.vapi
@@ -100,6 +100,8 @@ $(TMPDIR)/%.vapi: $(SRCDIR)/%.vala
 	@touch $@
 
 ## Generates a C header from all of the Vala files to provide an API to plain C
+## Uses a hack to prevent it from generating anything else
+## This is only generated if there are actual plain C files to build
 $(V_HEADER): $(V_SRC)
 	@mkdir -p ${@D}
 	@echo "[VALAC]	${@F}"
