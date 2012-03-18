@@ -9,25 +9,26 @@ MAJVER  := 0
 MINVER  := 0
 VERSION := $(MAJVER).$(MINVER)
 
+## Configuration file name
+CONF := xsps.json
+
 ## Build Targets
 XSPS        := $(NAME)
 XSPS_STATIC := $(NAME).static
 TARGETS     := $(XSPS) $(XSPS_STATIC)
 
 ## Build directories
-SRCDIR    := src
-INCDIR    := include/$(NAME)
-VAPIDIR   := vapi
-TMPDIR    := tmp
+SRCDIR  := src
+INCDIR  := include/$(NAME)
+VAPIDIR := vapi
+TMPDIR  := tmp
+LCDIR   := config
 
 ## Install Directories
 DESTDIR     := $(HOME)/xsps_install
 PREFIX      := $(DESTDIR)/usr/local
 SYSCONF_DIR := $(DESTDIR)/etc
 CDIR        := $(SYSCONF_DIR)/xsps
-
-## Configuration file name
-CONF        := xsps.json
 
 ## Install targets
 INST_TARGET=$(PREFIX)/bin/$(XSPS)
@@ -134,7 +135,7 @@ $(STATIC_INST_TARGET): $(XSPS_STATIC)
 	@install -m 0755 $^ $@
 
 ## This installs the global configuration file
-$(CDIR)/$(CONF): config/xsps.json
+$(CDIR)/$(CONF): $(LCDIR)/$(CONF)
 	@echo "[INSTALL]	$@"
 	@test -d ${@D} || mkdir -p ${@D}
 	@install -m 0644 $^ $@
