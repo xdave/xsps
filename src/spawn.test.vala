@@ -37,8 +37,8 @@ on_output(IOChannel source, IOCondition cond)
 		if (fd == outfd)
 			stdout.printf("%s", output);
 		if (fd == errfd)
-			stdout.printf("%c[1m%c[31m%s",
-			    (char)27, (char)27, output);
+			stdout.printf("%c[1m%c[31m%s%c[0m",
+			    (char)27, (char)27, output, (char)27);
 	} catch (ConvertError err) {
 		stderr.printf("Conversion error!: %s\n", err.message);
 		return false;
