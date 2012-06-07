@@ -50,9 +50,10 @@ VALAC := valac
 
 ## Required packages -- internal and external
 PKGS               := glib-2.0 gobject-2.0 gee-1.0 json-glib-1.0
-PKG_CFLAGS         := $(shell $(PKGC) --cflags $(PKGS))
-PKG_LDFLAGS        := $(shell $(PKGC) --libs $(PKGS))
-PKG_STATIC_LDFLAGS := $(shell $(PKGC) --libs --static $(PKGS))
+NON_VAPI_PKGS      := gthread-2.0
+PKG_CFLAGS         := $(shell $(PKGC) --cflags $(PKGS) $(NON_VAPI_PKGS))
+PKG_LDFLAGS        := $(shell $(PKGC) --libs $(PKGS) $(NON_VAPI_PKGS))
+PKG_STATIC_LDFLAGS := $(shell $(PKGC) --libs --static $(PKGS) $(NON_VAPI_PKGS))
 V_INTERNAL_PKGS    := posix defs stdlib
 V_PKGS             := $(patsubst %,--pkg=%,$(V_INTERNAL_PKGS) $(PKGS))
 
@@ -88,7 +89,7 @@ $(XSPS_STATIC): $(ALL_OBJ)
 ## This builds the shared executable
 $(XSPS): $(ALL_OBJ)
 	@echo "[CCLD]		${@F}"
-	@$(CCACHE) $(CC) -pie $^ $(PKG_LDFLAGS) $(LDFLAGS) -o $@
+	@$(CCACHE) $(CC) -pie $^ $(PKG_LDFLAGS) $(XSPS_LDFLAGS) -o $@
 
 ## This compiles the C source files to C objects
 $(TMPDIR)/%.o: $(SRCDIR)/%.c $(V_HEADER)
